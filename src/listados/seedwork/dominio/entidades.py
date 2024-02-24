@@ -6,7 +6,7 @@ from .mixins import ValidarReglasMixin
 from .reglas import IdEntidadEsInmutable
 from .excepciones import IdDebeSerInmutableExcepcion
 
-@dataclasses
+@dataclass
 class Entidad:
     id: uuid.UUID = field(hash=True)
     _id: uuid.UUID = field(init=False, repr=False, hash=True)

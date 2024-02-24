@@ -5,9 +5,32 @@ from flask_swagger import swagger
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+def registrar_handlers():
+    import listados.modulos.contratos.aplicacion
+
+def importar_modelos_alchemy():
+    import listados.modulos.contratos.infraestructura.dto
+
 def create_app(configuracion={}):
     # Init la aplicacion de Flask
     app = Flask(__name__, instance_relative_config=True)
+
+    # Base de datos
+    app.config['SQLALCHEMY_DATABASE_URI'] =\
+            'sqlite:///' + os.path.join(basedir, 'database.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Inicializa la DB
+    from listados.config.db import init_db
+    init_db(app)
+
+    from listados.config.db import db
+
+    importar_modelos_alchemy()
+    registrar_handlers()
+
+    with app.app_context():
+        db.create_all()
 
     # Importar Blueprints
     from . import propiedades

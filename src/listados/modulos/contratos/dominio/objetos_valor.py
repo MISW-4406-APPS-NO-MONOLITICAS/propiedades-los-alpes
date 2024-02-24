@@ -1,0 +1,25 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from listados.seedwork.dominio.objetos_valor import ObjetoValor
+
+@dataclass(frozen=True)
+class FechaInicio(ObjetoValor):
+    ...
+
+@dataclass(frozen=True)
+class FechaVencimiento(ObjetoValor):
+    ...
+
+@dataclass(frozen=True)
+class Valor(ObjetoValor):
+    ...
+
+@dataclass(frozen=True)
+class NoticiaMedio(ObjetoValor):
+    ...
+
+@dataclass(frozen=True)
+class MaterialMercado(ObjetoValor):
+    ...
+
