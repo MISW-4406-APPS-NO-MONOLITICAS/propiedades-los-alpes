@@ -7,7 +7,7 @@ class Valor(DTO):
 
 
 @dataclass(frozen=True)
-class TransaccionDto(DTO):
+class TransaccionDTO(DTO):
     id: str = field(default_factory=str)
     fecha_creacion: str = field(default_factory=str)
     fecha_actualizacion: str = field(default_factory=str)
