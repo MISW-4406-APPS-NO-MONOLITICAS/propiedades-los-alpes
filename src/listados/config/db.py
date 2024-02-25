@@ -3,6 +3,9 @@ from flask import Flask
 
 db = None
 
+# Init db with mysql
 def init_db(app: Flask):
-    global db 
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://root:root@127.0.0.1:3306/listados'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    global db
     db = SQLAlchemy(app)

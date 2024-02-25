@@ -3,7 +3,7 @@ from .base import CrearTransaccionBaseHandler
 from listados.seedwork.aplicacion.comandos import Comando
 from listados.seedwork.aplicacion.comandos import ejecutar_commando as comando
 from listados.seedwork.infraestructura.uow import UnidadTrabajoPuerto
-from listados.modulos.contratos.aplicacion.dto import TransaccionDTO
+from listados.modulos.contratos.aplicacion.dto import TransaccionDTO, Valor
 from listados.modulos.contratos.dominio.entidades import Transaccion
 from listados.modulos.contratos.aplicacion.mapeadores import MapeadorTransaccion
 from listados.modulos.contratos.infraestructura.repositorios import RepositorioTransacciones
@@ -13,7 +13,7 @@ class CrearTransaccion(Comando):
     id: str
     fecha_creacion: str
     fecha_actualizacion: str
-    valor: float
+    valor: Valor
     comprador: str
     vendedor: str
     inquilino: str

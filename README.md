@@ -63,6 +63,7 @@ propiedades-los-alpes/
 - `src/listados/seedwork`: contiene 
 
 ## Propiedades de los Alpes
+
 ### Ejecutar Aplicación
 
 Desde el directorio principal ejecute el siguiente comando.
@@ -77,140 +78,26 @@ Ejecución en modo DEBUG:
 flask --app src/listados/api --debug run
 ```
 
-### Ejecutar pruebas
+### Levantar la base de datos
 
 ```bash
-coverage run -m pytest
+docker compose --profile database up -d
 ```
 
-### Ver reporte de covertura
+### Ejecutar cliente que crea una transacción
+
 ```bash
-coverage report
+python src/listados/api/cliente.py
 ```
 
-### Crear imagen Docker
-
-Desde el directorio principal ejecute el siguiente comando.
+### Revisar contenidos de la base de datos
 
 ```bash
-docker build . -f listados.Dockerfile -t listados/flask
+mysql -u root -p -h 127.0.0.1 -P 3306 -D listados 
 ```
 
-### Ejecutar contenedora (sin compose)
+Luego SQL
 
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-docker run -p 5000:5000 aeroalpes/flask
-```
-
-## Sidecar/Adaptador
-### Instalar librerías
-
-En el mundo real es probable que ambos proyectos estén en repositorios separados, pero por motivos pedagógicos y de simpleza, 
-estamos dejando ambos proyectos en un mismo repositorio. Sin embargo, usted puede encontrar un archivo `sidecar-requirements.txt`, 
-el cual puede usar para instalar las dependencias de Python para el servidor y cliente gRPC.
-
-```bash
-pip install -r sidecar-requirements.txt
-```
-
-### Ejecutar Servidor
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-python src/sidecar/main.py 
-```
-
-### Ejecutar Cliente
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-python src/sidecar/cliente.py 
-```
-
-
-### Ejecutar contenedora (sin compose)
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-docker run -p 50051:50051 aeroalpes/adaptador
-```
-
-### Ejecutar contenedora (sin compose)
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-docker run aeroalpes/ui
-```
-
-## Docker-compose
-
-Para desplegar toda la arquitectura en un solo comando, usamos `docker-compose`. Para ello, desde el directorio principal, ejecute el siguiente comando:
-
-```bash
-docker-compose up
-```
-
-Si desea detener el ambiente ejecute:
-
-```bash
-docker-compose stop
-```
-
-En caso de querer desplegar dicha topología en el background puede usar el parametro `-d`.
-
-```bash
-docker-compose up -d
-```
-
-## Comandos útiles
-
-### Listar contenedoras en ejecución
-```bash
-docker ps
-```
-
-### Listar todas las contenedoras
-```bash
-docker ps -a
-```
-
-### Parar contenedora
-```bash
-docker stop <id_contenedora>
-```
-
-### Eliminar contenedora
-```bash
-docker rm <id_contenedora>
-```
-
-### Listar imágenes
-```bash
-docker images
-```
-
-### Eliminar imágenes
-```bash
-docker images rm <id_imagen>
-```
-
-### Acceder a una contendora
-```bash
-docker exec -it <id_contenedora> sh
-```
-
-### Kill proceso que esta usando un puerto
-```bash
-fuser -k <puerto>/tcp
-```
-
-### Correr docker-compose usando profiles
-```bash
-docker-compose --profile <pulsar|listados> up
+```sql
+select * from listados.transacciones;
 ```
