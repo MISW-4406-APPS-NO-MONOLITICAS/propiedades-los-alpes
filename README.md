@@ -5,56 +5,98 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 ## Estructura del proyecto
 
 ```
-propiedades-los-alpes/
-├── src/
-│   ├── listados/
-│   │   ├── api/
-│   │   │   ├── __init__.py
-│   │   │   ├── propiedades.py
-│   │   │   ├── contratos.py
-│   │   │   ├── planos.py
-│   │   │   ├── companias.py
-│   │   ├── config/
-│   │   │   ├── __init__.py
-│   │   │   ├── db.py
-│   │   ├── modulos/
-│   │   │   ├── propiedades/
-│   │   │   │    ├── aplicacion/
-│   │   │   │    │   ├── __init__.py
-│   │   │   │    │   ├── comandos/
-│   │   │   │    │   ├── queries/
-│   │   │   │    ├── dominio/
-│   │   │   │    │   ├── __init__.py
-│   │   │   │    │   ├── entidades.py
-│   │   │   │    │   ├── objetos_valor.py
-│   │   │   │    ├── infraestructura/
-│   │   │   ├── contratos/
-│   │   ├── seedwork/
-│   │   │   ├── aplicacion/
-│   │   │   │    ├── __init__.py
-│   │   │   │    ├── comandos.py
-│   │   │   │    ├── dto.py
-│   │   │   │    ├── queries.py
-│   │   │   ├── dominio/
-│   │   │   │    ├── __init__.py
-│   │   │   │    ├── entidades.py
-│   │   │   │    ├── eventos.py
-│   │   │   │    ├── excepciones.py
-│   │   │   │    ├── fabricas.py
-│   │   │   │    ├── objetos_valor.py
-│   │   │   │    ├── reglas.py
-│   │   │   ├── infraestructura/
-│   │   │   │    ├── __init__.py
-│   │   │   ├── presentacion/
-│   │   │   │    ├── __init__.py
-│   │   │   │    ├── api.py
-├── tests/
 ├── docker-compose.yml
-├── propiedades-los-alpes.Dockerfile
-├── .gitignore
-├── .gitpod.yml
-├── requirements.txt
+├── listados.Dockerfile
 ├── README.md
+├── requirements.txt
+├── src
+│   └── listados
+│       ├── api
+│       │   ├── cliente.py
+│       │   ├── companias.py
+│       │   ├── contratos.py
+│       │   ├── __init__.py
+│       │   ├── planos.py
+│       │   ├── propiedades.py
+│       ├── config
+│       │   ├── db.py
+│       │   ├── __init__.py
+│       │   └── uow.py
+│       ├── __init__.py
+│       ├── modulos
+│       │   ├── companias
+│       │   │   └── __init__.py
+│       │   ├── contratos
+│       │   │   ├── aplicacion
+│       │   │   │   ├── comandos
+│       │   │   │   │   ├── base.py
+│       │   │   │   │   ├── crear_transaccion.py
+│       │   │   │   ├── dto.py
+│       │   │   │   ├── __init.py
+│       │   │   │   ├── mapeadores.py
+│       │   │   │   └── queries
+│       │   │   │       ├── obtener_contrato.py
+│       │   │   │       └── obtener_listado_contratos.py
+│       │   │   ├── dominio
+│       │   │   │   ├── entidades.py
+│       │   │   │   ├── eventos.py
+│       │   │   │   ├── excepciones.py
+│       │   │   │   ├── fabricas.py
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── objetos_valor.py
+│       │   │   │   ├── reglas.py
+│       │   │   │   └── repositorios.py
+│       │   │   ├── infraestructura
+│       │   │   │   ├── dto.py
+│       │   │   │   ├── excepciones.py
+│       │   │   │   ├── fabricas.py
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── mapeadores.py
+│       │   │   │   └── repositorios.py
+│       │   │   ├── __init__.py
+│       │   ├── __init__.py
+│       │   ├── propiedades
+│       │   │   ├── aplicacion
+│       │   │   │   ├── comandos
+│       │   │   │   │   ├── crear_propiedad.py
+│       │   │   │   │   ├── __init__.py
+│       │   │   │   ├── handlers.py
+│       │   │   │   ├── __init__.py
+│       │   │   │   └── queries
+│       │   │   │       ├── __init__.py
+│       │   │   │       ├── obtener_listado_propiedades.py
+│       │   │   │       └── obtener_propiedad.py
+│       │   │   ├── dominio
+│       │   │   │   ├── entidades.py
+│       │   │   │   ├── __init__.py
+│       │   │   │   └── objetos_valor.py
+│       │   │   └── infraestructura
+│       │   │       ├── consumidores.py
+│       │   │       └── __init__.py
+│       └── seedwork
+│           ├── aplicacion
+│           │   ├── comandos.py
+│           │   ├── dto.py
+│           │   ├── handlers.py
+│           │   ├── __init__.py
+│           │   └── queries.py
+│           ├── dominio
+│           │   ├── entidades.py
+│           │   ├── eventos.py
+│           │   ├── excepciones.py
+│           │   ├── fabricas.py
+│           │   ├── __init.py
+│           │   ├── mixins.py
+│           │   ├── objetos_valor.py
+│           │   ├── reglas.py
+│           │   └── repositorios.py
+│           ├── infraestructura
+│           │   ├── __init__.py
+│           │   └── uow.py
+│           └── presentacion
+│               ├── api.py
+│               ├── __init__.py
+└── requirements.txt
 ```
 
 - El directorio `/src` cuenta con un directorio llamado `/listados`, el cual representa el servicio de propiedades que recibe eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos.
