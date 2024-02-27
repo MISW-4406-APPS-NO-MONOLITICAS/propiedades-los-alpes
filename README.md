@@ -101,3 +101,7 @@ Luego SQL
 ```sql
 select * from listados.transacciones;
 ```
+
+## Escenarios de calidad
+
+Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/16Y6xnwHJ_i88_a9BrG8Z5BUw_KjdHqWL/view?usp=sharing)
