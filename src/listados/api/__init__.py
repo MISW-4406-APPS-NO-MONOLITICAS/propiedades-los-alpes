@@ -6,10 +6,14 @@ from flask_swagger import swagger
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 def registrar_handlers():
-    import listados.modulos.contratos.aplicacion
+    import listados.modulos.propiedades.aplicacion
 
 def importar_modelos_alchemy():
     import listados.modulos.contratos.infraestructura.dto
+
+def comenzar_consumidor():
+    import threading
+    import listados.modulos.propiedades.infraestructura.consumidores
 
 def create_app(configuracion={}):
     # Init la aplicacion de Flask

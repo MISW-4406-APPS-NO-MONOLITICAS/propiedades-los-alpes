@@ -13,7 +13,8 @@ class FechaVencimiento(ObjetoValor):
 
 @dataclass(frozen=True)
 class Valor(ObjetoValor):
-    ...
+    valor: float = field(default_factory=float)
+    
 
 @dataclass(frozen=True)
 class NoticiaMedio(ObjetoValor):

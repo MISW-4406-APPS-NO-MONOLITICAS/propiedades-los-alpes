@@ -36,3 +36,4 @@ typing_extensions==4.9.0
 urllib3==1.26.18
 websockets==10.4
 Werkzeug==3.0.1
+faker==23.2.1

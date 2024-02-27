@@ -63,6 +63,7 @@ class UnidadTrabajo(ABC):
 
     def _publicar_eventos_dominio(self, batch):
         for evento in self._obtener_eventos(batches=[batch]):
+            print(f'Sending signal: {type(evento).__name__}Dominio')
             dispatcher.send(signal=f'{type(evento).__name__}Dominio', evento=evento)
 
     def _publicar_eventos_post_commit(self):

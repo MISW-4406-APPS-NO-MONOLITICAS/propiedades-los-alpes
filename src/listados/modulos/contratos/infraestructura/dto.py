@@ -8,7 +8,7 @@ import datetime
 
 Base = db.declarative_base()
 
-class Transaccion(db.Model):
+class TransaccionDB(db.Model):
     __tablename__ = "transacciones"
     id: Mapped[str] = mapped_column(String(50), primary_key=True, nullable=False, )
     fecha_creacion: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
