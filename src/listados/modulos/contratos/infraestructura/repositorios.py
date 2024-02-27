@@ -2,16 +2,17 @@
 
 """
 
+import pdb
 from listados.config.db import db
 from listados.modulos.contratos.dominio.repositorios import RepositorioTransacciones, RepositorioProveedores
 from listados.modulos.contratos.dominio.objetos_valor import FechaInicio, FechaVencimiento, Valor, NoticiaMedio, MaterialMercado
 from listados.modulos.contratos.dominio.entidades import Transaccion, Venta, Alquiler, Listado, Subarrendamiento, TrabajoConjunto
 from listados.modulos.contratos.dominio.fabricas import FabricaTransacciones
-from .dto import Transaccion as TransaccionDTO
+from .dto import TransaccionDB as TransaccionDTO
 from .mapeadores import MapeadorTransaccion
 from uuid import UUID
 
-class RepositorioProveedoresSQLite(RepositorioProveedores):
+class RepositorioProveedoresDB(RepositorioProveedores):
 
     def obtener_por_id(self, id: UUID) -> Transaccion:
         # TODO
@@ -34,7 +35,7 @@ class RepositorioProveedoresSQLite(RepositorioProveedores):
         raise NotImplementedError
 
 
-class RepositorioTransaccionesSQLite(RepositorioTransacciones):
+class RepositorioTrasaccionesDB(RepositorioTransacciones):
 
     def __init__(self):
         self._fabrica_transacciones: FabricaTransacciones = FabricaTransacciones()
@@ -52,7 +53,7 @@ class RepositorioTransaccionesSQLite(RepositorioTransacciones):
         raise NotImplementedError
 
     def agregar(self, transaccion: Transaccion):
-        transaccion_dto = self.fabrica_transacciones.crear_objeto(transaccion, MapeadorTransaccion())
+        transaccion_dto = MapeadorTransaccion().entidad_a_dto(transaccion)
         db.session.add(transaccion_dto)
 
     def actualizar(self, transaccion: Transaccion):

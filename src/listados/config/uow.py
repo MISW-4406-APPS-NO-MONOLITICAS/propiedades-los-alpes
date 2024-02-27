@@ -29,7 +29,6 @@ class UnidadTrabajoSQLAlchemy(UnidadTrabajo):
             batch.operacion(*batch.args, **batch.kwargs)
 
         db.session.commit()
-
         super().commit()
 
     def rollback(self, savepoint=None):

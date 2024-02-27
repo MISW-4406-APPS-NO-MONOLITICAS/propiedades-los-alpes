@@ -3,16 +3,20 @@ from datetime import datetime
 from listados.seedwork.aplicacion.dto import Mapeador as AppMap
 from listados.seedwork.dominio.repositorios import Mapeador as RepMap
 from listados.modulos.contratos.dominio.entidades import Transaccion
+from listados.modulos.contratos.aplicacion.dto import Valor
 from .dto import TransaccionDTO
 
 class MapeadorTransaccionDTOJson(AppMap):
     def externo_a_dto(self, externo:dict) -> TransaccionDTO:
         transaccion_dto = TransaccionDTO(
-            valor=externo.get('valor'),
-            comprador=externo.get('comprador'),
-            vendedor=externo.get('vendedor'),
-            inquilino=externo.get('inquilino'),
-            arrendatario=externo.get('arrendatario')
+            id='',
+            fecha_creacion='',
+            fecha_actualizacion='',
+            valor=Valor(externo['valor']),
+            comprador=externo['comprador'],
+            vendedor=externo['vendedor'],
+            inquilino=externo['inquilino'],
+            arrendatario=externo['arrendatario']
         )
         return transaccion_dto
 
@@ -23,6 +27,7 @@ class MapeadorTransaccion(RepMap):
     _FORMATO_FECHA = '%Y-%m-%dT%H:%M:%SZ'
 
     def obtener_tipo(self) -> type:
+        print('Este class')
         return Transaccion.__class__
 
     def entidad_a_dto(self, entidad:Transaccion) -> TransaccionDTO:
@@ -38,7 +43,13 @@ class MapeadorTransaccion(RepMap):
         return TransaccionDTO(_id,fecha_creacion,fecha_actualizacion,valor,comprador,vendedor,inquilino,arrendatario)
 
     def dto_a_entidad(self,dto:TransaccionDTO) -> Transaccion:
-        print('dto: ', dto)
-        transaccion = Transaccion()
+        transaccion = Transaccion(
+            id=dto.id,
+            valor=dto.valor,
+            comprador=dto.comprador,
+            vendedor=dto.vendedor,
+            inquilino=dto.inquilino,
+            arrendatario=dto.arrendatario
+        )
 
         return transaccion

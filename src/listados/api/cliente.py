@@ -1,19 +1,18 @@
 import requests
 import random
+import faker
 
+faker = faker.Faker()
 
 def establecer_transaccion_test():
     url = "http://localhost:5000/contratos"
 
     data = {
-        "id": random.randint(1, 1000000),
-        "fecha_creacion": "2021-01-01 12:00:00",
-        "fecha_actualizacion": "2021-01-01 12:00:00",
         "valor": random.randint(1, 1000000),
-        "comprador": "comprador",
-        "vendedor": "vendedor",
-        "inquilino": "inquilino",
-        "arrendatario": "arrendatario",
+        "comprador": faker.name(),
+        "vendedor": faker.name(),
+        "inquilino": faker.name(),
+        "arrendatario": faker.name(),
     }
     
     response = requests.post(url, json=data)

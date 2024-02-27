@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import pdb
 from .base import CrearTransaccionBaseHandler
 from listados.seedwork.aplicacion.comandos import Comando
 from listados.seedwork.aplicacion.comandos import ejecutar_commando as comando

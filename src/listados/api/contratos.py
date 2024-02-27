@@ -1,3 +1,4 @@
+import json
 from flask import request, Response
 import listados.seedwork.presentacion.api as api
 from listados.modulos.contratos.aplicacion.mapeadores import MapeadorTransaccionDTOJson
