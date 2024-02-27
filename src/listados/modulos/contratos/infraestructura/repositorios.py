@@ -12,7 +12,7 @@ from .dto import TransaccionDB as TransaccionDTO
 from .mapeadores import MapeadorTransaccion
 from uuid import UUID
 
-class RepositorioProveedoresSQLite(RepositorioProveedores):
+class RepositorioProveedoresDB(RepositorioProveedores):
 
     def obtener_por_id(self, id: UUID) -> Transaccion:
         # TODO
@@ -35,7 +35,7 @@ class RepositorioProveedoresSQLite(RepositorioProveedores):
         raise NotImplementedError
 
 
-class RepositorioTransaccionesSQLite(RepositorioTransacciones):
+class RepositorioTrasaccionesDB(RepositorioTransacciones):
 
     def __init__(self):
         self._fabrica_transacciones: FabricaTransacciones = FabricaTransacciones()

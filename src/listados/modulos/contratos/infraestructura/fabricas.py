@@ -6,15 +6,15 @@ from dataclasses import dataclass, field
 from listados.seedwork.dominio.fabricas import Fabrica
 from listados.seedwork.dominio.repositorios import Repositorio
 from listados.modulos.contratos.dominio.repositorios import RepositorioProveedores, RepositorioTransacciones
-from .repositorios import RepositorioTransaccionesSQLite, RepositorioProveedoresSQLite
+from .repositorios import RepositorioTrasaccionesDB, RepositorioProveedoresDB
 from .excepciones import ExcepcionFabrica
 
 @dataclass
 class FabricaRepositorio(Fabrica):
     def crear_objeto(self, obj: type, mapeador: any = None) -> Repositorio:
         if obj == RepositorioTransacciones.__class__:
-            return RepositorioTransaccionesSQLite()
+            return RepositorioTrasaccionesDB()
         elif obj == RepositorioProveedores.__class__:
-            return RepositorioProveedoresSQLite()
+            return RepositorioProveedoresDB()
         else:
             raise ExcepcionFabrica()
