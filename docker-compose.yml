@@ -11,6 +11,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=listados
+    networks:
+      - internal
 
   pulsar:
     image: apachepulsar/pulsar:3.2.0
@@ -26,10 +28,25 @@ services:
       interval: 1s
       timeout: 3s
       retries: 10
+    networks:
+      - internal
+
+  listados:
+    container_name: listados
+    image: listados
+    command: "tail -f /dev/null"
+    profiles: ["listados", "full"]
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: src/listados/Dockerfile
+    env_file: .env
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
 
 
 networks:
-  pulsar:
-    driver: bridge
-  sidecar:
-    driver: bridge
+  internal:
