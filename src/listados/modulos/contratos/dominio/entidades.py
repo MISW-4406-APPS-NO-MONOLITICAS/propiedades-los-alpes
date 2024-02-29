@@ -5,6 +5,7 @@ from listados.modulos.contratos.dominio.objetos_valor import Valor
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
 from listados.modulos.contratos.dominio.eventos import TransaccionCreada
 
+
 @dataclass
 class Transaccion(AgregacionRaiz):
     valor: Valor = field(default_factory=Valor)
@@ -13,28 +14,9 @@ class Transaccion(AgregacionRaiz):
     inquilino: str = field(default_factory=str)
     arrendatario: str = field(default_factory=str)
 
-
-    def crear_transaccion(self,transaccion: Transaccion):
-        print('Transaccion creada: ',transaccion)
-        self.agregar_evento(TransaccionCreada(id_transaccion=self.id,fecha_creacion=self.fecha_creacion))
-
-@dataclass
-class Venta(Entidad):
-    ...
-
-@dataclass
-class Alquiler(Entidad):
-    ...
-
-@dataclass
-class Listado(Entidad):
-    ...
-
-@dataclass
-class Subarrendamiento(Entidad):
-    ...
-
-@dataclass
-class TrabajoConjunto(Entidad):
-    ...
-    
+    def crear_transaccion(self):
+        self.agregar_evento(
+            TransaccionCreada(
+                id_transaccion=self.id, fecha_creacion=self.fecha_creacion
+            )
+        )

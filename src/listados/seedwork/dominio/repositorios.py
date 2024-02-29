@@ -2,8 +2,10 @@
 """
 
 from abc import ABC, abstractmethod
+from typing import Any
 from uuid import UUID
 from .entidades import Entidad
+
 
 class Repositorio(ABC):
     @abstractmethod
@@ -28,15 +30,8 @@ class Repositorio(ABC):
 
 
 class Mapeador(ABC):
-    @abstractmethod
-    def obtener_tipo(self) -> type:
+    def entidad_a_dto(self, entidad: Any) -> Any:
         ...
 
-    @abstractmethod
-    def entidad_a_dto(self, entidad: Entidad) -> any:
+    def dto_a_entidad(self, dto: Any) -> Entidad:
         ...
-
-    @abstractmethod
-    def dto_a_entidad(self, dto: any) -> Entidad:
-        ...
-    

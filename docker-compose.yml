@@ -34,7 +34,6 @@ services:
   listados:
     container_name: listados
     image: listados
-    command: "tail -f /dev/null"
     profiles: ["listados", "full"]
     ports:
       - "5000:5000"

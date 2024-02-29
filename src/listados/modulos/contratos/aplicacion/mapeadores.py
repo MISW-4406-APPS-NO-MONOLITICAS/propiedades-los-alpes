@@ -1,37 +1,46 @@
-from datetime import datetime
-
-from listados.seedwork.aplicacion.dto import Mapeador as AppMap
-from listados.seedwork.dominio.repositorios import Mapeador as RepMap
+from listados.seedwork.dominio.repositorios import Mapeador
 from listados.modulos.contratos.dominio.entidades import Transaccion
 from listados.modulos.contratos.aplicacion.dto import Valor
 from .dto import TransaccionDTO
 
-class MapeadorTransaccionDTOJson(AppMap):
-    def externo_a_dto(self, externo:dict) -> TransaccionDTO:
+
+class MapeadorTransaccionDTOJson(Mapeador):
+    def externo_a_dto(self, externo: dict) -> TransaccionDTO:
         transaccion_dto = TransaccionDTO(
-            id='',
-            fecha_creacion='',
-            fecha_actualizacion='',
-            valor=Valor(externo['valor']),
-            comprador=externo['comprador'],
-            vendedor=externo['vendedor'],
-            inquilino=externo['inquilino'],
-            arrendatario=externo['arrendatario']
+            id="",
+            fecha_creacion="",
+            fecha_actualizacion="",
+            valor=Valor(externo["valor"]),
+            comprador=externo["comprador"],
+            vendedor=externo["vendedor"],
+            inquilino=externo["inquilino"],
+            arrendatario=externo["arrendatario"],
         )
         return transaccion_dto
 
     def dto_a_externo(self, dto: TransaccionDTO) -> dict:
-        return dto.__dict__
+        return {
+            "id": dto.id,
+            "fecha_creacion": dto.fecha_creacion,
+            "fecha_actualizacion": dto.fecha_actualizacion,
+            "valor": dto.valor.valor,
+            "comprador": dto.comprador,
+            "vendedor": dto.vendedor,
+            "inquilino": dto.inquilino,
+            "arrendatario": dto.arrendatario,
+        }
 
-class MapeadorTransaccion(RepMap):
-    _FORMATO_FECHA = '%Y-%m-%dT%H:%M:%SZ'
+    def dto_a_entidad(self, dto):
+        raise NotImplementedError
 
-    def obtener_tipo(self) -> type:
-        print('Este class')
-        return Transaccion.__class__
+    def entidad_a_dto(self, entidad):
+        raise NotImplementedError
 
-    def entidad_a_dto(self, entidad:Transaccion) -> TransaccionDTO:
-        print("entidad_dto: ",entidad)
+
+class MapeadorTransaccion(Mapeador):
+    _FORMATO_FECHA = "%Y-%m-%dT%H:%M:%SZ"
+
+    def entidad_a_dto(self, entidad: Transaccion) -> TransaccionDTO:
         _id = str(entidad.id)
         fecha_creacion = entidad.fecha_creacion.strftime(self._FORMATO_FECHA)
         fecha_actualizacion = entidad.fecha_actualizacion.strftime(self._FORMATO_FECHA)
@@ -40,16 +49,23 @@ class MapeadorTransaccion(RepMap):
         vendedor = entidad.vendedor
         inquilino = entidad.inquilino
         arrendatario = entidad.arrendatario
-        return TransaccionDTO(_id,fecha_creacion,fecha_actualizacion,valor,comprador,vendedor,inquilino,arrendatario)
+        return TransaccionDTO(
+            _id,
+            fecha_creacion,
+            fecha_actualizacion,
+            Valor(valor.valor),
+            comprador,
+            vendedor,
+            inquilino,
+            arrendatario,
+        )
 
-    def dto_a_entidad(self,dto:TransaccionDTO) -> Transaccion:
+    def dto_a_entidad(self, dto: TransaccionDTO) -> Transaccion:
         transaccion = Transaccion(
-            id=dto.id,
-            valor=dto.valor,
             comprador=dto.comprador,
             vendedor=dto.vendedor,
             inquilino=dto.inquilino,
-            arrendatario=dto.arrendatario
+            arrendatario=dto.arrendatario,
         )
 
         return transaccion
