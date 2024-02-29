@@ -3,7 +3,11 @@ from dataclasses import dataclass, field
 from listados.modulos.contratos.dominio.objetos_valor import Valor
 
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
-from listados.modulos.contratos.dominio.eventos import TransaccionCreada
+from listados.modulos.contratos.dominio.eventos import (
+    EventoIntegracion,
+    TransaccionCreada,
+    TransaccionCreadaIntegracion,
+)
 
 
 @dataclass
@@ -18,5 +22,16 @@ class Transaccion(AgregacionRaiz):
         self.agregar_evento(
             TransaccionCreada(
                 id_transaccion=self.id, fecha_creacion=self.fecha_creacion
+            )
+        )
+
+        self.agregar_evento_integracion(
+            EventoIntegracion(
+                topico="transaccion_creada",
+                evento=TransaccionCreadaIntegracion(
+                    id_transaccion=self.id.__str__(),
+                    valor=self.valor.valor,
+                    fecha_creacion=self.fecha_creacion.isoformat(),
+                ),
             )
         )

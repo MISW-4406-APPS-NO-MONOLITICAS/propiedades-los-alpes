@@ -22,7 +22,7 @@ class AgregacionRaiz(Entidad, ValidarReglasMixin):
     def agregar_evento(self, evento: EventoDominio):
         self.eventos.append(evento)
 
-    def agregar_evento_integracion(self, evento: EventoIntegracion):
+    def agregar_evento_integracion(self, evento):
         self.eventos_integracion.append(evento)
 
     def limpiar_eventos(self):

@@ -14,14 +14,15 @@ from listados.seedwork.dominio.excepciones import ExcepcionDominio
 
 bp = api.crear_blueprint("contratos", "/contratos")
 
+mapeador = MapeadorTransaccionDTOJson()
+
 
 @bp.route("", methods=("POST",))
 def crear_transaccion():
     try:
         transaccion_dict = request.json
 
-        map_transaccion = MapeadorTransaccionDTOJson()
-        transaccion_dto = map_transaccion.externo_a_dto(transaccion_dict)
+        transaccion_dto = mapeador.externo_a_dto(transaccion_dict)
 
         comando = CrearTransaccion(
             transaccion_dto.valor,
@@ -41,4 +42,4 @@ def crear_transaccion():
 @bp.route("", methods=("GET",))
 def listar_transacciones():
     result = ejecutar_query(ObtenerTransacciones())
-    return [MapeadorTransaccionDTOJson().dto_a_externo(dto) for dto in result.resultado]
+    return [mapeador.dto_a_externo(dto) for dto in result.resultado]

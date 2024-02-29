@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request, url_for, redirect, jsonify, session
 from flask_swagger import swagger
+import listados.modulos.contratos.infraestructura.despachador
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

@@ -30,8 +30,10 @@ class Repositorio(ABC):
 
 
 class Mapeador(ABC):
+    @abstractmethod
     def entidad_a_dto(self, entidad: Any) -> Any:
         ...
 
+    @abstractmethod
     def dto_a_entidad(self, dto: Any) -> Entidad:
         ...
