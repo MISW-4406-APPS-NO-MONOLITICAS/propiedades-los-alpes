@@ -14,15 +14,20 @@ def registrar_handlers_eventos_dominio():
     handler_propiedades()
 
 
-def registrar_consumidores_broker():
-    import threading
+def registrar_consumidores_broker(app: Flask):
+    processes = []
+    import multiprocessing
     from listados.modulos.contratos.infraestructura.consumidores import consumidores
 
     for consumidor in consumidores:
-        threading.Thread(target=consumidor).start()
+        process = multiprocessing.Process(target=consumidor)
+        processes.append(process)
+        process.start()
+
+    app.config["processes"] = processes
 
 
-def setup_db(app):
+def setup_db(app: Flask):
     # Inicializa la DB
     from listados.config.db import init_db, db_session
 
@@ -49,8 +54,7 @@ def create_app(configuracion={}):
     from listados.config.pulsar import comenzar_despachador_eventos_integracion
 
     comenzar_despachador_eventos_integracion()
-    if "pytest" not in sys.modules:
-        registrar_consumidores_broker()
+    registrar_consumidores_broker(app)
 
     # Importar Blueprints
     from . import propiedades

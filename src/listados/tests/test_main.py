@@ -20,6 +20,10 @@ faker = faker.Faker()
 def app():
     app = create_app()
     yield app
+    processes = app.config.get("processes")
+    if processes:
+        for process in processes:
+            process.terminate()
 
 
 @pytest.fixture
