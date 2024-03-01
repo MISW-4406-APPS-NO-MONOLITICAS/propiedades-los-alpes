@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+from uuid import uuid4
 from listados.modulos.contratos.dominio.objetos_valor import Valor
 
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
@@ -29,6 +30,8 @@ class Transaccion(AgregacionRaiz):
             EventoIntegracion(
                 topico="transaccion_creada",
                 evento=TransaccionCreadaIntegracion(
+                    id=str(uuid4()),
+                    fecha_evento=self.fecha_creacion.isoformat(),
                     id_transaccion=self.id.__str__(),
                     valor=self.valor.valor,
                     fecha_creacion=self.fecha_creacion.isoformat(),

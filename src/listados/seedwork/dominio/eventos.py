@@ -13,10 +13,9 @@ class EventoDominio:
     fecha_evento: datetime = field(default=datetime.now())
 
 
+# Este es el objeto que usamos para pasarle al despachador,
+# simplemente tiene un tópico y el evento
+@dataclass
 class EventoIntegracion:
     topico: str
     evento: schema.Record
-
-    def __init__(self, topico: str, evento: schema.Record):
-        self.topico = topico
-        self.evento = evento
