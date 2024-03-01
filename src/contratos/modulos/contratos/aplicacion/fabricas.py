@@ -1,0 +1,14 @@
+from contratos.modulos.contratos.dominio.entidades import Transaccion
+from contratos.modulos.contratos.aplicacion.mapeadores import MapeadorTransaccion
+from contratos.seedwork.dominio.repositorios import Mapeador
+from contratos.seedwork.dominio.fabricas import Fabrica
+from dataclasses import dataclass
+
+
+@dataclass
+class FabricaTransacciones(Fabrica):
+    def crear_objeto(self, obj, mapeador: Mapeador | None = None) -> Transaccion:
+        mapeador = mapeador or MapeadorTransaccion()
+        result = mapeador.dto_a_entidad(obj)
+        assert isinstance(result, Transaccion)
+        return result

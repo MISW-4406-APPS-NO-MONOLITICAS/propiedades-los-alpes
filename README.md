@@ -6,11 +6,10 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 
 ```
 ├── docker-compose.yml
-├── listados.Dockerfile
 ├── README.md
 ├── requirements.txt
 ├── src
-│   └── listados
+│   └── contratos
 │       ├── api
 │       │   ├── cliente.py
 │       │   ├── companias.py
@@ -99,49 +98,49 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 └── requirements.txt
 ```
 
-- El directorio `/src` cuenta con un directorio llamado `/listados`, el cual representa el servicio de propiedades que recibe eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos.
-- `src/listados/api/`: contiene la definición de los endpoints de cada uno de los modulos
-- `src/listados/modulos/`: contiene los diferentes modulos del microservcio. 
-- `src/listados/seedwork`: contiene 
+- El directorio `/src` cuenta con un directorio llamado `/contratos`, el cual representa el servicio de propiedades que recibe eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos.
+- `src/contratos/api/`: contiene la definición de los endpoints de cada uno de los modulos
+- `src/contratos/modulos/`: contiene los diferentes modulos del microservcio. 
+- `src/contratos/seedwork`: contiene 
 
 ## Propiedades de los Alpes
 
-### Ejecutar Aplicación
-
-Desde el directorio principal ejecute el siguiente comando.
+### Levantar los contenedores y servicios
 
 ```bash
-flask --app src/listados/api run
-```
-
-Ejecución en modo DEBUG:
-
-```bash
-flask --app src/listados/api --debug run
-```
-
-### Levantar la base de datos
-
-```bash
-docker compose --profile database up -d
+docker compose --profile full up -d --build
 ```
 
 ### Ejecutar cliente que crea una transacción
 
 ```bash
-python src/listados/api/cliente.py
+docker exec contratos python src/contratos/api/cliente.py
 ```
 
-### Revisar contenidos de la base de datos
+### Ejecutar pruebas
 
 ```bash
-mysql -u root -p -h 127.0.0.1 -P 3306 -D listados 
+docker exec -it contratos python -m pytest --maxfail=1 src/contratos/tests/ 
 ```
 
-Luego SQL
+### Monitorear los logs para ver que sucede
 
-```sql
-select * from listados.transacciones;
+```bash
+docker logs -f contratos
+```
+
+### Reiniciar el servicio
+
+```bash
+docker restart contratos
+```
+
+### Eliminar base de datos y pulsar para recrear todo en limpio
+
+Importante para cuando se cambia el esquema del tópico.
+
+```bash
+docker compose --profile full down --volumes
 ```
 
 ## Escenarios de calidad

@@ -10,7 +10,7 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=listados
+      - MYSQL_DATABASE=contratos
     healthcheck:
       test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
       interval: 1s
@@ -31,15 +31,15 @@ services:
     networks:
       - internal
 
-  listados:
-    container_name: listados
-    image: listados
-    profiles: ["listados", "full"]
+  contratos:
+    container_name: contratos
+    image: contratos
+    profiles: ["contratos", "full"]
     ports:
       - "5000:5000"
     build:
       context: .
-      dockerfile: src/listados/Dockerfile
+      dockerfile: src/contratos/Dockerfile
     env_file: .env
     depends_on:
       database:
