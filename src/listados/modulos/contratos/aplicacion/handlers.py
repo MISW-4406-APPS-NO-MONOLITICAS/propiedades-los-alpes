@@ -1,9 +1,14 @@
+import random
 import uuid
 from listados.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
 from listados.config.logger import logger
 from listados.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 )
+from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
+    ComandoCrearTransaccion,
+)
+from pydispatch import dispatcher
 
 
 class TransaccionCreadaIntegracionHandler:
@@ -19,5 +24,23 @@ class TransaccionCreadaIntegracionHandler:
             logger.info(
                 f"Transaccion {event.id_transaccion} ya existe, no se hace nada"
             )
+
+            # Test
+            if random.choice([True, False]):
+                example_enviar_comando()
+
         else:
             logger.info(f"Transaccion {event.id_transaccion} no existe, se crea")
+
+
+def example_enviar_comando():
+    from faker import Faker
+    faker = Faker()
+    comando = ComandoCrearTransaccion(
+        valor=faker.random_number(),
+        comprador=faker.name(),
+        vendedor=faker.name(),
+        inquilino=faker.name(),
+        arrendatario=faker.name(),
+    )
+    dispatcher.send(signal="Comando", comando=comando)

@@ -19,6 +19,9 @@ class TransaccionCreadaIntegracion(EventoIntegracion):
     fecha_evento = schema.String(required=True)
     id_transaccion = schema.String(required=True)
     valor = schema.Float(required=True)
+    comprador = schema.String(required=True)
+    vendedor = schema.String(required=True)
+    inquilino = schema.String(required=True)
 
     def topic_name(self):
         return "transaccion_creada"

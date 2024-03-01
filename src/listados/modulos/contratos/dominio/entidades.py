@@ -33,5 +33,8 @@ class Transaccion(AgregacionRaiz):
                 id_transaccion=self.id.__str__(),
                 valor=self.valor.valor,
                 fecha_creacion=self.fecha_creacion.isoformat(),
+                comprador=self.comprador,
+                vendedor=self.vendedor,
+                inquilino=self.inquilino,
             ),
         )

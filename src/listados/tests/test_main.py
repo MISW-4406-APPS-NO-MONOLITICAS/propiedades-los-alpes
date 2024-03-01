@@ -70,7 +70,7 @@ def test_crear_transaccion_evento_integracion(
             TransaccionCreadaIntegracion.__name__,
             TransaccionCreadaIntegracion().topic_name(),
         )
-        assert f"{name} publicado en el topico {topico}" in caplog.text
+        assert f"Publicado {name} en el topico {topico}" in caplog.text
 
     repositorio = RepositorioTrasaccionesDB()
     result = repositorio.obtener_por_columna("comprador", data.comprador)[0]
