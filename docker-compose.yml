@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
 
   database:
@@ -11,6 +11,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=listados
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
     networks:
       - internal
 
@@ -23,11 +28,6 @@ services:
       - "6650:6650"
       - "8080:8080"
     command: ["bin/pulsar", "standalone"]
-    healthcheck:
-      test: ["CMD", "/bin/pulsar", "admin", "brokers", "healthcheck"]
-      interval: 1s
-      timeout: 3s
-      retries: 10
     networks:
       - internal
 
@@ -41,10 +41,15 @@ services:
       context: .
       dockerfile: src/listados/Dockerfile
     env_file: .env
+    depends_on:
+      database:
+        condition: service_healthy
     volumes:
       - ./src:/src
     networks:
       - internal
+    # attaching for debugging
+    stdin_open: true
 
 
 networks:
