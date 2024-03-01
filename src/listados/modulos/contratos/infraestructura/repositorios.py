@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from listados.config.db import db
+from listados.config.db import db_session
 from listados.modulos.contratos.dominio.repositorios import (
     RepositorioTransacciones,
 )
@@ -30,11 +30,11 @@ class RepositorioTrasaccionesDB(RepositorioTransacciones):
         return self._fabrica_transacciones
 
     def obtener_por_id(self, id: UUID) -> Transaccion:
-        db_model = db.session.query(TransaccionDB).filter_by(id=str(id)).one()
+        db_model = db_session.query(TransaccionDB).filter_by(id=str(id)).one()
         return self.fabrica_transacciones.crear_objeto(db_model)
 
     def obtener_todos(self) -> list[Transaccion]:
-        transacciones = db.session.query(TransaccionDB).all()
+        transacciones = db_session.query(TransaccionDB).all()
         return [
             self.fabrica_transacciones.crear_objeto(transaccion)
             for transaccion in transacciones
@@ -43,17 +43,17 @@ class RepositorioTrasaccionesDB(RepositorioTransacciones):
     def agregar(self, entity: Transaccion):
         db_model = MapeadorTransaccionDB().entidad_a_dto(entity)
         print("Adding model with id", db_model.id)
-        db.session.add(db_model)
+        db_session.add(db_model)
 
     def actualizar(self, entity: Transaccion):
         raise NotImplementedError
 
     def eliminar(self, entity_id: UUID):
-        db.session.query(TransaccionDB).filter_by(id=str(entity_id)).delete()
+        db_session.query(TransaccionDB).filter_by(id=str(entity_id)).delete()
 
     def obtener_por_columna(self, columna: str, valor: str) -> list[Transaccion]:
         transacciones = (
-            db.session.query(TransaccionDB)
+            db_session.query(TransaccionDB)
             .where(text(f"{columna} = :valor"))
             .params(valor=valor)
         ).all()

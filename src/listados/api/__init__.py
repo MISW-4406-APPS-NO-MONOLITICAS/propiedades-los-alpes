@@ -1,25 +1,36 @@
 import os
 
-from flask import Flask, render_template, request, url_for, redirect, jsonify, session
-from flask_swagger import swagger
+from flask import Flask
+from pydispatch.saferef import sys
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-def registrar_handlers():
-    import listados.modulos.propiedades.aplicacion
+def registrar_handlers_eventos_dominio():
+    from listados.modulos.propiedades.aplicacion.handlers import (
+        registrar as handler_propiedades,
+    )
+
+    handler_propiedades()
 
 
-def importar_modelos_alchemy():
-    import listados.modulos.contratos.infraestructura.dto
-
-
-def comenzar_despachador_eventos_dominio():
-    import listados.config.despachador
-
-def comenzar_consumidor():
+def registrar_consumidores_broker():
     import threading
-    import listados.modulos.propiedades.infraestructura.consumidores
+    from listados.modulos.contratos.infraestructura.consumidores import consumidores
+
+    for consumidor in consumidores:
+        threading.Thread(target=consumidor).start()
+
+
+def setup_db(app):
+    # Inicializa la DB
+    from listados.config.db import init_db, db_session
+
+    init_db()
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db_session.remove()
 
 
 def create_app(configuracion={}):
@@ -31,21 +42,15 @@ def create_app(configuracion={}):
 
     app.secret_key = "9d58f98f-3ae8-4149-a09f-3a8c2012e32c"
     app.config["SESSION_TYPE"] = "filesystem"
-    app.config["TESTING"] = configuracion.get("TESTING")
 
-    # Inicializa la DB
-    from listados.config.db import init_db
+    setup_db(app)
 
-    init_db(app)
-    from listados.config.db import db
+    registrar_handlers_eventos_dominio()
+    from listados.config.pulsar import comenzar_despachador_eventos_integracion
 
-    registrar_handlers()
-    comenzar_despachador_eventos_dominio()
-
-    with app.app_context():
-        importar_modelos_alchemy()
-        print("Creando tablas en la base de datos")
-        db.create_all()
+    comenzar_despachador_eventos_integracion()
+    if "pytest" not in sys.modules:
+        registrar_consumidores_broker()
 
     # Importar Blueprints
     from . import propiedades
@@ -59,15 +64,8 @@ def create_app(configuracion={}):
     app.register_blueprint(contratos.bp)
     app.register_blueprint(planos.bp)
 
-    @app.route("/spec")
-    def spec():
-        swag = swagger(app)
-        swag["info"]["version"] = "1.0"
-        swag["info"]["title"] = "Proyecto los Alpes"
-        return jsonify(swag)
-
-    @app.route("/health-check")
-    def health():
-        return jsonify({"status": "up"})
+    @app.route("/health")
+    def __health():
+        return {"status": "ok"}
 
     return app

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from pydispatch import dispatcher
-import pickle
+from listados.config.logger import logger
 
 from listados.seedwork.dominio.entidades import AgregacionRaiz
+from listados.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
 
 
 class Lock(Enum):
@@ -69,38 +70,33 @@ class UnidadTrabajo:
 
     def _publicar_eventos_dominio(self, batch):
         for evento in self._obtener_eventos(tipo="dominio", batches=[batch]):
-            print(f"Publicando evento dominio: {type(evento).__name__}Dominio")
+            assert isinstance(evento, EventoDominio), "Debe ser un evento de dominio"
+            logger.info(
+                f"Publicando evento dominio: {type(evento).__name__} en signal {type(evento).__name__}Dominio"
+            )
             dispatcher.send(signal=f"{type(evento).__name__}Dominio", evento=evento)
 
     def _publicar_eventos_post_commit(self):
         for evento in self._obtener_eventos(tipo="integracion"):
-            print(f"Publicando evento integracion: {type(evento).__name__}Integracion")
+            assert isinstance(
+                evento, EventoIntegracion
+            ), "Debe ser un evento de integracion"
+            logger.info(
+                f"Publicando evento integracion: {evento.evento.__class__.__name__} en signal Integracion"
+            )
             dispatcher.send(signal="Integracion", evento=evento)
 
 
-def save_uow(uow):
-    try:
-        from flask import session
-    except:
-        raise Exception("Flask is not running, failed to import session")
-
-    session["uow"] = pickle.dumps(uow)
+uow = None
 
 
-def get_uow() -> UnidadTrabajo:
-    try:
-        from flask import session
-    except:
-        raise Exception("Flask is not running, failed to import session")
-
-    if session.get("uow"):
-        return pickle.loads(session["uow"])
-    else:
+def get_uow():
+    global uow
+    if uow is None:
         from listados.config.uow import UnidadTrabajoSQLAlchemy
 
         uow = UnidadTrabajoSQLAlchemy()
-        save_uow(uow)
-        return uow
+    return uow
 
 
 class UnidadTrabajoPuerto:
@@ -109,26 +105,19 @@ class UnidadTrabajoPuerto:
         return get_uow()
 
     @staticmethod
-    def save_unidad_trabajo(uow):
-        return save_uow(uow)
-
-    @staticmethod
     def commit():
         uow = __class__.get_unidad_de_trabajo()
         uow.commit()
-        __class__.save_unidad_trabajo(uow)
 
     @staticmethod
     def rollback(savepoint=None):
         uow = __class__.get_unidad_de_trabajo()
         uow.rollback(savepoint=savepoint)
-        __class__.save_unidad_trabajo(uow)
 
     @staticmethod
     def savepoint():
         uow = __class__.get_unidad_de_trabajo()
         uow.savepoint()
-        __class__.save_unidad_trabajo(uow)
 
     @staticmethod
     def dar_savepoints():
@@ -139,4 +128,3 @@ class UnidadTrabajoPuerto:
     def registrar_batch(operacion, *args, lock=Lock.PESIMISTA, **kwargs):
         uow = __class__.get_unidad_de_trabajo()
         uow.registrar_batch(operacion, *args, lock=lock, **kwargs)
-        __class__.save_unidad_trabajo(uow)

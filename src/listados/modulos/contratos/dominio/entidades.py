@@ -28,7 +28,7 @@ class Transaccion(AgregacionRaiz):
 
         self.agregar_evento_integracion(
             EventoIntegracion(
-                topico="transaccion_creada",
+                topico=TransaccionCreadaIntegracion.topic_name(),
                 evento=TransaccionCreadaIntegracion(
                     id=str(uuid4()),
                     fecha_evento=self.fecha_creacion.isoformat(),

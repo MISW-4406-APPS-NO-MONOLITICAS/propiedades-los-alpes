@@ -9,8 +9,14 @@ from .entidades import Entidad
 
 class Repositorio(ABC):
     @abstractmethod
-    def obtener_por_id(self, id: UUID) -> Entidad:
+    def obtener_por_id(self, id: UUID) -> Entidad | None:
         ...
+
+    def obtener_por_id_or_error(self, id: UUID) -> Entidad:
+        result = self.obtener_por_id(id)
+        if result is None:
+            raise ValueError(f"No se encontró entidad con id {id}")
+        return result
 
     @abstractmethod
     def obtener_todos(self) -> list[Entidad]:

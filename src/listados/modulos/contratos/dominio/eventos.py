@@ -1,7 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import uuid
-from listados.seedwork.dominio.eventos import EventoDominio
+
+from listados.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
 from datetime import datetime
 import pulsar.schema as schema
 
@@ -18,3 +19,7 @@ class TransaccionCreadaIntegracion(schema.Record):
     fecha_evento = schema.String(required=True)
     id_transaccion = schema.String(required=True)
     valor = schema.Float(required=True)
+
+    @staticmethod
+    def topic_name():
+        return "transaccion_creada"

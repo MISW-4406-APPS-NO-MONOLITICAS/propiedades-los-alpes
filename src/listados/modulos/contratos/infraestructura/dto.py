@@ -2,14 +2,10 @@
 """
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 from sqlalchemy import Float, String, DateTime
-from listados.config.db import db
+from listados.config.db import Base
 import datetime
 
-Base = declarative_base()
-Model = db.Model
-
-
-class TransaccionDB(Model):
+class TransaccionDB(Base):
     __tablename__ = "transacciones"
     id: Mapped[str] = mapped_column(
         String(50),

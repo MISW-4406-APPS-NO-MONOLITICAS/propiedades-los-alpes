@@ -1,17 +1,16 @@
 from flask.testing import FlaskClient
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
     CrearTransaccion,
 )
 from listados.modulos.contratos.infraestructura.repositorios import (
-    RepositorioTransacciones,
     RepositorioTrasaccionesDB,
 )
 import pytest
 import faker
 from listados.api import create_app
-from listados.config.db import db
+from listados.config.db import db_session
 
 
 faker = faker.Faker()
@@ -26,17 +25,6 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
-
-
-def get_db_generator():
-    # Check if running in the application context
-    app = create_app()
-    with app.app_context():
-        yield db
-
-
-def get_db() -> SQLAlchemy:
-    return next(get_db_generator())
 
 
 def crear_transaccion_data():
@@ -62,6 +50,7 @@ def test_crear_transaccion(client: FlaskClient):
 
 
 def test_query_transacciones(client: FlaskClient):
+    test_crear_transaccion(client)
     response = client.get("/contratos")
     assert response.status_code == 200
     # Assert is json

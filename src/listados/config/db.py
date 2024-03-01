@@ -1,18 +1,19 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-db: SQLAlchemy = SQLAlchemy()
+databse_uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
+if not databse_uri:
+    databse_uri = "mysql+mysqldb://root:root@127.0.0.1:3306/listados"
+
+engine = create_engine(databse_uri)
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+Base = declarative_base()
 
 
 # Init db with mysql
-def init_db(app: Flask):
-    databse_uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
-    if not databse_uri:
-        databse_uri = "mysql+mysqldb://root:root@127.0.0.1:3306/listados"
+def init_db():
+    from listados.modulos.contratos.infraestructura.dto import TransaccionDB
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = databse_uri
-    app.config["SQLACLHEMY_ECHO"] = True
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    global db
-    db.init_app(app)
+    Base.metadata.create_all(bind=engine)
