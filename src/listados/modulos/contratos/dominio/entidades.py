@@ -4,10 +4,10 @@ from listados.modulos.contratos.dominio.objetos_valor import Valor
 
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
 from listados.modulos.contratos.dominio.eventos import (
-    EventoIntegracion,
     TransaccionCreada,
     TransaccionCreadaIntegracion,
 )
+from listados.seedwork.dominio.eventos import EventoIntegracion
 
 
 @dataclass

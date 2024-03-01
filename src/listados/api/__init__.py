@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, render_template, request, url_for, redirect, jsonify, session
 from flask_swagger import swagger
-import listados.modulos.contratos.infraestructura.despachador
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,6 +13,9 @@ def registrar_handlers():
 def importar_modelos_alchemy():
     import listados.modulos.contratos.infraestructura.dto
 
+
+def comenzar_despachador_eventos_dominio():
+    import listados.config.despachador
 
 def comenzar_consumidor():
     import threading
@@ -38,6 +40,7 @@ def create_app(configuracion={}):
     from listados.config.db import db
 
     registrar_handlers()
+    comenzar_despachador_eventos_dominio()
 
     with app.app_context():
         importar_modelos_alchemy()
