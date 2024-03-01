@@ -22,6 +22,7 @@ class Despachador:
             topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
         )
         publicador.send(evento)
+        logger.info(f"Evento {type(evento).__name__} publicado en el topico {topico}")
         cliente.close()
 
     def publicar_evento(self, evento):

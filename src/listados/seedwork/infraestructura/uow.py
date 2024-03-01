@@ -77,7 +77,7 @@ class UnidadTrabajo:
         for evento in self._obtener_eventos(tipo="dominio", batches=[batch]):
             assert isinstance(evento, EventoDominio), "Debe ser un evento de dominio"
             logger.info(
-                f"Publicando evento dominio: {type(evento).__name__} en signal {type(evento).__name__}Dominio"
+                f"Despachando evento dominio: {type(evento).__name__} en signal {type(evento).__name__}Dominio"
             )
             dispatcher.send(signal=f"{type(evento).__name__}Dominio", evento=evento)
 
@@ -87,7 +87,7 @@ class UnidadTrabajo:
                 evento, EventoIntegracion
             ), "Debe ser un evento de integracion"
             logger.info(
-                f"Publicando evento integracion: {evento.evento.__class__.__name__} en signal Integracion"
+                f"Despachando evento integracion: {evento.evento.__class__.__name__} en signal Integracion"
             )
             dispatcher.send(signal="Integracion", evento=evento)
 

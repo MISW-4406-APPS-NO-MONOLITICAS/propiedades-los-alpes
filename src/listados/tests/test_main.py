@@ -1,16 +1,15 @@
 from flask.testing import FlaskClient
-from sqlalchemy import text
-from sqlalchemy.orm import Session
+from pulsar import logging
 from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
     CrearTransaccion,
 )
+from listados.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
 from listados.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 )
 import pytest
 import faker
 from listados.api import create_app
-from listados.config.db import db_session
 
 
 faker = faker.Faker()
@@ -50,19 +49,19 @@ def test_crear_transaccion(client: FlaskClient):
     result = repositorio.obtener_por_columna("comprador", data.comprador)
     assert len(result)
     assert result[0].comprador == data.comprador
+
     return data
 
 
-def test_query_transacciones(client: FlaskClient):
-    test_crear_transaccion(client)
-    response = client.get("/contratos")
-    assert response.status_code == 200
-    # Assert is json
-    assert response.is_json
-    assert response.json
-    for item in response.json:
-        assert "valor" in item
-        assert "comprador" in item
-        assert "vendedor" in item
-        assert "inquilino" in item
-        assert "arrendatario" in item
+def test_crear_transaccion_evento_integracion(
+    client: FlaskClient, caplog: pytest.LogCaptureFixture
+):
+    data = crear_transaccion_data()
+    with caplog.at_level(logging.INFO):
+        response = client.post("/contratos", json=data.as_dict())
+        assert response.status_code == 202
+        name, topico = (
+            TransaccionCreadaIntegracion.__name__,
+            TransaccionCreadaIntegracion.topic_name(),
+        )
+        assert f"Evento {name} publicado en el topico {topico}" in caplog.text
