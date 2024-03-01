@@ -27,14 +27,11 @@ class Transaccion(AgregacionRaiz):
         )
 
         self.agregar_evento_integracion(
-            EventoIntegracion(
-                topico=TransaccionCreadaIntegracion.topic_name(),
-                evento=TransaccionCreadaIntegracion(
-                    id=str(uuid4()),
-                    fecha_evento=self.fecha_creacion.isoformat(),
-                    id_transaccion=self.id.__str__(),
-                    valor=self.valor.valor,
-                    fecha_creacion=self.fecha_creacion.isoformat(),
-                ),
-            )
+            evento=TransaccionCreadaIntegracion(
+                id=str(uuid4()),
+                fecha_evento=self.fecha_creacion.isoformat(),
+                id_transaccion=self.id.__str__(),
+                valor=self.valor.valor,
+                fecha_creacion=self.fecha_creacion.isoformat(),
+            ),
         )

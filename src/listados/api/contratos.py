@@ -6,7 +6,7 @@ from listados.modulos.contratos.aplicacion.queries.obtener_listado_contratos imp
 from listados.seedwork.aplicacion.queries import ejecutar_query
 from listados.modulos.contratos.aplicacion.mapeadores import MapeadorTransaccionDTOJson
 from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
-    CrearTransaccion,
+    ComandoCrearTransaccion,
 )
 from listados.seedwork.aplicacion.comandos import ejecutar_commando
 from listados.seedwork.dominio.excepciones import ExcepcionDominio
@@ -22,12 +22,12 @@ def crear_transaccion():
 
         transaccion_dto = mapeador.externo_a_dto(transaccion_dict)
 
-        comando = CrearTransaccion(
-            transaccion_dto.valor,
-            transaccion_dto.comprador,
-            transaccion_dto.vendedor,
-            transaccion_dto.inquilino,
-            transaccion_dto.arrendatario,
+        comando = ComandoCrearTransaccion(
+            valor=transaccion_dto.valor.valor,
+            comprador=transaccion_dto.comprador,
+            vendedor=transaccion_dto.vendedor,
+            inquilino=transaccion_dto.inquilino,
+            arrendatario=transaccion_dto.arrendatario,
         )
         ejecutar_commando(comando)
         return Response("{}", status=202, mimetype="application/json")

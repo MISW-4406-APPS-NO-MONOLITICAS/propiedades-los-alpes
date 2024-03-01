@@ -3,10 +3,6 @@ from listados.seedwork.aplicacion.dto import DTO
 from listados.modulos.contratos.dominio.objetos_valor import Valor
 
 
-@dataclass(frozen=True)
-class Valor(DTO):
-    valor: float
-
 
 @dataclass(frozen=True)
 class TransaccionDTO(DTO):

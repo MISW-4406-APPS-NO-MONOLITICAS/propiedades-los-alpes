@@ -7,7 +7,7 @@ from listados.modulos.contratos.dominio.eventos import TransaccionCreadaIntegrac
 
 consumidores = [
     Consumidor(
-        topico=TransaccionCreadaIntegracion.topic_name(),
+        topico=TransaccionCreadaIntegracion().topic_name(),
         mensaje=TransaccionCreadaIntegracion,
         handler=TransaccionCreadaIntegracionHandler,
     ).start,

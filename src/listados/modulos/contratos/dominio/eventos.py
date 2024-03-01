@@ -14,12 +14,11 @@ class TransaccionCreada(EventoDominio):
     fecha_creacion: datetime = field(default_factory=datetime.now)
 
 
-class TransaccionCreadaIntegracion(schema.Record):
+class TransaccionCreadaIntegracion(EventoIntegracion):
     id = schema.String(required=True)
     fecha_evento = schema.String(required=True)
     id_transaccion = schema.String(required=True)
     valor = schema.Float(required=True)
 
-    @staticmethod
-    def topic_name():
+    def topic_name(self):
         return "transaccion_creada"

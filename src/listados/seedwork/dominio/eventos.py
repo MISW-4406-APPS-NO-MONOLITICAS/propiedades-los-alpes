@@ -13,9 +13,6 @@ class EventoDominio:
     fecha_evento: datetime = field(default=datetime.now())
 
 
-# Este es el objeto que usamos para pasarle al despachador,
-# simplemente tiene un tópico y el evento
-@dataclass
-class EventoIntegracion:
-    topico: str
-    evento: schema.Record
+class EventoIntegracion(schema.Record):
+    def topic_name(self) -> str:
+        raise ValueError("La subclase debe implementar el método topic_name")

@@ -94,7 +94,7 @@ class UnidadTrabajo:
                 evento, EventoIntegracion
             ), "Debe ser un evento de integracion"
             logger.info(
-                f"Despachando evento integracion: {evento.evento.__class__.__name__} en signal Integracion"
+                f"Despachando evento integracion: {evento.__class__.__name__} en signal Integracion"
             )
             dispatcher.send(signal="Integracion", evento=evento)
 

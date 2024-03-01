@@ -4,6 +4,8 @@ import pulsar
 import pulsar.schema as schema
 from pydispatch import dispatcher
 from listados.config.logger import logger
+from listados.seedwork.aplicacion.comandos import Comando
+from listados.seedwork.dominio.eventos import EventoIntegracion
 
 logger = logging.getLogger("pulsar")
 
@@ -20,16 +22,19 @@ class Despachador:
 
     def _publicar_mensaje(self, topico: str, evento: schema.Record):
         cliente = get_pulsar_client()
-        self.logger.info(f"Publicando evento {type(evento).__name__} en el topico {topico}")
+        self.logger.info(f"Publicando {type(evento).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
             topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
         )
         publicador.send(evento)
-        self.logger.info(f"Evento {type(evento).__name__} publicado en el topico {topico}")
+        self.logger.info(f"{type(evento).__name__} publicado en el topico {topico}")
         cliente.close()
 
-    def publicar_evento(self, evento):
-        self._publicar_mensaje(evento.topico, evento.evento)
+    def publicar_evento(self, evento: EventoIntegracion):
+        self._publicar_mensaje(evento.topic_name(), evento)
+
+    def publicar_comando(self, comando: Comando):
+        self._publicar_mensaje(comando.topic_name(), comando)
 
 
 despachador = Despachador()
@@ -39,12 +44,16 @@ def comenzar_despachador_eventos_integracion_a_pulsar():
     dispatcher.connect(despachador.publicar_evento, signal="Integracion")
 
 
+def comenzar_despachador_coamndos_a_pulsar():
+    dispatcher.connect(despachador.publicar_comando, signal="Comando")
+
+
 class Consumidor:
-    mensaje: schema.Record
+    mensaje: EventoIntegracion | Comando
     topico: str
     handler: Callable
 
-    def __init__(self, topico: str, mensaje: schema.Record, handler: Callable):
+    def __init__(self, topico: str, mensaje: EventoIntegracion | Comando, handler: Callable):
         self.topico = topico
         self.mensaje = mensaje
         self.handler = handler

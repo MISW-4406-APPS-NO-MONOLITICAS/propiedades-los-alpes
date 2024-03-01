@@ -2,7 +2,10 @@ import os
 
 from flask import Flask
 from pydispatch.saferef import sys
-from listados.config.pulsar import comenzar_despachador_eventos_integracion_a_pulsar
+from listados.config.pulsar import (
+    comenzar_despachador_eventos_integracion_a_pulsar,
+    comenzar_despachador_coamndos_a_pulsar,
+)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,6 +14,7 @@ def registrar_handlers_eventos_dominio():
     from listados.modulos.propiedades.aplicacion.handlers import (
         registrar as handler_propiedades,
     )
+
     handler_propiedades()
 
 
@@ -53,6 +57,10 @@ def create_app(configuracion={}):
 
     # Escucha los eventos de integración disparados por el uow, y los envía a los tópicos
     comenzar_despachador_eventos_integracion_a_pulsar()
+
+    # Escucha los comandos disparados por la aplicación y los envía a los tópicos
+    comenzar_despachador_coamndos_a_pulsar()
+
     # Cada consumidor tiene su propio proceso donde escucha un tópico con un esquema
     comenzar_procesos_consumidores_de_pulsar(app)
 

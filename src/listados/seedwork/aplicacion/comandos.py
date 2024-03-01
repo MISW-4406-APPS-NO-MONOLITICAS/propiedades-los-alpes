@@ -2,14 +2,12 @@ from dataclasses import asdict, dataclass
 from functools import singledispatch
 from abc import ABC, abstractmethod
 from typing import Any, Type
+import pulsar.schema as schema
 
 
-@dataclass
-class Comando:
-    ...
-
-    def as_dict(self):
-        return asdict(self)
+class Comando(schema.Record):
+    def topic_name(self) -> str:
+        raise ValueError("La subclase debe implementar el método topic_name")
 
 
 class ComandoHandler(ABC):

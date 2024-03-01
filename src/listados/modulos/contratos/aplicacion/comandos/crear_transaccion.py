@@ -4,21 +4,33 @@ from listados.seedwork.aplicacion.comandos import Comando
 from listados.seedwork.aplicacion.comandos import ejecutar_commando as comando
 from listados.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from listados.modulos.contratos.aplicacion.dto import TransaccionDTO, Valor
+import pulsar.schema as schema
 
 
-@dataclass
-class CrearTransaccion(Comando):
-    valor: Valor
-    comprador: str
-    vendedor: str
-    inquilino: str
-    arrendatario: str
+class ComandoCrearTransaccion(Comando):
+    valor = schema.Float()
+    comprador = schema.String()
+    vendedor = schema.String()
+    inquilino = schema.String()
+    arrendatario = schema.String()
+
+    def topic_name(self):
+        return "crear_transaccion"
+
+    def as_dict(self):
+        return {
+            "valor": self.valor,
+            "comprador": self.comprador,
+            "vendedor": self.vendedor,
+            "inquilino": self.inquilino,
+            "arrendatario": self.arrendatario,
+        }
 
 
-class CrearTransaccionHandler(BaseHandler):
-    def handle(self, comando: CrearTransaccion):
+class ComandoCrearTransaccionHandler(BaseHandler):
+    def handle(self, comando: ComandoCrearTransaccion):
         transaccion_dto = TransaccionDTO(
-            valor=comando.valor,
+            valor=Valor(comando.valor),
             comprador=comando.comprador,
             vendedor=comando.vendedor,
             inquilino=comando.inquilino,
@@ -35,7 +47,7 @@ class CrearTransaccionHandler(BaseHandler):
         UnidadTrabajoPuerto.commit()
 
 
-@comando.register(CrearTransaccion)
-def ejecutar_comando_crear_transaccion(comando: CrearTransaccion):
-    handler = CrearTransaccionHandler()
+@comando.register(ComandoCrearTransaccion)
+def ejecutar_comando_crear_transaccion(comando: ComandoCrearTransaccion):
+    handler = ComandoCrearTransaccionHandler()
     handler.handle(comando)

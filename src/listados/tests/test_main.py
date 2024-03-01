@@ -2,7 +2,7 @@ from uuid import uuid4
 from flask.testing import FlaskClient
 from pulsar import logging
 from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
-    CrearTransaccion,
+    ComandoCrearTransaccion,
 )
 from listados.modulos.contratos.aplicacion.handlers import (
     TransaccionCreadaIntegracionHandler,
@@ -36,7 +36,7 @@ def client(app):
 
 
 def crear_transaccion_data():
-    return CrearTransaccion(
+    return ComandoCrearTransaccion(
         valor=faker.random_number(),
         comprador=faker.name(),
         vendedor=faker.name(),
@@ -68,9 +68,9 @@ def test_crear_transaccion_evento_integracion(
         assert response.status_code == 202
         name, topico = (
             TransaccionCreadaIntegracion.__name__,
-            TransaccionCreadaIntegracion.topic_name(),
+            TransaccionCreadaIntegracion().topic_name(),
         )
-        assert f"Evento {name} publicado en el topico {topico}" in caplog.text
+        assert f"{name} publicado en el topico {topico}" in caplog.text
 
     repositorio = RepositorioTrasaccionesDB()
     result = repositorio.obtener_por_columna("comprador", data.comprador)[0]
