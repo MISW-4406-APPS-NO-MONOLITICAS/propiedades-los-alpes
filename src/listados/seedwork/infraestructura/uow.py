@@ -20,6 +20,8 @@ class Batch:
         self.kwargs = kwargs
 
 
+logger = logger.getChild('uow')
+
 class UnidadTrabajo:
     batches: list[Batch] = []
 
@@ -45,6 +47,7 @@ class UnidadTrabajo:
 
     @abstractmethod
     def _limpiar_batches(self):
+        logger.info("Limpiando batches")
         self.batches = []
 
     @abstractmethod
@@ -56,11 +59,13 @@ class UnidadTrabajo:
         raise NotImplementedError
 
     def commit(self):
+        logger.info("Committing")
         self._publicar_eventos_post_commit()
         self._limpiar_batches()
 
     @abstractmethod
     def rollback(self, savepoint=None):
+        logger.info("Rolling back")
         self._limpiar_batches()
 
     def registrar_batch(self, operacion, *args, lock=Lock.PESIMISTA, **kwargs):
