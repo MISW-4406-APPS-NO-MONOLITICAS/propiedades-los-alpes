@@ -23,6 +23,7 @@ faker = faker.Faker()
 def app():
     app = create_app()
     yield app
+    # Termina los procesos que están escuchando los eventos de pulsar (broker)
     processes = app.config.get("processes")
     if processes:
         for process in processes:

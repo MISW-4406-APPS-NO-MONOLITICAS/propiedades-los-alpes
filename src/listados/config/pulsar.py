@@ -15,14 +15,17 @@ def get_pulsar_client() -> pulsar.Client:
 
 
 class Despachador:
+    def __init__(self):
+        self.logger = logger.getChild("despachador")
+
     def _publicar_mensaje(self, topico: str, evento: schema.Record):
         cliente = get_pulsar_client()
-        logger.info(f"Publicando evento {type(evento).__name__} en el topico {topico}")
+        self.logger.info(f"Publicando evento {type(evento).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
             topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
         )
         publicador.send(evento)
-        logger.info(f"Evento {type(evento).__name__} publicado en el topico {topico}")
+        self.logger.info(f"Evento {type(evento).__name__} publicado en el topico {topico}")
         cliente.close()
 
     def publicar_evento(self, evento):
@@ -32,7 +35,7 @@ class Despachador:
 despachador = Despachador()
 
 
-def comenzar_despachador_eventos_integracion():
+def comenzar_despachador_eventos_integracion_a_pulsar():
     dispatcher.connect(despachador.publicar_evento, signal="Integracion")
 
 
@@ -45,9 +48,10 @@ class Consumidor:
         self.topico = topico
         self.mensaje = mensaje
         self.handler = handler
+        self.logger = logger.getChild("consumidor")
 
     def start(self):
-        logger.info(f"Comenzando a consumir del topico {self.topico}")
+        self.logger.info(f"Comenzando a consumir del topico {self.topico}")
         cliente = get_pulsar_client()
         consumidor = cliente.subscribe(
             self.topico,
@@ -57,13 +61,13 @@ class Consumidor:
         )
         while True:
             res = consumidor.receive()
-            logger.info(f"Recibido mensaje del topico {self.topico}")
+            self.logger.info(f"Recibido mensaje del topico {self.topico}")
             value = res.value()
-            logger.info(
+            self.logger.info(
                 f"Mensaje deserializado de tipo {value.__class__.__name__} del topico {self.topico}"
             )
             self.handler(value)
             consumidor.acknowledge(res)
-            logger.info(
+            self.logger.info(
                 f"Acknowledged mensaje {value.__class__.__name__} del topico {self.topico}"
             )

@@ -19,8 +19,15 @@ class Batch:
         self.lock = lock
         self.kwargs = kwargs
 
+    def run(self):
+        logger.info(
+            f"Ejecutando operacion {self.operacion.__name__}"
+        )
+        return self.operacion(*self.args, **self.kwargs)
 
-logger = logger.getChild('uow')
+
+logger = logger.getChild("uow")
+
 
 class UnidadTrabajo:
     batches: list[Batch] = []

@@ -11,7 +11,7 @@ class UnidadTrabajoSQLAlchemy(UnidadTrabajo):
 
     def commit(self):
         for batch in self.batches:
-            batch.operacion(*batch.args, **batch.kwargs)
+            batch.run()
 
         db_session.commit()
         super().commit()

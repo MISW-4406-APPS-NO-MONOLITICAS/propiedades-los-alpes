@@ -1,10 +1,9 @@
 import json
-from flask import request, Response
+from flask import Blueprint, request, Response
 from listados.modulos.contratos.aplicacion.queries.obtener_listado_contratos import (
     ObtenerTransacciones,
 )
 from listados.seedwork.aplicacion.queries import ejecutar_query
-import listados.seedwork.presentacion.api as api
 from listados.modulos.contratos.aplicacion.mapeadores import MapeadorTransaccionDTOJson
 from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
     CrearTransaccion,
@@ -12,12 +11,11 @@ from listados.modulos.contratos.aplicacion.comandos.crear_transaccion import (
 from listados.seedwork.aplicacion.comandos import ejecutar_commando
 from listados.seedwork.dominio.excepciones import ExcepcionDominio
 
-bp = api.crear_blueprint("contratos", "/contratos")
-
+blueprint = Blueprint('contratos', __name__, url_prefix='/contratos')
 mapeador = MapeadorTransaccionDTOJson()
 
 
-@bp.route("", methods=("POST",))
+@blueprint.route("", methods=("POST",))
 def crear_transaccion():
     try:
         transaccion_dict = request.json
@@ -39,7 +37,7 @@ def crear_transaccion():
         )
 
 
-@bp.route("", methods=("GET",))
+@blueprint.route("", methods=("GET",))
 def listar_transacciones():
     result = ejecutar_query(ObtenerTransacciones())
     return [mapeador.dto_a_externo(dto) for dto in result.resultado]

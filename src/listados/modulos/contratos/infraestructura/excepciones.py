@@ -1,6 +1,3 @@
-""" Excepciones para la capa de infrastructura del dominio de contratos
-"""
-
 from listados.seedwork.dominio.excepciones import ExcepcionFabrica
 
 

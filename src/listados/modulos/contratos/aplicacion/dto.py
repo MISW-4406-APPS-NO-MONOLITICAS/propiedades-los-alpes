@@ -18,17 +18,3 @@ class TransaccionDTO(DTO):
     vendedor: str = field(default_factory=str)
     inquilino: str = field(default_factory=str)
     arrendatario: str = field(default_factory=str)
-
-
-"""
-
-@dataclass(frozen=True)
-class VentaDto(TransaccionDto):
-    comprador: str = field(default_factory=str)
-    vendedor: str = field(default_factory=str)
-
-@dataclass(frozen=True)
-class AlquilerDto(TransaccionDto):
-    inquilino: str = field(default_factory=str)
-    arrendatario: str = field(default_factory=str)
-"""
