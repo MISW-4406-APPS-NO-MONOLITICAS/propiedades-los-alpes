@@ -143,6 +143,26 @@ Importante para cuando se cambia el esquema del tópico.
 docker compose --profile full down --volumes
 ```
 
+### Debugging
+
+Agregar pdb en una linea
+
+```python
+__import__('pdb').set_trace()
+```
+
+Reiniciar el contenedor
+
+```bash
+docker restart --signal=SIGKILL contratos
+```
+
+Attach al contendores
+
+```bash
+docker attach contratos
+```
+
 ## Escenarios de calidad
 
 Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/16Y6xnwHJ_i88_a9BrG8Z5BUw_KjdHqWL/view?usp=sharing)

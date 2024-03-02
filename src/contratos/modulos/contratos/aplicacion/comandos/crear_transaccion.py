@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from contratos.config.logger import logger
 from .base import BaseHandler
 from contratos.seedwork.aplicacion.comandos import Comando
 from contratos.seedwork.aplicacion.comandos import ejecutar_commando as comando
@@ -29,6 +30,7 @@ class ComandoCrearTransaccion(Comando):
 
 class ComandoCrearTransaccionHandler(BaseHandler):
     def handle(self, comando: ComandoCrearTransaccion):
+        logger.info(f"Manejando comando {comando.__class__.__name__}")
         transaccion_dto = TransaccionDTO(
             valor=Valor(comando.valor),
             comprador=comando.comprador,
@@ -40,6 +42,7 @@ class ComandoCrearTransaccionHandler(BaseHandler):
         transaccion.crear_transaccion()  # Genera los eventos
 
         # Se programa en el uow
+        logger.info(f"Inscribiendo en unidad de trabajo del comando {comando.__class__.__name__}")
         UnidadTrabajoPuerto.registrar_batch(
             self.repositorio_transaciones.agregar, transaccion
         )

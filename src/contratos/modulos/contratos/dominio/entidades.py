@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contratos.config.logger import logger
 from dataclasses import dataclass, field
 from uuid import uuid4
 from contratos.modulos.contratos.dominio.objetos_valor import Valor
@@ -20,6 +21,9 @@ class Transaccion(AgregacionRaiz):
     arrendatario: str = field(default_factory=str)
 
     def crear_transaccion(self):
+        logger.info(
+            f"Creando transaccion, agregando evento de dominio {type(TransaccionCreada).__name__}"
+        )
         self.agregar_evento(
             TransaccionCreada(
                 id_transaccion=self.id, fecha_creacion=self.fecha_creacion
