@@ -1,11 +1,11 @@
 import random
 import uuid
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
-from contratos.config.logger import logger
-from contratos.modulos.contratos.infraestructura.repositorios import (
+from listados.modulos.propiedades.dominio.eventos import TransaccionCreadaIntegracion
+from listados.config.logger import logger
+from listados.modulos.propiedades.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 )
-from contratos.modulos.contratos.aplicacion.comandos.crear_transaccion import (
+from listados.modulos.propiedades.aplicacion.comandos.crear_transaccion import (
     ComandoCrearTransaccion,
 )
 from pydispatch import dispatcher

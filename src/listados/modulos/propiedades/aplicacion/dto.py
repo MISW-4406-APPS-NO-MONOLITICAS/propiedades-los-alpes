@@ -5,7 +5,7 @@ from contratos.modulos.contratos.dominio.objetos_valor import Valor
 
 
 @dataclass(frozen=True)
-class TransaccionDTO(DTO):
+class PropiedadDTO(DTO):
     id: str = field(default_factory=str)
     fecha_creacion: str = field(default_factory=str)
     fecha_actualizacion: str = field(default_factory=str)

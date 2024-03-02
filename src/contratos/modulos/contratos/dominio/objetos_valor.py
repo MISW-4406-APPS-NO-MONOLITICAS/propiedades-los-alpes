@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from contratos.seedwork.dominio.objetos_valor import ObjetoValor
+from listados.seedwork.dominio.objetos_valor import ObjetoValor
 
 
 @dataclass(frozen=True)

@@ -1,7 +1,7 @@
 from pydispatch import dispatcher
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreada
-from contratos.seedwork.aplicacion.handlers import Handler
-from contratos.config.logger import logger
+from listados.modulos.propiedades.dominio.eventos import TransaccionCreada
+from listados.seedwork.aplicacion.handlers import Handler
+from listados.config.logger import logger
 
 logger = logger.getChild("propiedades-handler")
 

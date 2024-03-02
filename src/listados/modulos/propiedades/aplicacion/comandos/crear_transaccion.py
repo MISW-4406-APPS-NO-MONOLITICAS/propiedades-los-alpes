@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from contratos.config.logger import logger
+from listados.config.logger import logger
 from .base import BaseHandler
-from contratos.seedwork.aplicacion.comandos import Comando
-from contratos.seedwork.aplicacion.comandos import ejecutar_commando as comando
-from contratos.seedwork.infraestructura.uow import UnidadTrabajoPuerto
-from contratos.modulos.contratos.aplicacion.dto import TransaccionDTO, Valor
+from listados.seedwork.aplicacion.comandos import Comando
+from listados.seedwork.aplicacion.comandos import ejecutar_commando as comando
+from listados.seedwork.infraestructura.uow import UnidadTrabajoPuerto
+from listados.modulos.propiedades.aplicacion.dto import TransaccionDTO, Valor
 import pulsar.schema as schema
 
 
@@ -32,7 +32,7 @@ class ComandoCrearTransaccionHandler(BaseHandler):
     def handle(self, comando: ComandoCrearTransaccion):
         logger.info(f"Manejando comando {comando.__class__.__name__}")
         transaccion_dto = TransaccionDTO(
-            valor=Valor(comando.valor),
+            valor=Valor(comando.valor), # type: ignore
             comprador=comando.comprador,
             vendedor=comando.vendedor,
             inquilino=comando.inquilino,

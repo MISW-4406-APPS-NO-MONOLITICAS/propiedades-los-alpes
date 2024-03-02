@@ -1,5 +1,5 @@
 from abc import ABC
-from contratos.seedwork.dominio.repositorios import Repositorio
+from listados.seedwork.dominio.repositorios import Repositorio
 
 
 class RepositorioTransacciones(Repositorio, ABC):

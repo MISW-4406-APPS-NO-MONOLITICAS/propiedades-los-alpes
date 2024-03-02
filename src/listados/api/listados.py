@@ -4,7 +4,7 @@ from listados.modulos.propiedades.aplicacion.queries.obtener_listado_contratos i
     ObtenerTransacciones,
 )
 from listados.seedwork.aplicacion.queries import ejecutar_query
-from listados.modulos.propiedades.aplicacion.mapeadores import MapeadorTransaccionDTOJson
+from listados.modulos.propiedades.aplicacion.mapeadores import MapeadorPropiedadDTOJson
 from listados.modulos.propiedades.aplicacion.comandos.crear_transaccion import (
     ComandoCrearTransaccion,
 )
@@ -12,15 +12,15 @@ from contratos.seedwork.aplicacion.comandos import ejecutar_commando
 from contratos.seedwork.dominio.excepciones import ExcepcionDominio
 
 blueprint = Blueprint('contratos', __name__, url_prefix='/contratos')
-mapeador = MapeadorTransaccionDTOJson()
+mapeador = MapeadorPropiedadDTOJson()
 
 
 @blueprint.route("", methods=("POST",))
-def crear_transaccion():
+def crear_propiedad():
     try:
-        transaccion_dict = request.json
+        propiedad_dict = request.json
 
-        transaccion_dto = mapeador.externo_a_dto(transaccion_dict)
+        transaccion_dto = mapeador.externo_a_dto(propiedad_dict)
 
         comando = ComandoCrearTransaccion(
             valor=transaccion_dto.valor.valor,

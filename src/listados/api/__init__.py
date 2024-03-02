@@ -11,11 +11,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def registrar_handlers_eventos_dominio():
-    from listados.modulos.propiedades.aplicacion.handlers import (
-        registrar as handler_propiedades,
+    from listados.modulos.arrendamiento.aplicacion.handlers import (
+        registrar as handler_arrendamiento,
     )
 
-    handler_propiedades()
+    handler_arrendamiento()
 
 
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):

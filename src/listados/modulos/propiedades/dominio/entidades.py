@@ -1,11 +1,11 @@
 from __future__ import annotations
-from contratos.config.logger import logger
+from listados.config.logger import logger
 from dataclasses import dataclass, field
 from uuid import uuid4
-from contratos.modulos.contratos.dominio.objetos_valor import Valor
+from listados.modulos.propiedades.dominio.objetos_valor import Valor
 
-from contratos.seedwork.dominio.entidades import AgregacionRaiz, Entidad
-from contratos.modulos.contratos.dominio.eventos import (
+from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
+from listados.modulos.propiedades.dominio.eventos import (
     TransaccionCreada,
     TransaccionCreadaIntegracion,
 )
@@ -42,3 +42,6 @@ class Transaccion(AgregacionRaiz):
                 inquilino=self.inquilino,
             ),
         )
+
+@dataclass
+class

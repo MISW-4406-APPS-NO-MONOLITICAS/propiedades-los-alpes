@@ -1,23 +1,23 @@
-from contratos.config.pulsar import Consumidor
-from contratos.modulos.contratos.aplicacion.comandos.crear_transaccion import (
+from listados.config.pulsar import Consumidor
+from listados.modulos.propiedades.aplicacion.comandos.crear_transaccion import (
     ComandoCrearTransaccion,
     ComandoCrearTransaccionHandler,
 )
-from contratos.modulos.contratos.aplicacion.handlers import (
+from listados.modulos.propiedades.aplicacion.handlers import (
     TransaccionCreadaIntegracionHandler,
 )
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
+from listados.modulos.propiedades.dominio.eventos import TransaccionCreadaIntegracion
 
 
 consumidores = [
     Consumidor(
         topico=TransaccionCreadaIntegracion().topic_name(),
-        mensaje=TransaccionCreadaIntegracion,
+        mensaje=TransaccionCreadaIntegracion, # type: ignore
         handler=TransaccionCreadaIntegracionHandler,
     ).start,
     Consumidor(
         topico=ComandoCrearTransaccion().topic_name(),
-        mensaje=ComandoCrearTransaccion,
+        mensaje=ComandoCrearTransaccion, # type: ignore
         handler=ComandoCrearTransaccionHandler().handle,
     ).start,
 ]

@@ -1,12 +1,12 @@
 from listados.seedwork.dominio.repositorios import Mapeador
 from listados.modulos.propiedades.dominio.entidades import Transaccion
 from listados.modulos.propiedades.aplicacion.dto import Valor
-from .dto import TransaccionDTO
+from .dto import PropiedadDTO
 
 
-class MapeadorTransaccionDTOJson(Mapeador):
-    def externo_a_dto(self, externo: dict) -> TransaccionDTO:
-        transaccion_dto = TransaccionDTO(
+class MapeadorPropiedadDTOJson(Mapeador):
+    def externo_a_dto(self, externo: dict) -> PropiedadDTO:
+        transaccion_dto = PropiedadDTO(
             id="",
             fecha_creacion="",
             fecha_actualizacion="",
@@ -18,7 +18,7 @@ class MapeadorTransaccionDTOJson(Mapeador):
         )
         return transaccion_dto
 
-    def dto_a_externo(self, dto: TransaccionDTO) -> dict:
+    def dto_a_externo(self, dto: PropiedadDTO) -> dict:
         return {
             "id": dto.id,
             "fecha_creacion": dto.fecha_creacion,
@@ -40,7 +40,7 @@ class MapeadorTransaccionDTOJson(Mapeador):
 class MapeadorTransaccion(Mapeador):
     _FORMATO_FECHA = "%Y-%m-%dT%H:%M:%SZ"
 
-    def entidad_a_dto(self, entidad: Transaccion) -> TransaccionDTO:
+    def entidad_a_dto(self, entidad: Propiedad) -> PropiedadDTO:
         _id = str(entidad.id)
         fecha_creacion = entidad.fecha_creacion.strftime(self._FORMATO_FECHA)
         fecha_actualizacion = entidad.fecha_actualizacion.strftime(self._FORMATO_FECHA)

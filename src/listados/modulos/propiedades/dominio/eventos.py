@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import uuid
 
-from contratos.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
+from listados.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
 from datetime import datetime
 import pulsar.schema as schema
 
