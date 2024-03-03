@@ -8,8 +8,7 @@ from listados.modulos.propiedades.dominio.objetos_valor import Valor
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
 from listados.modulos.propiedades.dominio.eventos import (
     PropiedadCreada,
-    PropiedadCreadaIntegracion,
-    EstadoPropiedadActualizado
+    PropiedadCreadaIntegracion
 )
 from contratos.seedwork.dominio.eventos import EventoIntegracion
 
@@ -52,15 +51,6 @@ class Propiedad(AgregacionRaiz):
             )
         )
 
-    def actualizar_estado(self, estado: str):
-        logger.info(
-            f"Actualizando estado de propiedad, agregando evento de dominio {type(EstadoPropiedadActualizado).__name__}"
-        )
-        self.agregar_evento(
-            EstadoPropiedadActualizado(
-                id_propiedad=self.id,
-                estado=estado
-            )
-        )
+    
 
 

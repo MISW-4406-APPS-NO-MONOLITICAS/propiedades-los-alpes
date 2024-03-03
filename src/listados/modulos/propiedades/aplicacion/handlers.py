@@ -2,6 +2,7 @@ import random
 import uuid
 from listados.modulos.propiedades.dominio.eventos import  PropiedadCreadaIntegracion
 from listados.config.logger import logger
+from listados.seedwork.aplicacion.handlers import Handler
 from listados.modulos.propiedades.infraestructura.repositorios import (
     RepositorioPropiedadesDB,
 )
@@ -9,6 +10,20 @@ from listados.modulos.propiedades.aplicacion.comandos.crear_propiedad import (
     ComandoCrearPropiedad,
 )
 from pydispatch import dispatcher
+
+
+
+class HandlerArrendamientoDominio(Handler):
+    @staticmethod
+    def handle_estado_propiedad_actualizado(evento):
+        logger.info(f"Handling evento de dominio {type(evento).__name__}")
+
+
+def registrar():
+    dispatcher.connect(
+        HandlerArrendamientoDominio.handle_estado_propiedad_actualizado,
+        signal="EstadoPropiedadActualizadoDominio",
+    )
 
 
 class PropiedadCreadaIntegracionHandler:

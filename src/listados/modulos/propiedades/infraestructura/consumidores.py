@@ -9,7 +9,7 @@ from listados.modulos.propiedades.aplicacion.handlers import (
 from listados.modulos.propiedades.dominio.eventos import PropiedadCreadaIntegracion
 
 
-consumidores = [
+consumidores_propiedades = [
     Consumidor(
         topico=PropiedadCreadaIntegracion().topic_name(),
         mensaje=PropiedadCreadaIntegracion, # type: ignore
@@ -19,5 +19,5 @@ consumidores = [
         topico=ComandoCrearPropiedad().topic_name(),
         mensaje=ComandoCrearPropiedad, # type: ignore
         handler=ComandoCrearPropiedadHandler().handle,
-    ).start,
+    ).start
 ]

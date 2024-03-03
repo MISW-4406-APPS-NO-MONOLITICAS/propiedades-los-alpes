@@ -1,19 +1,34 @@
+import random
 from pydispatch import dispatcher
-from listados.modulos.propiedades.dominio.eventos import TransaccionCreada
 from listados.seedwork.aplicacion.handlers import Handler
+from listados.modulos.arrendamiento.dominio.eventos import  ContratoPropiedadArrendadaIntegracion
 from listados.config.logger import logger
 
-logger = logger.getChild("propiedades-handler")
+logger = logger.getChild("arrendamiento-handler")
 
 
-class HandlerTransaccionDominio(Handler):
-    @staticmethod
-    def handle_transaccion_creada(evento):
-        logger.info(f"Handling evento de dominio {type(evento).__name__}")
+class ContratoPropiedadArrendadaIntegracionHandler:
+    def __init__(self, event: ContratoPropiedadArrendadaIntegracion):
+        logger.info(
+            f"Handling evento {type(event).__name__}, id_propiedad: {event.id_propiedad}"
+        )
+        
 
 
-def registrar():
-    dispatcher.connect(
-        HandlerTransaccionDominio.handle_transaccion_creada,
-        signal="TransaccionCreadaDominio",
-    )
+    
+
+
+# def example_enviar_comando():
+#     from faker import Faker
+#     faker = Faker()
+#     comando = ComandoCrearPropiedad(
+#         tipo_construccion=faker.word(),
+#         estado=faker.boolean(),
+#         area=faker.pyfloat(),
+#         direccion=faker.address(),
+#         lote=faker.random_int(min=1, max=100),
+#         compania=faker.company(),
+#         fecha_registro=faker.date_this_year(),
+#         fecha_actualizacion=faker.date_this_year(),
+#     )
+#     dispatcher.send(signal="Comando", comando=comando)
