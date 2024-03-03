@@ -7,36 +7,40 @@ from listados.modulos.propiedades.dominio.objetos_valor import (
     Valor,
 )
 from listados.modulos.propiedades.dominio.entidades import (
-    Transaccion,
+    Propiedad,
 )
-from .dto import TransaccionDB
+from .dto import PropiedadDB
 
 
-class MapeadorTransaccionDB(Mapeador):
+class MapeadorPropiedadDB(Mapeador):
     _FORMATO_FECHA = "%Y-%m-%d %H:%M:%S"
 
-    def dto_a_entidad(self, dto: TransaccionDB) -> Transaccion:
-        return Transaccion(
+    def dto_a_entidad(self, dto: PropiedadDB) -> Propiedad:
+        return Propiedad(
             id=uuid.UUID(dto.id),
+           
+            tipo_construccion=dto.tipo_construccion,
+            estado=dto.estado,
+            area=dto.area,
+            direccion=dto.direccion,
+            lote=dto.lote,
+            compania=dto.compania,
             fecha_creacion=dto.fecha_creacion,
-            fecha_actualizacion=dto.fecha_actualizacion,
-            valor=Valor(valor=dto.valor),
-            comprador=dto.comprador,
-            vendedor=dto.vendedor,
-            inquilino=dto.inquilino,
-            arrendatario=dto.arrendatario,
+            fecha_actualizacion=dto.fecha_actualizacion
         )
 
-    def entidad_a_dto(self, entidad: Transaccion) -> TransaccionDB:
-        return TransaccionDB(
+    def entidad_a_dto(self, entidad: Propiedad) -> PropiedadDB:
+        return PropiedadDB(
             id=str(entidad.id),
             fecha_creacion=entidad.fecha_creacion.strftime(self._FORMATO_FECHA),
             fecha_actualizacion=entidad.fecha_actualizacion.strftime(
                 self._FORMATO_FECHA
             ),
-            valor=entidad.valor.valor,
-            comprador=entidad.comprador,
-            vendedor=entidad.vendedor,
-            inquilino=entidad.inquilino,
-            arrendatario=entidad.arrendatario,
+            tipo_construccion=entidad.tipo_construccion,
+            estado=entidad.estado,
+            area=entidad.area,
+            direccion=entidad.direccion,
+            lote=entidad.lote,
+            compania=entidad.compania
+
         )

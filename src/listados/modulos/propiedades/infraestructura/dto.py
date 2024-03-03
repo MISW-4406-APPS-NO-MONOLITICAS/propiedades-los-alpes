@@ -5,19 +5,21 @@ from sqlalchemy import Float, String, DateTime
 from listados.config.db import Base
 import datetime
 
-class TransaccionDB(Base):
-    __tablename__ = "transacciones"
+class PropiedadDB(Base):
+    __tablename__ = "propiedades"
     id: Mapped[str] = mapped_column(
         String(50),
         primary_key=True,
         nullable=False,
     )
     fecha_creacion: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
-    fecha_actualizacion: Mapped[datetime.datetime] = mapped_column(
-        DateTime, nullable=False
-    )
-    valor: Mapped[float] = mapped_column(Float, nullable=False)
-    comprador: Mapped[str] = mapped_column(String(200), nullable=True)
-    vendedor: Mapped[str] = mapped_column(String(200), nullable=True)
-    inquilino: Mapped[str] = mapped_column(String(200), nullable=True)
-    arrendatario: Mapped[str] = mapped_column(String(200), nullable=True)
+    fecha_actualizacion: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+    tipo_construccion: Mapped[str] = mapped_column(String(50), nullable=False)
+    estado: Mapped[bool] = mapped_column(String(50), nullable=False)
+    area: Mapped[float] = mapped_column(Float, nullable=False)
+    direccion: Mapped[str] = mapped_column(String(50), nullable=False)
+    lote: Mapped[int] = mapped_column(String(50), nullable=False)
+    compania: Mapped[str] = mapped_column(String(50), nullable=False)
+    
+
+

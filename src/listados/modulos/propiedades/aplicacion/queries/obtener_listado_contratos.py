@@ -1,5 +1,5 @@
 from listados.modulos.propiedades.infraestructura.repositorios import (
-    RepositorioTrasaccionesDB,
+    RepositorioPropiedadesDB,
 )
 from contratos.seedwork.aplicacion.queries import (
     QueryHandler,
@@ -9,17 +9,17 @@ from contratos.seedwork.aplicacion.queries import (
 from dataclasses import dataclass
 
 
-class ObtenerTransacciones:
+class ObtenerPropiedades:
     pass
 
 @dataclass
-class ObtenerTransaccionesHandler(QueryHandler):
+class ObtenerPropiedadesHandler(QueryHandler):
     def handle(self):
-        repositorio = RepositorioTrasaccionesDB()
+        repositorio = RepositorioPropiedadesDB()
         return QueryResultado(repositorio.obtener_todos())
 
 
-@query.register(ObtenerTransacciones)
-def ejecutar_query_obtener_transacciones(query: ObtenerTransacciones):
-    handler = ObtenerTransaccionesHandler()
+@query.register(ObtenerPropiedades)
+def ejecutar_query_obtener_propiedades(query: ObtenerPropiedades):
+    handler = ObtenerPropiedadesHandler()
     return handler.handle()

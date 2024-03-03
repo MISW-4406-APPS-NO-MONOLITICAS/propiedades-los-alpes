@@ -1,33 +1,38 @@
+import datetime
 from listados.seedwork.dominio.repositorios import Mapeador
-from listados.modulos.propiedades.dominio.entidades import Transaccion
+from listados.modulos.propiedades.dominio.entidades import Propiedad
 from listados.modulos.propiedades.aplicacion.dto import Valor
 from .dto import PropiedadDTO
 
 
 class MapeadorPropiedadDTOJson(Mapeador):
     def externo_a_dto(self, externo: dict) -> PropiedadDTO:
-        transaccion_dto = PropiedadDTO(
+        return PropiedadDTO(
             id="",
-            fecha_creacion="",
-            fecha_actualizacion="",
-            valor=Valor(externo["valor"]),
-            comprador=externo["comprador"],
-            vendedor=externo["vendedor"],
-            inquilino=externo["inquilino"],
-            arrendatario=externo["arrendatario"],
+            tipo_construccion=externo["tipo_construccion"],
+            estado=externo["estado"],
+            area=externo["area"],
+            direccion=externo["direccion"],
+            lote=externo["lote"],
+            compania=externo["compania"],
+            fecha_registro=externo["fecha_registro"],
+            fecha_actualizacion=externo["fecha_actualizacion"]
+
         )
-        return transaccion_dto
+
+        
 
     def dto_a_externo(self, dto: PropiedadDTO) -> dict:
         return {
             "id": dto.id,
-            "fecha_creacion": dto.fecha_creacion,
+            "tipo_construccion": dto.tipo_construccion,
+            "estado": dto.estado,
+            "area": dto.area,
+            "direccion": dto.direccion,
+            "lote": dto.lote,
+            "compania": dto.compania,
+            "fecha_registro": dto.fecha_registro,
             "fecha_actualizacion": dto.fecha_actualizacion,
-            "valor": dto.valor.valor,
-            "comprador": dto.comprador,
-            "vendedor": dto.vendedor,
-            "inquilino": dto.inquilino,
-            "arrendatario": dto.arrendatario,
         }
 
     def dto_a_entidad(self, dto):
@@ -37,35 +42,42 @@ class MapeadorPropiedadDTOJson(Mapeador):
         raise NotImplementedError
 
 
-class MapeadorTransaccion(Mapeador):
+class MapeadorPropiedad(Mapeador):
     _FORMATO_FECHA = "%Y-%m-%dT%H:%M:%SZ"
 
     def entidad_a_dto(self, entidad: Propiedad) -> PropiedadDTO:
         _id = str(entidad.id)
+        tipo_construccion = entidad.tipo_construccion
+        estado = entidad.estado
+        area = entidad.area
+        direccion = entidad.direccion
+        lote = entidad.lote
+        compania = entidad.compania
         fecha_creacion = entidad.fecha_creacion.strftime(self._FORMATO_FECHA)
         fecha_actualizacion = entidad.fecha_actualizacion.strftime(self._FORMATO_FECHA)
-        valor = entidad.valor
-        comprador = entidad.comprador
-        vendedor = entidad.vendedor
-        inquilino = entidad.inquilino
-        arrendatario = entidad.arrendatario
-        return TransaccionDTO(
+
+        return PropiedadDTO(
             _id,
+            tipo_construccion,
+            estado,
+            area,
+            direccion,
+            lote,
+            compania,
             fecha_creacion,
-            fecha_actualizacion,
-            Valor(valor.valor),
-            comprador,
-            vendedor,
-            inquilino,
-            arrendatario,
+            fecha_actualizacion
         )
 
-    def dto_a_entidad(self, dto: TransaccionDTO) -> Transaccion:
-        transaccion = Transaccion(
-            comprador=dto.comprador,
-            vendedor=dto.vendedor,
-            inquilino=dto.inquilino,
-            arrendatario=dto.arrendatario,
+    def dto_a_entidad(self, dto: PropiedadDTO) -> Propiedad:
+        return Propiedad(
+            tipo_construccion=dto.tipo_construccion,
+            estado=dto.estado,
+            area=dto.area,
+            direccion=dto.direccion,
+            lote=dto.lote,
+            compania=dto.compania,
+            fecha_creacion=datetime.datetime.strptime(dto.fecha_registro, self._FORMATO_FECHA),
+            fecha_actualizacion=datetime.datetime.strptime(dto.fecha_actualizacion, self._FORMATO_FECHA)
         )
 
-        return transaccion
+       

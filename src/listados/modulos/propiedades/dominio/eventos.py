@@ -8,20 +8,36 @@ import pulsar.schema as schema
 
 
 @dataclass
-class TransaccionCreada(EventoDominio):
-    id_transaccion: uuid.UUID = field(default_factory=uuid.uuid4)
-    valor: float = field(default_factory=float)
-    fecha_creacion: datetime = field(default_factory=datetime.now)
+class PropiedadCreada(EventoDominio):
+    id_propiedad: uuid.UUID = field(default_factory=uuid.uuid4)
+    fecha_registro: datetime = field(default_factory=datetime.now)
 
 
-class TransaccionCreadaIntegracion(EventoIntegracion):
+@dataclass
+class EstadoPropiedadActualizado(EventoDominio):
+    id_propiedad: uuid.UUID = field(default_factory=uuid.uuid4)
+    estado: str = field(default_factory=str)
+    fecha_actualizacion: datetime = field(default_factory=datetime.now)
+
+
+# class ContratoPropiedadArrendadaIntegracion(EventoIntegracion):
+#     id = schema.String(required=True)
+#     fecha_evento = schema.String(required=True)
+#     id_propiedad = schema.String(required=True)
+    
+#     def topic_name(self):
+#         return "contrato_propiedad_arrendada"
+
+class PropiedadCreadaIntegracion(EventoIntegracion):
     id = schema.String(required=True)
     fecha_evento = schema.String(required=True)
-    id_transaccion = schema.String(required=True)
-    valor = schema.Float(required=True)
-    comprador = schema.String(required=True)
-    vendedor = schema.String(required=True)
-    inquilino = schema.String(required=True)
+    id_propiedad = schema.String(required=True)
+    tipo_construccion = schema.String(required=True)
+    esta_disponible = schema.Boolean(required=True)
+    area = schema.Float(required=True)
+    direccion = schema.String(required=True)
+    lote = schema.Integer(required=True)
+    compania = schema.String(required=True)
 
     def topic_name(self):
-        return "transaccion_creada"
+        return "propiedad_creada"

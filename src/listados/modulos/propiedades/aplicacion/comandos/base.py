@@ -1,16 +1,16 @@
-from listados.modulos.propiedades.dominio.repositorios import RepositorioTransacciones
+from listados.modulos.propiedades.dominio.repositorios import RepositorioPropiedades
 from listados.modulos.propiedades.infraestructura.repositorios import (
-    RepositorioTrasaccionesDB,
+    RepositorioPropiedadesDB,
 )
 from listados.seedwork.aplicacion.comandos import ComandoHandler
-from listados.modulos.propiedades.aplicacion.fabricas import FabricaTransacciones
+from listados.modulos.propiedades.aplicacion.fabricas import FabricaPropiedades
 
 
 class BaseHandler(ComandoHandler):
-    fabrica_transacciones: FabricaTransacciones
-    repositorio_transaciones: RepositorioTransacciones
+    fabrica_propiedades: FabricaPropiedades
+    repositorio_propiedades: RepositorioPropiedades
 
     def __init__(self):
-        self.fabrica_transacciones: FabricaTransacciones = FabricaTransacciones()
-        self.repositorio_transaciones: RepositorioTransacciones = (
-            RepositorioTrasaccionesDB())
+        self.fabrica_propiedades: FabricaPropiedades = FabricaPropiedades()
+        self.repositorio_propiedades: RepositorioPropiedades = (
+            RepositorioPropiedadesDB())
