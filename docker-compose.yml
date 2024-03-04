@@ -51,6 +51,25 @@ services:
     # attaching for debugging
     stdin_open: true
 
+  auditorias:
+    container_name: auditorias
+    image: auditorias
+    profiles: ["auditorias", "full"]
+    ports:
+      - "5002:5000"
+    build:
+      context: .
+      dockerfile: src/auditorias/Dockerfile
+    env_file: .env
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
 
 networks:
   internal:
