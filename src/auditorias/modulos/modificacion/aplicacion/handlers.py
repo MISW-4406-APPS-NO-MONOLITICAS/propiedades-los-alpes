@@ -1,20 +1,19 @@
-""" from pydispatch import dispatcher
-from auditorias.modulos.verificacion.dominio.eventos import TransaccionCreada
+from pydispatch import dispatcher
+from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado
 from auditorias.seedwork.aplicacion.handlers import Handler
 from auditorias.config.logger import logger
 
 logger = logger.getChild("propiedades-handler")
 
 
-class HandlerTransaccionDominio(Handler):
+class HandlerAnalisisDominio(Handler):
     @staticmethod
-    def handle_transaccion_creada(evento):
+    def handle_contrato_auditado(evento):
         logger.info(f"Handling evento de dominio {type(evento).__name__}")
 
 
 def registrar():
     dispatcher.connect(
-        HandlerTransaccionDominio.handle_transaccion_creada,
-        signal="TransaccionCreadaDominio",
+        HandlerAnalisisDominio.handle_contrato_auditado,
+        signal="ContratoAuditadoDominio",
     )
- """

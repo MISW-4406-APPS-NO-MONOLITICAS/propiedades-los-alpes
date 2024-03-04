@@ -1,42 +1,45 @@
-""" # Mapeadores para la capa de infrastructura del dominio de auditorias
+# Mapeadores para la capa de infrastructura del dominio de auditorias
 
 import uuid
 from auditorias.seedwork.dominio.repositorios import Mapeador
 from auditorias.modulos.verificacion.dominio.objetos_valor import (
-    Valor,
+    TipoAnalisis,
 )
 from auditorias.modulos.verificacion.dominio.entidades import (
-    Transaccion,
+    Analisis,
 )
-from .dto import TransaccionDB
+from .dto import AnalisisDB
 
 
-class MapeadorTransaccionDB(Mapeador):
+class MapeadorAnalisisDB(Mapeador):
     _FORMATO_FECHA = "%Y-%m-%d %H:%M:%S"
 
-    def dto_a_entidad(self, dto: TransaccionDB) -> Transaccion:
-        return Transaccion(
+    def dto_a_entidad(self, dto: AnalisisDB) -> Analisis:
+        return Analisis(
             id=uuid.UUID(dto.id),
             fecha_creacion=dto.fecha_creacion,
             fecha_actualizacion=dto.fecha_actualizacion,
-            valor=Valor(valor=dto.valor),
-            comprador=dto.comprador,
-            vendedor=dto.vendedor,
-            inquilino=dto.inquilino,
-            arrendatario=dto.arrendatario,
+            tipo_analisis=TipoAnalisis(valor=dto.tipo_analisis),
+            contrato_id=dto.contrato_id,
+            oficial=dto.oficial,
+            consistente=dto.consistente,
+            completo=dto.completo,
+            indice_confiabilidad=dto.indice_confiabilidad,
+            auditado=dto.auditado,
         )
 
-    def entidad_a_dto(self, entidad: Transaccion) -> TransaccionDB:
-        return TransaccionDB(
+    def entidad_a_dto(self, entidad: Analisis) -> AnalisisDB:
+        return AnalisisDB(
             id=str(entidad.id),
             fecha_creacion=entidad.fecha_creacion.strftime(self._FORMATO_FECHA),
             fecha_actualizacion=entidad.fecha_actualizacion.strftime(
                 self._FORMATO_FECHA
             ),
-            valor=entidad.valor.valor,
-            comprador=entidad.comprador,
-            vendedor=entidad.vendedor,
-            inquilino=entidad.inquilino,
-            arrendatario=entidad.arrendatario,
+            tipo_analisis=entidad.tipo_analisis.valor,
+            contrato_id=entidad.contrato_id,
+            oficial=entidad.oficial,
+            consistente=entidad.consistente,
+            completo=entidad.completo,
+            indice_confiabilidad=entidad.indice_confiabilidad,
+            auditado=entidad.auditado,
         )
- """

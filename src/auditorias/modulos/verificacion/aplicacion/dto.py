@@ -13,3 +13,4 @@ class AnalisisDTO(DTO):
     consistente: bool = field(default_factory=bool)
     completo: bool = field(default_factory=bool)
     indice_confiabilidad: float = field(default_factory=float)
+    auditado: bool = field(default_factory=bool)

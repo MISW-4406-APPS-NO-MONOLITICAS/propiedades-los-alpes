@@ -2,21 +2,21 @@ import os
 
 from flask import Flask
 from pydispatch.saferef import sys
-""" from auditorias.config.pulsar import (
+from auditorias.config.pulsar import (
     comenzar_despachador_eventos_integracion_a_pulsar,
     comenzar_despachador_comandos_a_pulsar,
-) """
+)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-""" def registrar_handlers_eventos_dominio():
+def registrar_handlers_eventos_dominio():
     from auditorias.modulos.modificacion.aplicacion.handlers import (
         registrar as handler_modificacion,
     )
 
     handler_modificacion()
- """
+
 
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):
     processes = []
@@ -52,14 +52,14 @@ def create_app(configuracion={}):
     # Creación de las tablas y la sessión
     setup_db(app)
 
-    """ # Handlers que escuchan eventos de dominio (síncronos)
+    # Handlers que escuchan eventos de dominio (síncronos)
     registrar_handlers_eventos_dominio()
 
     # Escucha los eventos de integración disparados por el uow, y los envía a los tópicos
     comenzar_despachador_eventos_integracion_a_pulsar()
 
     # Escucha los comandos disparados por la aplicación y los envía a los tópicos
-    comenzar_despachador_comandos_a_pulsar() """
+    comenzar_despachador_comandos_a_pulsar()
 
     # Cada consumidor tiene su propio proceso donde escucha un tópico con un esquema
     comenzar_procesos_consumidores_de_pulsar(app)

@@ -1,4 +1,4 @@
-""" from auditorias.config.db import db_session
+from auditorias.config.db import db_session
 from auditorias.seedwork.infraestructura.uow import UnidadTrabajo, Batch
 
 
@@ -25,4 +25,3 @@ class UnidadTrabajoSQLAlchemy(UnidadTrabajo):
 
     def savepoint(self):
         db_session.begin_nested()
- """

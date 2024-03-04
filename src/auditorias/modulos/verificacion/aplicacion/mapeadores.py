@@ -16,6 +16,7 @@ class MapeadorAnalisisDTOJson(Mapeador):
             consistente=externo["consistente"],
             completo=externo["completo"],
             indice_confiabilidad=externo["indice_confiabilidad"],
+            auditado=externo["auditado"],
         )
         return analisis_dto
 
@@ -30,6 +31,7 @@ class MapeadorAnalisisDTOJson(Mapeador):
             "consistente": dto.consistente,
             "completo": dto.completo,
             "indice_confiabilidad": dto.indice_confiabilidad,
+            "auditado": dto.auditado,
         }
 
     def dto_a_entidad(self, dto):
@@ -52,6 +54,7 @@ class MapeadorAnalisis(Mapeador):
         consistente = entidad.consistente
         completo = entidad.completo
         indice_confiabilidad = entidad.indice_confiabilidad
+        auditado = entidad.auditado
         return AnalisisDTO(
             _id,
             fecha_creacion,
@@ -62,6 +65,7 @@ class MapeadorAnalisis(Mapeador):
             consistente,
             completo,
             indice_confiabilidad,
+            auditado,
         )
 
     def dto_a_entidad(self, dto: AnalisisDTO) -> Analisis:
@@ -72,6 +76,7 @@ class MapeadorAnalisis(Mapeador):
             consistente=dto.consistente,
             completo=dto.completo,
             indice_confiabilidad=dto.indice_confiabilidad,
+            auditado=dto.auditado,
         )
 
         return analisis

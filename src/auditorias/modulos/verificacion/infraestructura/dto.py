@@ -22,3 +22,4 @@ class AnalisisDB(Base):
     consistente: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     completo: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     indice_confiabilidad: Mapped[float] = mapped_column(Float, nullable=False, default=0)
+    auditado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

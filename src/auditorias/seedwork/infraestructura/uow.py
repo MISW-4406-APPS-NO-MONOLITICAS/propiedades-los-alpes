@@ -1,4 +1,4 @@
-""" from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod
 from enum import Enum
 from pydispatch import dispatcher
 from auditorias.config.logger import logger
@@ -140,4 +140,3 @@ class UnidadTrabajoPuerto:
     def registrar_batch(operacion, *args, lock=Lock.PESIMISTA, **kwargs):
         uow = __class__.get_unidad_de_trabajo()
         uow.registrar_batch(operacion, *args, lock=lock, **kwargs)
- """
