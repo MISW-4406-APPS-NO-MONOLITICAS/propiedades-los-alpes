@@ -9,11 +9,14 @@ def establecer_transaccion_test():
     url = "http://localhost:5000/listados"
 
     data = {
-        "valor": random.randint(1, 1000000),
-        "comprador": faker.name(),
-        "vendedor": faker.name(),
-        "inquilino": faker.name(),
-        "arrendatario": faker.name(),
+        "tipo_construccion": faker.word(),
+        "estado": faker.boolean(),
+        "area": faker.pyfloat(),
+        "direccion": faker.address(),
+        "lote": faker.random_int(min=1, max=100),
+        "compania": faker.company(),
+        "fecha_registro": faker.date_this_year(),
+        "fecha_actualizacion": faker.date_this_year(),
     }
 
     print("About to send the following data to the server:", data)

@@ -15,15 +15,14 @@ from pydispatch import dispatcher
 
 class HandlerArrendamientoDominio(Handler):
     @staticmethod
-    def handle_estado_propiedad_actualizado(evento):
+    def handle_arrendamiento_realizado(evento):
         logger.info(f"Handling evento de dominio {type(evento).__name__}")
-
-
+        
 def registrar():
     dispatcher.connect(
-        HandlerArrendamientoDominio.handle_estado_propiedad_actualizado,
-        signal="EstadoPropiedadActualizadoDominio",
-    )
+        HandlerArrendamientoDominio.handle_arrendamiento_realizado,
+        signal="ArrendamientoRealizadoDominio",
+    )       
 
 
 class PropiedadCreadaIntegracionHandler:

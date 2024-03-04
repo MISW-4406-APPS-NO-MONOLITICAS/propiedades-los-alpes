@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
 databse_uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
 if not databse_uri:
-    databse_uri = "mysql+mysqldb://root:root@127.0.0.1:3306/contratos"
+    databse_uri = "mysql+mysqldb://root:root@database/contratos"
 
 engine = create_engine(
     databse_uri, execution_options={"isolation_level": "READ COMMITTED"}

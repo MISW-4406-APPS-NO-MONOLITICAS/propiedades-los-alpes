@@ -11,24 +11,18 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def registrar_handlers_eventos_dominio():
-    from listados.modulos.arrendamiento.aplicacion.handlers import (
-        registrar as handler_arrendamiento,
+    from listados.modulos.propiedades.aplicacion.handlers import (
+        registrar as handler_propiedades,
     )
 
-    handler_arrendamiento()
+    handler_propiedades()
 
 
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):
     processes = []
     import multiprocessing
-    from listados.modulos.propiedades.infraestructura.consumidores import consumidores_propiedades
+  
     from listados.modulos.arrendamiento.infraestructura.consumidores import consumidores_arrendamiento
-
-    for consumidor in consumidores_propiedades:
-        # Cada uno es un proceso bloqueante que está escuchando un tópico
-        process = multiprocessing.Process(target=consumidor)
-        processes.append(process)
-        process.start()
 
     for consumidor in consumidores_arrendamiento:
         # Cada uno es un proceso bloqueante que está escuchando un tópico

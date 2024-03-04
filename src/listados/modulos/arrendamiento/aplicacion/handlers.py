@@ -12,10 +12,6 @@ class ContratoPropiedadArrendadaIntegracionHandler:
         logger.info(
             f"Handling evento {type(event).__name__}, id_propiedad: {event.id_propiedad}"
         )
-        
-
-
-    
 
 
 # def example_enviar_comando():
