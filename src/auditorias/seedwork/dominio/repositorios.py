@@ -1,4 +1,4 @@
-""" #Interfaces para los repositorios reusables parte del seedwork del proyecto
+#Interfaces para los repositorios reusables parte del seedwork del proyecto
 
 from abc import ABC, abstractmethod
 from typing import Any
@@ -42,4 +42,3 @@ class Mapeador(ABC):
     @abstractmethod
     def dto_a_entidad(self, dto: Any) -> Entidad:
         ...
- """

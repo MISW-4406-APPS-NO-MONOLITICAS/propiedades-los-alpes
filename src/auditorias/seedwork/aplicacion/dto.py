@@ -1,4 +1,4 @@
-""" from dataclasses import dataclass
+from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
 @dataclass(frozen=True)
@@ -12,4 +12,4 @@ class Mapeador(ABC):
 
     @abstractmethod
     def dto_a_externo(self, dto: DTO) -> any:
-        ... """
+        ...

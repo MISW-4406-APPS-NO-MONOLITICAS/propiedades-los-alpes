@@ -1,4 +1,4 @@
-""" #Reglas de negocio reusables parte del seedwork del proyecto
+#Reglas de negocio reusables parte del seedwork del proyecto
 #En este archivo usted encontrará reglas de negocio reusables parte del seedwork del proyecto
 
 
@@ -35,4 +35,4 @@ class IdEntidadEsInmutable(ReglaNegocio):
             if self.entidad._id:
                 return False
         except AttributeError as error:
-            return True """
+            return True

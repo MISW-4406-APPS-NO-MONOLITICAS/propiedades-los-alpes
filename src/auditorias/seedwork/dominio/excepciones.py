@@ -1,4 +1,4 @@
-""" # Excepciones reusables parte del seedwork del proyecto
+# Excepciones reusables parte del seedwork del proyecto
 # En este archivo usted encontrará los Excepciones reusables parte del seedwork del proyecto
 
 from .reglas import ReglaNegocio
@@ -23,4 +23,4 @@ class ExcepcionFabrica(ExcepcionDominio):
     def __init__(self, mensaje):
         self.__mensaje = mensaje
     def __str__(self):
-        return str(self.__mensaje) """
+        return str(self.__mensaje)

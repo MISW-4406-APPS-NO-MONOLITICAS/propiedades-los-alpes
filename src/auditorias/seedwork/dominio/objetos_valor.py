@@ -1,4 +1,4 @@
-""" #Objetos valor reusables parte del seedwork del proyecto
+#Objetos valor reusables parte del seedwork del proyecto
 #En este archivo usted encontrará los objetos valor reusables parte del seedwork del proyecto
 
 
@@ -8,4 +8,4 @@ from datetime import datetime
 
 @dataclass(frozen=True)
 class ObjetoValor:
-    ... """
+    ...

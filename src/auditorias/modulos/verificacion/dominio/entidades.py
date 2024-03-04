@@ -1,3 +1,18 @@
+from __future__ import annotations
+from auditorias.config.logger import logger
+from dataclasses import dataclass, field
+from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
+from auditorias.seedwork.dominio.entidades import AgregacionRaiz
+
+@dataclass
+class Analisis(AgregacionRaiz):
+    tipo_analisis: TipoAnalisis = field(default_factory=TipoAnalisis)
+    contrato_id: str = field(default_factory=str)
+    oficial: bool = field(default_factory=bool)
+    consistente: bool = field(default_factory=bool)
+    completo: bool = field(default_factory=bool)
+    indice_confiabilidad: float = field(default_factory=float)
+
 """ from __future__ import annotations
 from auditorias.config.logger import logger
 from dataclasses import dataclass, field

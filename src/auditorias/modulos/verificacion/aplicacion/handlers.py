@@ -1,6 +1,7 @@
 import random
 import uuid
 from auditorias.modulos.verificacion.dominio.eventos import ContratoCreadoIntegracion
+from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorAnalisisDTOJson
 from auditorias.config.logger import logger
 """ from auditorias.modulos.verificacion.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
@@ -16,6 +17,9 @@ class ContratoCreadoIntegracionHandler:
         logger.info(
             f"Handling evento {type(event).__name__}, id_transaccion: {event.id_transaccion}"
         )
+        # TODO: logica con el comando
+        """ mapeador = MapeadorVerificacionDTOJson() """
+        
 
 """ def example_enviar_comando():
     from faker import Faker

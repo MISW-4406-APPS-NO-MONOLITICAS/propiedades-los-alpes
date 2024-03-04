@@ -1,4 +1,4 @@
-""" import uuid
+import uuid
 from datetime import datetime
 from dataclasses import dataclass, field
 from .eventos import EventoDominio, EventoIntegracion
@@ -27,4 +27,3 @@ class AgregacionRaiz(Entidad, ValidarReglasMixin):
 
     def limpiar_eventos(self):
         self.eventos = list()
- """
