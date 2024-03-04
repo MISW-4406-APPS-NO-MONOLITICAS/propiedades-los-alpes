@@ -1,3 +1,4 @@
+import datetime
 import random
 import uuid
 from auditorias.modulos.verificacion.aplicacion.comandos.auditar_contrato import ComandoAuditarContrato
@@ -22,6 +23,9 @@ class ContratoCreadoIntegracionHandler:
         logger.info(
             f"Handling evento {type(event).__name__}, id_transaccion: {event.id_transaccion}: {event}"
         )
+        logger.info(
+            f"EXPERIMENT - INICIAL: id_transaccion: {event.id_transaccion}, inicio-evento: {event.fecha_evento}, inicio-proceso: {datetime.datetime.now().isoformat()}"
+        )
         analisis = self.servicio_auditoria.auditar_contrato(event)
         logger.info(f"analisis de contrato: {analisis}")
         
@@ -37,16 +41,3 @@ class ContratoCreadoIntegracionHandler:
             )
             ejecutar_commando(comando)
     
-        
-
-""" def example_enviar_comando():
-    from faker import Faker
-    faker = Faker()
-    comando = ComandoCrearTransaccion(
-        valor=faker.random_number(),
-        comprador=faker.name(),
-        vendedor=faker.name(),
-        inquilino=faker.name(),
-        arrendatario=faker.name(),
-    )
-    dispatcher.send(signal="Comando", comando=comando) """

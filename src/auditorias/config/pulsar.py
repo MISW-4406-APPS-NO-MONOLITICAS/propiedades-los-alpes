@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from typing import Callable
 import pulsar
@@ -26,7 +27,11 @@ class Despachador:
         publicador = cliente.create_producer(
             topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
         )
+        instant = datetime.now()
         publicador.send(evento)
+        logger.info(
+            f"EXPERIMENT - FINAL: id_transaccion: {evento.id_transaccion}, fin-proceso: {instant.isoformat()}, fin-evento: {datetime.now().isoformat()}"
+        )
         self.logger.info(f"Publicado {type(evento).__name__} en el topico {topico}")
         cliente.close()
 

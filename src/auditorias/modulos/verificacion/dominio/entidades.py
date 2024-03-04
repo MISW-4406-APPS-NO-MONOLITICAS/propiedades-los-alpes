@@ -7,13 +7,6 @@ from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado, Co
 from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
 from auditorias.seedwork.dominio.entidades import AgregacionRaiz
 
-""" from auditorias.seedwork.dominio.entidades import AgregacionRaiz, Entidad
-from auditorias.modulos.verificacion.dominio.eventos import (
-    ContratoAuditado,
-    ContratoAuditadoIntegracion,
-)
-from auditorias.seedwork.dominio.eventos import EventoIntegracion """
-
 @dataclass
 class Analisis(AgregacionRaiz):
     tipo_analisis: TipoAnalisis = field(default_factory=TipoAnalisis)
