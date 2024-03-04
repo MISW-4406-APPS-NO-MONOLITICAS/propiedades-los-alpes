@@ -1,3 +1,4 @@
+import time
 from auditorias.modulos.verificacion.dominio.entidades import Analisis
 from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
 from auditorias.modulos.verificacion.dominio.reglas import ValorMayorQueCero
@@ -24,5 +25,7 @@ class ServicioAuditoria(Servicio):
         )
         # TODO: refinar ajustando valor mínimo de indice de confiabilidad
         analisis.auditado = True if analisis.indice_confiabilidad >= 0 else False
+        # delay para experimento - 2 peticiones por segundo
+        time.sleep(0.5)
         
         return analisis

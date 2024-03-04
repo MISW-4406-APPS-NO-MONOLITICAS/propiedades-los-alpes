@@ -1,4 +1,4 @@
-""" import requests
+import requests
 import random
 import faker
 
@@ -6,7 +6,8 @@ faker = faker.Faker()
 
 
 def establecer_transaccion_test():
-    url = "http://localhost:5002/auditorias"
+    #url = "http://localhost:5002/auditorias"
+    url = "http://localhost:5000/contratos"
 
     data = {
         "valor": random.randint(1, 1000000),
@@ -31,4 +32,6 @@ def establecer_transaccion_test():
 
 
 establecer_transaccion_test()
- """
+establecer_transaccion_test()
+establecer_transaccion_test()
+establecer_transaccion_test()
