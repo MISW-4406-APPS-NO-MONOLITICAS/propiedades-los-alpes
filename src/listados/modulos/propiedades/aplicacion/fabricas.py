@@ -12,3 +12,11 @@ class FabricaPropiedades(Fabrica):
         result = mapeador.dto_a_entidad(obj)
         assert isinstance(result, Propiedad)
         return result
+
+
+class FabricaArrendamiento(Fabrica):
+    def crear_objeto(self, obj, mapeador: Mapeador | None = None) -> Propiedad:
+        mapeador = mapeador or MapeadorPropiedad()
+        result = mapeador.dto_a_entidad(obj)
+        assert isinstance(result, Propiedad)
+        return result

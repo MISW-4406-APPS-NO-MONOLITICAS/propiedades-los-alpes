@@ -22,7 +22,7 @@ def establecer_transaccion_test():
     print("About to send the following data to the server:", data)
     response = requests.post(url, json=data)
     if response.ok:
-        print("Transaccion establecida")
+        print("Actualizacion exitosa")
 
     # Pretty print the response
     try:

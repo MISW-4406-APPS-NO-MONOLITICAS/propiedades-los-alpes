@@ -64,3 +64,5 @@ class ComandoCrearPropiedadHandler(BaseHandler):
 def ejecutar_comando_crear_propiedad(comando: ComandoCrearPropiedad):
     handler = ComandoCrearPropiedadHandler()
     handler.handle(comando)
+
+
