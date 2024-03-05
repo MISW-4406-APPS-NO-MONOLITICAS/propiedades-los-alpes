@@ -1,11 +1,12 @@
+from datetime import datetime
 import logging
 from typing import Callable
 import pulsar
 import pulsar.schema as schema
 from pydispatch import dispatcher
-from contratos.config.logger import logger
-from contratos.seedwork.aplicacion.comandos import Comando
-from contratos.seedwork.dominio.eventos import EventoIntegracion
+from auditorias.config.logger import logger
+from auditorias.seedwork.aplicacion.comandos import Comando
+from auditorias.seedwork.dominio.eventos import EventoIntegracion
 
 logger = logging.getLogger("pulsar")
 
@@ -20,21 +21,25 @@ class Despachador:
     def __init__(self):
         self.logger = logger.getChild("despachador")
 
-    def _publicar_mensaje(self, topico: str, mensaje: schema.Record):
+    def _publicar_mensaje(self, topico: str, evento: schema.Record):
         cliente = get_pulsar_client()
-        self.logger.info(f"Publicando {type(mensaje).__name__} en el topico {topico}")
+        self.logger.info(f"Publicando {type(evento).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
-            topico, schema=schema.AvroSchema(mensaje.__class__)  # pyright: ignore
+            topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
         )
-        publicador.send(mensaje)
-        self.logger.info(f"Publicado {type(mensaje).__name__} en el topico {topico}")
+        instant = datetime.now()
+        publicador.send(evento)
+        logger.info(
+            f"EXPERIMENT - FINAL: id_transaccion: {evento.id_transaccion}, fin-proceso: {instant.isoformat()}, fin-evento: {datetime.now().isoformat()}"
+        )
+        self.logger.info(f"Publicado {type(evento).__name__} en el topico {topico}")
         cliente.close()
 
     def publicar_evento(self, evento: EventoIntegracion):
-        self._publicar_mensaje(topico=evento.topic_name(), mensaje=evento)
+        self._publicar_mensaje(evento.topic_name(), evento)
 
     def publicar_comando(self, comando: Comando):
-        self._publicar_mensaje(topico=comando.topic_name(), mensaje=comando)
+        self._publicar_mensaje(comando.topic_name(), comando)
 
 
 despachador = Despachador()
@@ -44,7 +49,7 @@ def comenzar_despachador_eventos_integracion_a_pulsar():
     dispatcher.connect(despachador.publicar_evento, signal="Integracion")
 
 
-def comenzar_despachador_coamndos_a_pulsar():
+def comenzar_despachador_comandos_a_pulsar():
     dispatcher.connect(despachador.publicar_comando, signal="Comando")
 
 

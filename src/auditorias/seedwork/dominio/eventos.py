@@ -1,5 +1,4 @@
-"""Entidades reusables parte del seedwork del proyecto
-"""
+# Entidades reusables parte del seedwork del proyecto
 
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -11,6 +10,7 @@ import pulsar.schema as schema
 class EventoDominio:
     id: uuid.UUID = field(hash=True, default_factory=uuid.uuid4)
     fecha_evento: datetime = field(default_factory=datetime.now)
+
 
 class EventoIntegracion(schema.Record):
     def topic_name(self) -> str:
