@@ -1,4 +1,4 @@
-# Proyecto de los Alpes - Entrega 3
+# Proyecto de los Alpes - Entrega 4
 
 Microservicio en Flask de un sistema que provee información sobre bienes raíces comerciales. Está diseñado usando DDD y aplicando el patrón CQRS y usando eventos de dominio e integración para la comunicación asíncrona entre componentes internos parte del mismo contexto acotado y sistemas externos.
 
@@ -98,10 +98,14 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 └── requirements.txt
 ```
 
-- El directorio `/src` cuenta con un directorio llamado `/contratos`, el cual representa el servicio de propiedades que recibe eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos.
-- `src/contratos/api/`: contiene la definición de los endpoints de cada uno de los modulos
-- `src/contratos/modulos/`: contiene los diferentes modulos del microservcio. 
-- `src/contratos/seedwork`: contiene 
+- El directorio `/src` cuenta con los directorios `/contratos`, `/auditorias` y `/propiedades` los cuales representan los microservicios definidos para Propiedades de los Alpes. La comunicación entre ellos se realiza a través de eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos basado en Apache Pulsar
+- `src/*/api/`: contiene la definición de los endpoints del microservicio
+- `src/*/config/`: contiene las configuraciones generales del microservicio 
+- `src/*/modulos/`: contiene los diferentes modulos del microservicio. Cada módulo está estructurado en capas de aplicación, dominio e infraestructura
+- `src/*/seedwork/`: contiene las estructuras anémicas transversales al microservicio
+- `src/*/tests`: contiene test unitarios
+- `src/*/Dockerfile`: preparación y ejecución de la aplicación de acuerdo al microservicio correspondiente
+- `docker-compose.yml`: orquestación de microservicios, base de datos mysql, pulsar y red interna
 
 ## Propiedades de los Alpes
 
@@ -157,13 +161,37 @@ Reiniciar el contenedor
 docker restart --signal=SIGKILL contratos
 ```
 
-Attach al contendores
+Attach al contenedores
 
 ```bash
 docker attach contratos
 ```
 
+Nota: reemplazar 'contratos' con el nombre del microservicio requerido
+
+## Pulsar
+
+Namespace por default en modo standalone: ``` public/default ``` 
+
+
+Listar tópicos 
+
+```bash
+docker exec pulsar bin/pulsar-admin topics list public/default 
+```
+
+Estado de un tópico 
+
+```bash
+docker exec pulsar bin/pulsar-admin topics stats persistent://public/default/topico 
+```
+
+subscribirse 
+
+```bash
+docker exec pulsar bin/pulsar-client consume -s sub public/default/topico -t Shared -st auto_consume -n 5  
+```
 
 ## Escenarios de calidad
 
-Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/16Y6xnwHJ_i88_a9BrG8Z5BUw_KjdHqWL/view?usp=sharing)
+Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/1ergvNQD3fY79l_3he4n_UzElMptrbnxj/view?usp=sharing)
