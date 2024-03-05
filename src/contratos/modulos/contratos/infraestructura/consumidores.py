@@ -12,12 +12,12 @@ from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegra
 consumidores = [
     Consumidor(
         topico=TransaccionCreadaIntegracion().topic_name(),
-        mensaje=TransaccionCreadaIntegracion,
+        mensaje=TransaccionCreadaIntegracion, # type: ignore
         handler=TransaccionCreadaIntegracionHandler,
     ).start,
     Consumidor(
         topico=ComandoCrearTransaccion().topic_name(),
-        mensaje=ComandoCrearTransaccion,
+        mensaje=ComandoCrearTransaccion, # type: ignore
         handler=ComandoCrearTransaccionHandler().handle,
     ).start,
 ]

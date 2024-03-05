@@ -10,7 +10,8 @@ import pulsar.schema as schema
 @dataclass
 class EventoDominio:
     id: uuid.UUID = field(hash=True, default_factory=uuid.uuid4)
-    fecha_evento: datetime = field(default_factory=datetime.now)
+    fecha_evento: datetime = field(default=datetime.now())
+
 
 class EventoIntegracion(schema.Record):
     def topic_name(self) -> str:
