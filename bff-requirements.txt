@@ -1,0 +1,8 @@
+aiopulsar-py
+fastapi==0.89.1
+uvicorn[standard]
+pulsar-client
+pulsar-client[avro]
+requests
+sse-starlette
+strawberry-graphql[fastapi]
