@@ -121,6 +121,16 @@ docker compose --profile full up -d --build
 docker exec contratos python src/contratos/api/cliente.py
 ```
 
+### Ejecutar cliente que audita un contrato
+* generación de múltiples contratos
+* suscripción del microservicio de auditoria al evento de contrato creado
+* captura del evento e inicio del procesod de auditoría de contrato
+* publicación del resultado de contrato auditado
+
+```bash
+docker exec contratos python src/auditorias/api/cliente.py
+```
+
 ### Ejecutar pruebas
 
 ```bash

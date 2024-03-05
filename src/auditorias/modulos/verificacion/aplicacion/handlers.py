@@ -7,13 +7,6 @@ from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorAnalis
 from auditorias.config.logger import logger
 from auditorias.modulos.verificacion.dominio.servicios import ServicioAuditoria
 from auditorias.seedwork.aplicacion.comandos import ejecutar_comando
-""" from auditorias.modulos.verificacion.infraestructura.repositorios import (
-    RepositorioTrasaccionesDB,
-) """
-""" from auditorias.modulos.verificacion.aplicacion.comandos.modificar_contrato import (
-    ComandoCrearTransaccion,
-)
-from pydispatch import dispatcher """
 
 
 class ContratoCreadoIntegracionHandler:
