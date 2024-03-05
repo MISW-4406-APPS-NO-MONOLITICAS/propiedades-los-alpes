@@ -20,21 +20,21 @@ class Despachador:
     def __init__(self):
         self.logger = logger.getChild("despachador")
 
-    def _publicar_mensaje(self, topico: str, evento: schema.Record):
+    def _publicar_mensaje(self, topico: str, mensaje: schema.Record):
         cliente = get_pulsar_client()
-        self.logger.info(f"Publicando {type(evento).__name__} en el topico {topico}")
+        self.logger.info(f"Publicando {type(mensaje).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
-            topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
+            topico, schema=schema.AvroSchema(mensaje.__class__)  # pyright: ignore
         )
-        publicador.send(evento)
-        self.logger.info(f"Publicado {type(evento).__name__} en el topico {topico}")
+        publicador.send(mensaje)
+        self.logger.info(f"Publicado {type(mensaje).__name__} en el topico {topico}")
         cliente.close()
 
     def publicar_evento(self, evento: EventoIntegracion):
-        self._publicar_mensaje(evento.topic_name(), evento)
+        self._publicar_mensaje(topico=evento.topic_name(), mensaje=evento)
 
     def publicar_comando(self, comando: Comando):
-        self._publicar_mensaje(comando.topic_name(), comando)
+        self._publicar_mensaje(topico=comando.topic_name(), mensaje=comando)
 
 
 despachador = Despachador()

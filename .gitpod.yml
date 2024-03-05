@@ -10,24 +10,18 @@ tasks:
       gp sync-done bundle
   - name: Instalar dependencias
     init: gp sync-await bundle
-    command: pip install -r requirements.txt && pip install -r sidecar-requirements.txt && pip install -r ui-requirements.txt
-  - name: Crear imagenes Docker
-    init: > 
-      docker build . -f aeroalpes.Dockerfile -t aeroalpes/flask &&
-      docker build . -f adaptador.Dockerfile -t aeroalpes/adaptador &&
-      docker build . -f notificacion.Dockerfile -t aeroalpes/notificacion &&
-      docker build . -f ui.Dockerfile -t aeroalpes/ui &&
-      gp sync-done images
-  - name: Crear folder para datos y asigna permisos
-    init: > 
-      mkdir -p data/bookkeeper && 
-      mkdir -p data/zookeeper && 
-      sudo chmod -R 777 ./data
-  - name: Pull el Docker compose
-    init: gp sync-await images
-    command: docker-compose pull
-  
+    command: pip install -r requirements.txt
+  - name: Levantar stack
+    init: |
+      docker compose --profile full pull --ignore-buildable &&
+      docker compose --profile full up -d --build
+
 ports:
+  - port: 5000-5005
+    description: Servicios HTTP
+    visibility: public
+    protocol: http
+    onOpen: notify
   - port: 2181
     onOpen: ignore
   - port: 8080
