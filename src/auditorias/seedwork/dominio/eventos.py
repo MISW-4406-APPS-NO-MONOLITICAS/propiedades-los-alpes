@@ -1,5 +1,4 @@
-"""Entidades reusables parte del seedwork del proyecto
-"""
+# Entidades reusables parte del seedwork del proyecto
 
 from dataclasses import dataclass, field
 from datetime import datetime

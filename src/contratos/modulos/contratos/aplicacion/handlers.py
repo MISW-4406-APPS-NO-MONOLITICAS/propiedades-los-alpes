@@ -26,8 +26,8 @@ class TransaccionCreadaIntegracionHandler:
             )
 
             # Test
-            if random.choice([True, False]):
-                example_enviar_comando()
+            #if random.choice([True, False]):
+            example_enviar_comando()
 
         else:
             logger.info(f"Transaccion {event.id_transaccion} no existe, se crea")
