@@ -1,4 +1,4 @@
-""" from functools import singledispatch
+from functools import singledispatch
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Generic, TypeVar
@@ -27,4 +27,3 @@ def ejecutar_query(query) -> QueryResultado:
     raise NotImplementedError(
         f"No existe implementación para el query de tipo {type(query).__name__}"
     )
- """

@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from auditorias.config.logger import logger
 from .base import BaseHandler
 from auditorias.seedwork.aplicacion.comandos import Comando
-from auditorias.seedwork.aplicacion.comandos import ejecutar_commando as comando
+from auditorias.seedwork.aplicacion.comandos import ejecutar_comando as comando
 from auditorias.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from auditorias.modulos.verificacion.aplicacion.dto import AnalisisDTO, TipoAnalisis
 import pulsar.schema as schema

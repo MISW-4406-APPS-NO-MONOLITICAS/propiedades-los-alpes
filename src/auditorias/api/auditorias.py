@@ -1,5 +1,7 @@
 import json
+from auditorias.modulos.verificacion.aplicacion.comandos.eliminar_analisis import ComandoEliminarAnalisis
 from flask import Blueprint, request, Response
+from auditorias.seedwork.aplicacion.comandos import ejecutar_comando
 """ from auditorias.modulos.verificacion.aplicacion.queries.obtener_listado_auditorias import (
     ObtenerVerificaciones,
 )
@@ -8,14 +10,23 @@ from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorVerifi
 from auditorias.modulos.verificacion.aplicacion.comandos.auditar_contrato import (
     ComandoEnriquecerContrato,
 )
-from auditorias.seedwork.aplicacion.comandos import ejecutar_commando
 from auditorias.seedwork.dominio.excepciones import ExcepcionDominio """
 
 blueprint = Blueprint('auditorias', __name__, url_prefix='/auditorias')
 """ mapeador = MapeadorVerificacionDTOJson() """
 
+""" @blueprint.route("", methods=("DELETE",))
+def eliminar_analisis():
+    try:
+        comando = ComandoEliminarAnalisis()
+        ejecutar_comando(comando)
+        return Response("{}", status=204, mimetype="application/json")
+    except Exception as e:
+        return Response(
+            json.dumps(dict(error=str(e))), status=500, mimetype="application/json"
+        )
 
-""" @blueprint.route("", methods=("POST",))
+@blueprint.route("", methods=("POST",))
 def auditar_contrato():
     try:
         contrato_dict = request.json
@@ -35,9 +46,10 @@ def auditar_contrato():
         return Response(
             json.dumps(dict(error=str(e))), status=400, mimetype="application/json"
         )
+ """
 
-
-@blueprint.route("", methods=("GET",))
+""" @blueprint.route("", methods=("GET",))
 def listar_transacciones():
-    result = ejecutar_query(ObtenerVerificaciones())
+    return Response("ok", status=200, mimetype="application/json") """
+""" result = ejecutar_query(ObtenerVerificaciones())
     return [mapeador.dto_a_externo(dto) for dto in result.resultado] """

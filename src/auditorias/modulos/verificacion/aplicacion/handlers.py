@@ -6,7 +6,7 @@ from auditorias.modulos.verificacion.dominio.eventos import ContratoCreadoIntegr
 from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorAnalisisDTOJson
 from auditorias.config.logger import logger
 from auditorias.modulos.verificacion.dominio.servicios import ServicioAuditoria
-from auditorias.seedwork.aplicacion.comandos import ejecutar_commando
+from auditorias.seedwork.aplicacion.comandos import ejecutar_comando
 """ from auditorias.modulos.verificacion.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 ) """
@@ -39,5 +39,5 @@ class ContratoCreadoIntegracionHandler:
                 indice_confiabilidad = analisis.indice_confiabilidad,
                 auditado = analisis.auditado,
             )
-            ejecutar_commando(comando)
+            ejecutar_comando(comando)
     
