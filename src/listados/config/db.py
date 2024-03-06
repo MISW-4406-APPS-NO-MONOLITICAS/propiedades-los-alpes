@@ -3,7 +3,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-databse_uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
+databse_uri = os.environ.get("SQLALCHEMY_DATABASE2_URI")
 if not databse_uri:
     databse_uri = "mysql+mysqldb://root:root@database2/listados"
 

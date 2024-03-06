@@ -22,6 +22,6 @@ Base = declarative_base()
 
 # Init db with mysql
 def init_db():
-    import listados.modulos.propiedades.infraestructura.dto as propiedades_dto
+    import contratos.modulos.contratos.infraestructura.dto as contratos_dto
 
     Base.metadata.create_all(bind=engine)
