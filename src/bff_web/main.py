@@ -60,5 +60,9 @@ async def stream_mensajes(request: Request):
             await asyncio.sleep(0.1)
 
     return EventSourceResponse(leer_eventos())
+
+@app.get("/healt-check")
+async def healt_check():
+    return {'bff_web':'Running'}
     
 app.include_router(v1, prefix="/v1")
