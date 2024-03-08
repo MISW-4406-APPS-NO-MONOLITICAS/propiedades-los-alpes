@@ -114,6 +114,9 @@ services:
     profiles: ["bff_web"]
     ports:
       - "8000:8000"
+    environment:
+      - BROKER_HOST=pulsar
+      - CONTRATOS_ADDRESS=contratos
     build:
       context: .
       dockerfile: src/bff_web/Dockerfile

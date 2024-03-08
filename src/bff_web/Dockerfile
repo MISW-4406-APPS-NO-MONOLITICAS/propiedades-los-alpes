@@ -1,4 +1,5 @@
 FROM python:3.10
+ENV LC_ALL en_US.UTF-8
 
 EXPOSE 8000/tcp
 
