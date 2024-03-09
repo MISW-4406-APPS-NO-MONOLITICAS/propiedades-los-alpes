@@ -6,8 +6,10 @@ from auditorias.modulos.verificacion.aplicacion.comandos.auditar_contrato import
 from auditorias.modulos.verificacion.aplicacion.comandos.cancelar_contrato_auditado import ComandoCancelarContratoAuditadoIntegracion
 from auditorias.modulos.verificacion.aplicacion.comandos.eliminar_analisis import ComandoEliminarAnalisis
 from flask import Blueprint, request, Response
-from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorCompensacionDTOJson, MapeadorTransaccionDTOJson
+from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorAnalisisDTOJson, MapeadorCompensacionDTOJson, MapeadorTransaccionDTOJson
+from auditorias.modulos.verificacion.aplicacion.queries.obtener_auditorias_contrato import ObtenerAuditoriasContrato
 from auditorias.seedwork.aplicacion.comandos import ejecutar_comando
+from auditorias.seedwork.aplicacion.queries import ejecutar_query
 from auditorias.seedwork.dominio.excepciones import ExcepcionDominio
 
 
@@ -58,3 +60,9 @@ def probar_compensacion_contrato():
         return Response(
             json.dumps(dict(error=str(e))), status=400, mimetype="application/json"
         )
+        
+@blueprint.route("contrato/<id>", methods=("GET",))
+def obtener_auditorias_por_contrato(id: str):
+    result = ejecutar_query(ObtenerAuditoriasContrato(contrato_id = id))
+    map_auditoria = MapeadorAnalisisDTOJson()
+    return [map_auditoria.dto_a_externo(analisis) for analisis in result.resultado]
