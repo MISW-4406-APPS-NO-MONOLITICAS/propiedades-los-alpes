@@ -9,10 +9,10 @@ from dataclasses import dataclass
 class FabricaTransacciones(Fabrica):
     mapeador: Mapeador
 
-    def __init__(self, mapeador: Mapeador | None = None):
+    def __init__(self, mapeador: Mapeador):
         self.mapeador = mapeador
 
     def crear_objeto(self, obj) -> Transaccion:
-        result = mapeador.dto_a_entidad(obj)
+        result = self.mapeador.dto_a_entidad(obj)
         assert isinstance(result, Transaccion)
         return result

@@ -19,8 +19,10 @@ class TransaccionDB(Base):
     vendedor: Mapped[str] = mapped_column(String(200), nullable=True)
     inquilino: Mapped[str] = mapped_column(String(200), nullable=True)
     arrendatario: Mapped[str] = mapped_column(String(200), nullable=True)
-    fecha_creacion: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, default=datetime.datetime.now)
+    id_auditoria: Mapped[str] = mapped_column(String(50), nullable=True)
+    fecha_creacion: Mapped[datetime.datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.datetime.now
+    )
     fecha_actualizacion: Mapped[datetime.datetime] = mapped_column(
-        DateTime, nullable=False
-        onupdate=datetime.datetime.now
+        DateTime, nullable=False, onupdate=datetime.datetime.now
     )

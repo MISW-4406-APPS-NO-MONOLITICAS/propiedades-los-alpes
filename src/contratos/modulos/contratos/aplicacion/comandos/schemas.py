@@ -1,3 +1,4 @@
+import uuid
 import pulsar.schema as schema
 
 from contratos.seedwork.aplicacion.comandos import Comando
@@ -53,6 +54,34 @@ class ComandoArrendarPropiedad(Comando):
     def topic_name(self) -> str:
         return "listados_arrendar_propiedad"
 
+    @staticmethod
+    def from_evento(evento):
+        from contratos.modulos.contratos.aplicacion.eventos.schemas import (
+            ContratoAuditado,
+        )
+        from contratos.modulos.contratos.infraestructura.repositorios import (
+            RepositorioTrasaccionesDB,
+        )
+
+        assert isinstance(
+            evento, ContratoAuditado
+        ), "Evento no es de tipo ContratoAuditado"
+        transaccion = RepositorioTrasaccionesDB().obtener_por_id(
+            uuid.UUID(str(evento.id_transaccion))
+        )
+        assert transaccion, "Transaccion no encontrada"
+
+        return ComandoArrendarPropiedad(
+            id_correlacion=evento.id_correlacion,
+            id_transaccion=evento.id_transaccion,
+            id_propiedad=transaccion.id_propiedad,
+            valor=transaccion.valor.valor,
+            comprador=transaccion.comprador,
+            vendedor=transaccion.vendedor,
+            inquilino=transaccion.inquilino,
+            arrendatario=transaccion.arrendatario,
+        )
+
 
 class ComandoCancelarContratoAuditado(Comando):
     id_correlacion = schema.String(required=True)
@@ -61,3 +90,28 @@ class ComandoCancelarContratoAuditado(Comando):
 
     def topic_name(self) -> str:
         return "auditorias_cancelar_contrato_auditado"
+
+    @staticmethod
+    def from_evento(evento):
+        from contratos.modulos.contratos.aplicacion.eventos.schemas import (
+            PropiedadArrendamientoRechazado,
+        )
+
+        assert isinstance(
+            evento, PropiedadArrendamientoRechazado
+        ), "Evento no es de tipo PropiedadArrendamientoRechazado"
+
+        from contratos.modulos.contratos.infraestructura.repositorios import (
+            RepositorioTrasaccionesDB,
+        )
+
+        transaccion = RepositorioTrasaccionesDB().obtener_por_id(
+            uuid.UUID(str(evento.id_transaccion))
+        )
+        assert transaccion, "Transaccion no encontrada"
+
+        return ComandoCancelarContratoAuditado(
+            id_correlacion=evento.id_correlacion,
+            id_transaccion=evento.id_transaccion,
+            id_auditoria=transaccion.id_auditoria,
+        )

@@ -21,8 +21,9 @@ class Transaccion(AgregacionRaiz):
     vendedor: str = field(default_factory=str)
     inquilino: str = field(default_factory=str)
     arrendatario: str = field(default_factory=str)
+    id_auditoria: str | None = None
 
-    def crear_transaccion(self):
+    def crear_transaccion(self, id_correlacion: str):
         logger.info(
             f"Creando transaccion, agregando evento de dominio {type(TransaccionCreada).__name__}"
         )
@@ -35,6 +36,7 @@ class Transaccion(AgregacionRaiz):
         self.agregar_evento_integracion(
             evento=TransaccionCreadaIntegracion(
                 id=str(uuid4()),
+                id_correlacion=id_correlacion or str(uuid4()),
                 id_transaccion=self.id.__str__(),
                 id_propiedad=self.id_propiedad,
                 valor=self.valor.valor,
