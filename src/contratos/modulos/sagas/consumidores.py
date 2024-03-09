@@ -1,4 +1,6 @@
+from auditorias.seedwork.dominio.eventos import EventoIntegracion
 from contratos.modulos.sagas.saga import (
+    ArrendamientoFallido,
     ComandoArrendarPropiedad,
     ContratoAuditado,
     PropiedadArrendada,
@@ -18,7 +20,12 @@ class ComandoAuditarContratoHandler:
 
 class ComandoArrendarPropiedadHandler:
     def handle(self, comando: ComandoArrendarPropiedad):
+        import random
+
         evento = PropiedadArrendada(id_correlacion=comando.id_correlacion)
+        if random.choice([True, False]):
+            evento = ArrendamientoFallido(id_correlacion=comando.id_correlacion)
+
         despachar_evento_integracion(evento)
 
 

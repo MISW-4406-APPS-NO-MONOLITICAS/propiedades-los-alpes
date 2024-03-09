@@ -7,7 +7,7 @@ from contratos.modulos.contratos.aplicacion.comandos.crear_transaccion import (
 from contratos.modulos.contratos.aplicacion.handlers import (
     TransaccionCreadaIntegracionHandler,
 )
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
+from contratos.modulos.contratos.aplicacion.eventos.schemas import TransaccionCreadaIntegracion
 from contratos.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 )

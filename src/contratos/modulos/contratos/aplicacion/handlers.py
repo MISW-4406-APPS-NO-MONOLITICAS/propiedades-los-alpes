@@ -1,6 +1,6 @@
 import random
 import uuid
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
+from contratos.modulos.contratos.aplicacion.eventos.schemas import TransaccionCreadaIntegracion
 from contratos.config.logger import logger
 from contratos.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,

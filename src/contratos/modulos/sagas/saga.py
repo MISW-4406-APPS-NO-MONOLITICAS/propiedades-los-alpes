@@ -64,7 +64,7 @@ class ComandoCancelarContratoAuditado(Comando):
 
     @staticmethod
     def from_evento(evento) -> Comando:
-        assert isinstance(evento, ContratoRechazado)
+        assert isinstance(evento, ArrendamientoFallido)
         return ComandoCancelarContratoAuditado(id_correlacion=evento.id_correlacion)
 
 
@@ -161,10 +161,10 @@ class SagaContratos(CoordinadorSaga):
                 else:
                     logger.info("No hay compensación para el paso actual")
 
-                if self.index > 0:
-                    self.index -= 1
+                if self.index == 0:
+                    return self.revertida()
 
-            return self.revertida()
+                self.index -= 1
 
         elif isinstance(evento, paso.evento):
             logger.info(
@@ -203,6 +203,7 @@ log_manejador = logger.getChild("manejador-saga-contratos")
 class ManejadorDeSaga:
     def __init__(self):
         from contratos.modulos.sagas.repository import RepositorioSagaContratosDB
+
         self.repositorio = RepositorioSagaContratosDB()
 
     @staticmethod
@@ -248,6 +249,7 @@ class ManejadorDeSaga:
             fecha_creacion=datetime.datetime.now(),
             fecha_actualizacion=datetime.datetime.now(),
         )
+        self.repositorio.persistir(saga)
         saga.iniciar(comando=comando_inicial)
         self.repositorio.persistir(saga)
         return saga

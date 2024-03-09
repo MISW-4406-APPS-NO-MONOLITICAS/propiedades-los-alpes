@@ -58,15 +58,9 @@ class RepositorioSagaContratosDB:
     def persistir(self, entity: SagaContratos):
         db_model = self._mapeador.entidad_a_dto(entity)
         # If the entity already exists, update it
-        if self.obtener_por_id_or_none(entity.id_correlacion):
-            logger.info(
-                f"Updating model {SagaLogDB.__name__} with id {entity.id_correlacion}"
-            )
-            self.db_session.merge(db_model)
-        else:
-            logger.info(
-                f"Adding model {SagaLogDB.__name__} with id {entity.id_correlacion}"
-            )
-            self.db_session.add(db_model)
-
+        logger.info(
+            f"Persisting {SagaLogDB.__name__} with id {entity.id_correlacion}"
+        )
+        self.db_session.merge(db_model)
         self.db_session.commit()
+        logger.info(f"Commited changes to {SagaLogDB.__name__}")
