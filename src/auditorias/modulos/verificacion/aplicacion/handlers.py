@@ -1,14 +1,14 @@
-import datetime
+""" import datetime
 import random
 import uuid
-from auditorias.modulos.verificacion.aplicacion.comandos.auditar_contrato import ComandoAuditarContrato
+from auditorias.modulos.verificacion.aplicacion.comandos.analizar_contrato import ComandoAnalizarContrato
 from auditorias.modulos.verificacion.dominio.eventos import ContratoCreadoIntegracion
 from auditorias.modulos.verificacion.aplicacion.mapeadores import MapeadorAnalisisDTOJson
 from auditorias.config.logger import logger
 from auditorias.modulos.verificacion.dominio.servicios import ServicioAuditoria
-from auditorias.seedwork.aplicacion.comandos import ejecutar_comando
+from auditorias.seedwork.aplicacion.comandos import ejecutar_comando """
 
-
+""" 
 class ContratoCreadoIntegracionHandler:
     servicio_auditoria: ServicioAuditoria = ServicioAuditoria()
     
@@ -23,7 +23,7 @@ class ContratoCreadoIntegracionHandler:
         logger.info(f"analisis de contrato: {analisis}")
         
         if analisis.auditado:
-            comando = ComandoAuditarContrato(
+            comando = ComandoAnalizarContrato(
                 tipo_analisis = analisis.tipo_analisis.valor,
                 contrato_id = analisis.contrato_id,
                 oficial = analisis.oficial,
@@ -32,5 +32,5 @@ class ContratoCreadoIntegracionHandler:
                 indice_confiabilidad = analisis.indice_confiabilidad,
                 auditado = analisis.auditado,
             )
-            ejecutar_comando(comando)
+            ejecutar_comando(comando) """
     

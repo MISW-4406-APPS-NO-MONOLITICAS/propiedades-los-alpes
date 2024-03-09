@@ -1,5 +1,5 @@
 from auditorias.config.logger import logger
-from auditorias.modulos.verificacion.infraestructura.repositorios import RepositorioTrasaccionesDB
+from auditorias.modulos.verificacion.infraestructura.repositorios import RepositorioAnalisisDB
 from auditorias.seedwork.aplicacion.queries import QueryResultado
 from .base import BaseHandler
 from auditorias.seedwork.aplicacion.comandos import Comando
@@ -21,7 +21,7 @@ class ComandoEliminarAnalisis(Comando):
 class ComandoEliminarAnalisisHandler(BaseHandler):
     def handle(self, comando: ComandoEliminarAnalisis):
         logger.info(f"Manejando comando {comando.__class__.__name__}")
-        repositorio = RepositorioTrasaccionesDB()
+        repositorio = RepositorioAnalisisDB()
         return QueryResultado(repositorio.eliminar_todo())
 
 

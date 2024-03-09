@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 from typing import Callable
 import pulsar
 import pulsar.schema as schema
@@ -8,13 +9,15 @@ from auditorias.config.logger import logger
 from auditorias.seedwork.aplicacion.comandos import Comando
 from auditorias.seedwork.dominio.eventos import EventoIntegracion
 
+pulsar_host = os.environ.get("PULSAR_HOST")
+if not pulsar_host:
+    pulsar_host = "//pulsar:6650"
 logger = logging.getLogger("pulsar")
-
 
 def get_pulsar_client() -> pulsar.Client:
     logger = logging.getLogger("pulsar_client")
     logger.setLevel(logging.ERROR)
-    return pulsar.Client(f"pulsar://pulsar:6650", logger=logger)
+    return pulsar.Client(f"pulsar:{pulsar_host}", logger=logger)
 
 
 class Despachador:
@@ -65,7 +68,7 @@ class Consumidor:
         self.logger = logger.getChild("consumidor")
 
     def start(self):
-        self.logger.info(f"Comenzando a consumir del topico {self.topico}")
+        self.logger.info(f"Comenzando consumo del topico {self.topico}")
         cliente = get_pulsar_client()
         consumidor = cliente.subscribe(
             self.topico,

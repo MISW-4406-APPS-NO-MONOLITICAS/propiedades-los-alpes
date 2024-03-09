@@ -1,7 +1,27 @@
-from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
+from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis, Valor
 from auditorias.seedwork.dominio.repositorios import Mapeador
 from auditorias.modulos.verificacion.dominio.entidades import Analisis
-from .dto import AnalisisDTO
+from .dto import AnalisisDTO, TransaccionDTO
+
+
+class MapeadorTransaccionDTOJson(Mapeador):
+    def externo_a_dto(self, externo: dict) -> TransaccionDTO:
+        transaccion_dto = TransaccionDTO(
+            id="",
+            fecha_creacion="",
+            fecha_actualizacion="",
+            valor=Valor(externo["valor"]),
+            comprador=externo["comprador"],
+            vendedor=externo["vendedor"],
+            inquilino=externo["inquilino"],
+        )
+        return transaccion_dto
+      
+    def dto_a_entidad(self, dto):
+        raise NotImplementedError
+
+    def entidad_a_dto(self, entidad):
+        raise NotImplementedError
 
 
 class MapeadorAnalisisDTOJson(Mapeador):
