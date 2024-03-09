@@ -33,6 +33,7 @@ class ContratoRechazado(EventoDominio):
     id_transaccion: uuid.UUID = field(default_factory=uuid.uuid4)
     fecha_creacion: datetime = field(default_factory=datetime.now)
     
+    
 class ContratoRechazadoIntegracion(EventoIntegracion):
     id = schema.String(required=True)
     fecha_evento = schema.String(required=True)

@@ -10,6 +10,7 @@ class MapeadorTransaccionDTOJson(Mapeador):
             id="",
             fecha_creacion="",
             fecha_actualizacion="",
+            contrato_id=externo["id_transaccion"],
             valor=Valor(externo["valor"]),
             comprador=externo["comprador"],
             vendedor=externo["vendedor"],

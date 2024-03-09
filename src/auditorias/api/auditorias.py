@@ -19,17 +19,16 @@ def probar_auditoria_contrato():
         transaccion_dict = request.json
 
         transaccion_dto = mapeador.externo_a_dto(transaccion_dict)
-        uuid = str(uuid4())
+        #uuid = str(uuid4())
 
         comando = ComandoAuditarContratoIntegracion(
-            id = uuid,
+            id = transaccion_dto.id,
             fecha_evento = datetime.now().isoformat(),
-            id_transaccion = uuid,
+            id_transaccion = transaccion_dto.contrato_id,
             valor = transaccion_dto.valor.valor,
             comprador = transaccion_dto.comprador,
             vendedor = transaccion_dto.vendedor,
             inquilino = transaccion_dto.inquilino,
-            #arrendatario = transaccion_dto.arrendatario,
         )
         ejecutar_comando(comando)
         return Response("{}", status=202, mimetype="application/json")

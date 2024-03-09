@@ -1,4 +1,5 @@
 import os
+from uuid import uuid4
 import requests
 import random
 import faker
@@ -12,6 +13,7 @@ def establecer_transaccion_test():
     #url = "http://localhost:5000/contratos"
 
     data = {
+        "id_transaccion": str(uuid4()),
         "valor": 0 if test_type == "rechazo" else random.randint(1, 1000000),
         "comprador": faker.name(),
         "vendedor": faker.name(),
