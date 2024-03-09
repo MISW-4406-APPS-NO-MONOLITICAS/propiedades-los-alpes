@@ -3,7 +3,7 @@ import uuid
 from auditorias.config.logger import logger
 from dataclasses import dataclass, field
 from uuid import uuid4
-from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado, ContratoAuditadoIntegracion, ContratoRechazado, ContratoRechazadoIntegracion
+from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado, ContratoAuditadoIntegracion, ContratoRechazado, ContratoRechazadoIntegracion, contratoAuditadoCancelado, contratoAuditadoCanceladoIntegracion
 from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
 from auditorias.seedwork.dominio.entidades import AgregacionRaiz
 
@@ -48,7 +48,7 @@ class Analisis(AgregacionRaiz):
             f"Rechazando contrato, agregando evento de dominio {type(ContratoRechazado).__name__}"
         )
         self.agregar_evento(
-            ContratoAuditado(
+            ContratoRechazado(
                 id_transaccion=uuid.UUID(self.contrato_id), 
                 fecha_creacion=self.fecha_creacion
             )
@@ -66,6 +66,34 @@ class Analisis(AgregacionRaiz):
                 completo=self.completo,
                 indice_confiabilidad=self.indice_confiabilidad,
                 auditado=self.auditado,
+            ),
+        )
+        
+    def cancelar_contrato_auditado(self):
+        logger.info(
+            f"Guardando cancelación de contrato, agregando evento de dominio {type(contratoAuditadoCancelado).__name__}"
+        )
+        self.agregar_evento(
+            contratoAuditadoCancelado(
+                id_transaccion=uuid.UUID(self.contrato_id), 
+                fecha_creacion=self.fecha_creacion
+            )
+        )
+        
+        self.tipo_analisis = TipoAnalisis("Contrato-compensacion")
+
+        self.agregar_evento_integracion(
+            evento=contratoAuditadoCanceladoIntegracion(
+                id=str(uuid4()),
+                fecha_evento=self.fecha_creacion.isoformat(),
+                fecha_creacion=self.fecha_creacion.isoformat(),
+                tipo_analisis=self.tipo_analisis.valor,
+                id_transaccion=self.contrato_id,
+                oficial=False,
+                consistente=False,
+                completo=False,
+                indice_confiabilidad=0,
+                auditado=False,
             ),
         )
         

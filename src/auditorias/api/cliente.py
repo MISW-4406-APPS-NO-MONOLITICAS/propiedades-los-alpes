@@ -6,24 +6,46 @@ import faker
 
 faker = faker.Faker()
 test_type = os.environ.get("TEST_TYPE")
+uuid = ""
 
-
-def establecer_transaccion_test():
+def solicitar_auditoria_contrato_test():
     url = "http://localhost:5002/auditorias"
-    #url = "http://localhost:5000/contratos"
-
+    uuid = str(uuid4())
     data = {
-        "id_transaccion": str(uuid4()),
+        "id_transaccion": uuid,
         "valor": 0 if test_type == "rechazo" else random.randint(1, 1000000),
         "comprador": faker.name(),
         "vendedor": faker.name(),
         "inquilino": faker.name(),
     }
 
-    print("About to send the following data to the server:", data)
+    print("Contrato para auditar:", data)
     response = requests.post(url, json=data)
     if response.ok:
-        print("Transaccion establecida")
+        print("Auditoría de contrato solicitada")   
+        if test_type != "rechazo" :
+          solicitar_compensacion_auditoria_test(uuid)
+
+    # Pretty print the response
+    try:
+        import json
+
+        print(json.dumps(response.json(), indent=4))
+    except:
+        print(response.text)
+        
+
+def solicitar_compensacion_auditoria_test(uuid: str):
+    url = "http://localhost:5002/auditorias/compensacion"
+
+    data = {
+        "id_transaccion": uuid
+    }
+
+    print("Compensación:", data)
+    response = requests.post(url, json=data)
+    if response.ok:
+        print("Compensación solicitada")
 
     # Pretty print the response
     try:
@@ -34,4 +56,4 @@ def establecer_transaccion_test():
         print(response.text)
 
 
-establecer_transaccion_test()
+solicitar_auditoria_contrato_test()

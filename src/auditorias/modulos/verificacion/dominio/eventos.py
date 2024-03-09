@@ -47,3 +47,24 @@ class ContratoRechazadoIntegracion(EventoIntegracion):
     
     def topic_name(self):
         return "contrato_rechazado"
+      
+      
+@dataclass
+class contratoAuditadoCancelado(EventoDominio):
+    id_transaccion: uuid.UUID = field(default_factory=uuid.uuid4)
+    fecha_creacion: datetime = field(default_factory=datetime.now)
+    
+    
+class contratoAuditadoCanceladoIntegracion(EventoIntegracion):
+    id = schema.String(required=True)
+    fecha_evento = schema.String(required=True)
+    tipo_analisis = schema.String(required=True)
+    id_transaccion = schema.String(required=True)
+    oficial = schema.Boolean(required=True)
+    consistente = schema.Boolean(required=True)
+    completo = schema.Boolean(required=True)
+    indice_confiabilidad = schema.Float(required=True)
+    auditado = schema.Boolean(required=True)
+    
+    def topic_name(self):
+        return "contrato_auditado_cancelado"

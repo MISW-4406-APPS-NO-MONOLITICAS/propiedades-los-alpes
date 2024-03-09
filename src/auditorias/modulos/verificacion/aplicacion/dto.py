@@ -26,3 +26,10 @@ class AnalisisDTO(DTO):
     completo: bool = field(default_factory=bool)
     indice_confiabilidad: float = field(default_factory=float)
     auditado: bool = field(default_factory=bool)
+    
+@dataclass(frozen=True)
+class CompensacionDTO(DTO):
+    id: str = field(default_factory=str)
+    fecha_creacion: str = field(default_factory=str)
+    fecha_actualizacion: str = field(default_factory=str)
+    contrato_id: str = field(default_factory=str)
