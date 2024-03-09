@@ -1,71 +1,22 @@
-from abc import ABC
-from collections.abc import Callable
 import datetime
-from typing import Type
-import uuid
 from contratos.config.pulsar import Consumidor
-from contratos.modulos.contratos.aplicacion.comandos.crear_contrato import (
+from contratos.modulos.contratos.aplicacion.comandos.schemas import (
+    ComandoArrendarPropiedad,
     ComandoAuditarContrato,
+    ComandoCancelarContratoAuditado,
+)
+from contratos.modulos.contratos.aplicacion.eventos.schemas import (
+    ContratoAuditado,
+    ContratoAuditoriaRechazada,
+    PropiedadArrendada,
+    PropiedadArrendamientoRechazado,
 )
 from contratos.seedwork.aplicacion.comandos import Comando
 from contratos.seedwork.dominio.eventos import EventoIntegracion
 from contratos.seedwork.aplicacion.saga import CoordinadorSaga, Paso
 from contratos.config.logger import logger
-import pulsar.schema as schema
 
 logger = logger.getChild("saga-contratos")
-
-
-class ContratoAuditado(EventoIntegracion):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "contrato_auditado"
-
-
-class ContratoRechazado(EventoIntegracion):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "contrato_rechazado"
-
-
-class ComandoArrendarPropiedad(Comando):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "arrendar_propiedad"
-
-    @staticmethod
-    def from_evento(evento) -> Comando:
-        assert isinstance(evento, ContratoAuditado)
-        return ComandoArrendarPropiedad(id_correlacion=evento.id_correlacion)
-
-
-class PropiedadArrendada(EventoIntegracion):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "propiedad_arrendada"
-
-
-class ArrendamientoFallido(EventoIntegracion):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "arrendamiento_fallido"
-
-
-class ComandoCancelarContratoAuditado(Comando):
-    id_correlacion = schema.String(required=True)
-
-    def topic_name(self) -> str:
-        return "cancelar_contrato_auditado"
-
-    @staticmethod
-    def from_evento(evento) -> Comando:
-        assert isinstance(evento, ArrendamientoFallido)
-        return ComandoCancelarContratoAuditado(id_correlacion=evento.id_correlacion)
 
 
 class SagaContratos(CoordinadorSaga):
@@ -76,14 +27,14 @@ class SagaContratos(CoordinadorSaga):
                 index=0,
                 comando=ComandoAuditarContrato,
                 evento=ContratoAuditado,
-                error=ContratoRechazado,
+                error=ContratoAuditoriaRechazada,
                 compensacion=None,
             ),
             Paso(
                 index=1,
                 comando=ComandoArrendarPropiedad,
                 evento=PropiedadArrendada,
-                error=ArrendamientoFallido,
+                error=PropiedadArrendamientoRechazado,
                 compensacion=ComandoCancelarContratoAuditado,
             ),
         ]
@@ -213,7 +164,6 @@ class ManejadorDeSaga:
         for evento in eventos:
             consumidores.append(
                 Consumidor(
-                    topico=evento().topic_name(),
                     mensaje=evento,
                     handler=lambda evento: ManejadorDeSaga().handler(evento),
                 )

@@ -12,6 +12,17 @@ class ComandoCrearContrato(Comando):
     inquilino = schema.String()
     arrendatario = schema.String()
 
+    def as_dict(self):
+        return {
+            "id_correlacion": self.id_correlacion,
+            "id_propiedad": self.id_propiedad,
+            "valor": self.valor,
+            "comprador": self.comprador,
+            "vendedor": self.vendedor,
+            "inquilino": self.inquilino,
+            "arrendatario": self.arrendatario,
+        }
+
     def topic_name(self) -> str:
         return "contratos_crear"
 

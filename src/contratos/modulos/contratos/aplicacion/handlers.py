@@ -1,12 +1,9 @@
-import random
 import uuid
+from contratos.modulos.contratos.aplicacion.comandos.schemas import ComandoCrearContrato
 from contratos.modulos.contratos.aplicacion.eventos.schemas import TransaccionCreadaIntegracion
 from contratos.config.logger import logger
 from contratos.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
-)
-from contratos.modulos.contratos.aplicacion.comandos.crear_transaccion import (
-    ComandoCrearTransaccion,
 )
 from pydispatch import dispatcher
 
@@ -36,7 +33,7 @@ class TransaccionCreadaIntegracionHandler:
 def example_enviar_comando():
     from faker import Faker
     faker = Faker()
-    comando = ComandoCrearTransaccion(
+    comando = ComandoCrearContrato(
         valor=faker.random_number(),
         comprador=faker.name(),
         vendedor=faker.name(),

@@ -1,13 +1,13 @@
 from auditorias.seedwork.dominio.eventos import EventoIntegracion
-from contratos.modulos.sagas.saga import (
-    ArrendamientoFallido,
+from contratos.config.pulsar import Consumidor
+from contratos.modulos.contratos.aplicacion.comandos.schemas import (
     ComandoArrendarPropiedad,
+    ComandoAuditarContrato,
+)
+from contratos.modulos.contratos.aplicacion.eventos.schemas import (
     ContratoAuditado,
     PropiedadArrendada,
-)
-from contratos.config.pulsar import Consumidor
-from contratos.modulos.contratos.aplicacion.comandos.crear_contrato import (
-    ComandoAuditarContrato,
+    PropiedadArrendamientoRechazado,
 )
 from contratos.seedwork.dominio.eventos import despachar_evento_integracion
 
@@ -24,19 +24,19 @@ class ComandoArrendarPropiedadHandler:
 
         evento = PropiedadArrendada(id_correlacion=comando.id_correlacion)
         if random.choice([True, False]):
-            evento = ArrendamientoFallido(id_correlacion=comando.id_correlacion)
+            evento = PropiedadArrendamientoRechazado(
+                id_correlacion=comando.id_correlacion
+            )
 
         despachar_evento_integracion(evento)
 
 
 consumidores: list[Consumidor] = [
     Consumidor(
-        topico=ComandoAuditarContrato().topic_name(),
         mensaje=ComandoAuditarContrato,
         handler=ComandoAuditarContratoHandler().handle,
     ),
     Consumidor(
-        topico=ComandoArrendarPropiedad().topic_name(),
         mensaje=ComandoArrendarPropiedad,
         handler=ComandoArrendarPropiedadHandler().handle,
     ),

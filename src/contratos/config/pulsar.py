@@ -55,11 +55,10 @@ class Consumidor:
 
     def __init__(
         self,
-        topico: str,
         mensaje: type[EventoIntegracion] | type[Comando],
         handler: Callable,
     ):
-        self.topico = topico
+        self.topico = mensaje().topic_name()
         self.mensaje = mensaje
         self.handler = handler
 
