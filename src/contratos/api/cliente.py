@@ -1,12 +1,26 @@
 import requests
 import random
 import faker
+import argparse
+
+
+parser = argparse.ArgumentParser(description="Helper utility to test the server")
+
+parser.add_argument(
+    "--crear-transaccion",
+    action="store_true",
+)
+
+parser.add_argument(
+    "--crear-contrato",
+    action="store_true",
+)
 
 faker = faker.Faker()
 
 
 def establecer_transaccion_test():
-    url = "http://localhost:5000/contratos"
+    url = "http://localhost:5000/contratos/transccion"
 
     data = {
         "valor": random.randint(1, 1000000),
@@ -30,4 +44,21 @@ def establecer_transaccion_test():
         print(response.text)
 
 
-establecer_transaccion_test()
+def establecer_contrato_test():
+    response = requests.post("http://localhost:5000/contratos", json={})
+    if response.ok:
+        print("Contrato establecido")
+        print(response.text)
+    else:
+        print("Error al establecer contrato")
+        print(response.text)
+
+
+args = parser.parse_args()
+
+if args.crear_transaccion:
+    establecer_transaccion_test()
+elif args.crear_contrato:
+    establecer_contrato_test()
+else:
+    raise ValueError("No se especifico ninguna accion")

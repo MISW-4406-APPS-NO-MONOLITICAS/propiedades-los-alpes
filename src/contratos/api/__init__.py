@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from pydispatch.saferef import sys
+from contratos.config.pulsar import Consumidor
 from contratos.config.pulsar import (
     comenzar_despachador_eventos_integracion_a_pulsar,
     comenzar_despachador_coamndos_a_pulsar,
@@ -21,11 +22,23 @@ def registrar_handlers_eventos_dominio():
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):
     processes = []
     import multiprocessing
-    from contratos.modulos.contratos.infraestructura.consumidores import consumidores
+    from contratos.modulos.contratos.infraestructura.consumidores import (
+        consumidores as consumidores_contratos,
+    )
+    from contratos.modulos.sagas.saga import consumidores as consumidores_sagas
+    from contratos.modulos.sagas.consumidores import (
+        consumidores as consumidores_sagas_helper,
+    )
 
-    for consumidor in consumidores:
+    todos: list[Consumidor] = []
+    todos.extend(consumidores_contratos)
+    todos.extend(consumidores_sagas)
+    todos.extend(consumidores_sagas_helper)
+
+    for consumidor in todos:
+        assert isinstance(consumidor, Consumidor)
         # Cada uno es un proceso bloqueante que está escuchando un tópico
-        process = multiprocessing.Process(target=consumidor)
+        process = multiprocessing.Process(target=consumidor.start, name=consumidor.name())
         processes.append(process)
         process.start()
 
@@ -35,7 +48,6 @@ def comenzar_procesos_consumidores_de_pulsar(app: Flask):
 def setup_db(app: Flask):
     # Inicializa la DB
     from contratos.config.db import init_db, db_session
-
     init_db()
 
     @app.teardown_appcontext

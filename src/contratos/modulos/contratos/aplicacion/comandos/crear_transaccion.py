@@ -1,7 +1,7 @@
-from dataclasses import dataclass, field
 from contratos.config.logger import logger
-from .base import BaseHandler
-from contratos.seedwork.aplicacion.comandos import Comando
+from contratos.modulos.contratos.aplicacion.fabricas import FabricaTransacciones
+from contratos.modulos.contratos.infraestructura.repositorios import RepositorioTrasaccionesDB
+from contratos.seedwork.aplicacion.comandos import Comando, ComandoHandler
 from contratos.seedwork.aplicacion.comandos import ejecutar_commando as comando
 from contratos.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from contratos.modulos.contratos.aplicacion.dto import TransaccionDTO, Valor
@@ -28,7 +28,11 @@ class ComandoCrearTransaccion(Comando):
         }
 
 
-class ComandoCrearTransaccionHandler(BaseHandler):
+class ComandoCrearTransaccionHandler(ComandoHandler):
+    def __init__(self):
+        self.fabrica_transacciones = FabricaTransacciones()
+        self.repositorio_transaciones = RepositorioTrasaccionesDB()
+
     def handle(self, comando: ComandoCrearTransaccion):
         logger.info(f"Manejando comando {comando.__class__.__name__}")
         transaccion_dto = TransaccionDTO(
