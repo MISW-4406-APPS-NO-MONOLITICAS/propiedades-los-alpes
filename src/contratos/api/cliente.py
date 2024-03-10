@@ -13,15 +13,21 @@ parser.add_argument(
     default=False,
 )
 
+parser.add_argument(
+    "--valor",
+    type=int,
+    default=None,
+)
+
 faker = faker.Faker()
 
 
-def establecer_transaccion_test():
+def establecer_transaccion_test(valor: int | None = None):
     url = "http://localhost:5000/contratos"
 
     data = {
         "id_propiedad": str(uuid.uuid4()),
-        "valor": random.randint(1, 1000000),
+        "valor": valor if valor is not None else faker.random_number(),
         "comprador": faker.name(),
         "vendedor": faker.name(),
         "inquilino": faker.name(),
@@ -46,7 +52,7 @@ args = parser.parse_args()
 
 if args.transaccion:
     print(args)
-    establecer_transaccion_test()
+    establecer_transaccion_test(args.valor)
 else:
     print("No se especifico ninguna accion correcta")
     parser.print_help()
