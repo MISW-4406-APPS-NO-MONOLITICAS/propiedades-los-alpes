@@ -6,11 +6,14 @@ import faker
 
 faker = faker.Faker()
 test_type = os.environ.get("TEST_TYPE")
+url_base = os.environ.get("TEST_URL_BASE")
+if not url_base:
+    url_base = "http://localhost:5000/auditorias"
 id_correlacion = ""
 id_transaccion = ""
 
 def solicitar_auditoria_contrato_test():
-    url = "http://localhost:5002/auditorias"
+    url = url_base
     id_correlacion = str(uuid4())
     id_transaccion = str(uuid4())
     data = {
@@ -38,7 +41,7 @@ def solicitar_auditoria_contrato_test():
         
 
 def solicitar_compensacion_auditoria_test(id_correlacion: str, id_transaccion: str):
-    url = "http://localhost:5002/auditorias/compensacion"
+    url = f"{url_base}/compensacion"
     id_auditoria = str(uuid4())
     data = {
         "id_correlacion": id_correlacion,
