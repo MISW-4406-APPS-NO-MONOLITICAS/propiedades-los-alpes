@@ -58,6 +58,8 @@ services:
       context: .
       dockerfile: src/contratos/Dockerfile
     env_file: .env
+    environment:
+      - BROKER_HOST=pulsar
     depends_on:
       database:
         condition: service_healthy

@@ -1,4 +1,5 @@
 import logging
+import os 
 from typing import Callable
 import pulsar
 import pulsar.schema as schema
@@ -13,7 +14,9 @@ logger = logging.getLogger("pulsar")
 def get_pulsar_client() -> pulsar.Client:
     logger = logging.getLogger("client")
     logger.setLevel(logging.ERROR)
-    return pulsar.Client(f"pulsar://pulsar:6650", logger=logger)
+    l = os.getenv('BROKER_HOST', default="localhost")
+    print(l)
+    return pulsar.Client(f"pulsar://{l}:6650", logger=logger)
 
 
 class Despachador:
