@@ -33,8 +33,10 @@ def client(app):
     return app.test_client()
 
 
-def crear_transaccion_data():
+def crear_contrato_data():
     return ComandoCrearContrato(
+        id_corelacion=str(uuid4()),
+        id_propiedad=str(uuid4()),
         valor=faker.random_number(),
         comprador=faker.name(),
         vendedor=faker.name(),
@@ -44,7 +46,7 @@ def crear_transaccion_data():
 
 
 def test_crear_transaccion(client: FlaskClient):
-    data = crear_transaccion_data()
+    data = crear_contrato_data()
     response = client.post("/contratos", json=data.as_dict())
     assert response.status_code == 202
 
@@ -56,10 +58,20 @@ def test_crear_transaccion(client: FlaskClient):
     return data
 
 
+def test_api_listar_transacciones(client: FlaskClient):
+    data = test_crear_transaccion(client)
+    response = client.get("/contratos")
+    assert response.status_code == 200
+    assert response.json
+    assert len(response.json) > 0
+    found = filter(lambda x: x["comprador"] == data.comprador, response.json)
+    assert len(list(found)) == 1
+
+
 def test_crear_transaccion_evento_integracion(
     client: FlaskClient, caplog: pytest.LogCaptureFixture
 ):
-    data = crear_transaccion_data()
+    data = crear_contrato_data()
     data.comprador = str(uuid4())  # type: ignore
     with caplog.at_level(logging.INFO):
         response = client.post("/contratos", json=data.as_dict())
