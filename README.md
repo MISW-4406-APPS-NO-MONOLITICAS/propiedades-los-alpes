@@ -278,6 +278,10 @@ Pasos:
 
 [Ver SAGA en Draw.io](https://viewer.diagrams.net/?page-id=8BqL5w1kLr_CeNQm_G1R&highlight=0000ff&edit=_blank&layers=1&nav=1&page-id=8BqL5w1kLr_CeNQm_G1R#G1SEoDtM7BW_qL7KysAWG-W4_v_kGHrHuO)
 
+## Colleción Postman
+
+[Colección Postman](https://documenter.getpostman.com/view/33501861/2sA2xh3YT2)
+
 ## Escenarios de calidad
 
 Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/1ergvNQD3fY79l_3he4n_UzElMptrbnxj/view?usp=sharing)
