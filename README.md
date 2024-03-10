@@ -118,35 +118,46 @@ docker compose --profile full up -d --build
 ### Ejecutar cliente que crea una transacción
 
 ```bash
-docker exec contratos python src/contratos/api/cliente.py
-```
-
-### Ejecutar cliente que audita un contrato
-* generación de múltiples contratos
-* suscripción del microservicio de auditoria al evento de contrato creado
-* captura del evento e inicio del procesod de auditoría de contrato
-* publicación del resultado de contrato auditado
-
-```bash
-docker exec contratos python src/auditorias/api/cliente.py
+# Generar transacción valida
+docker exec contratos python src/contratos/api/cliente.py --transaccion
+# Generar transacción inválida para auditoría
+docker exec contratos python src/contratos/api/cliente.py --transaccion --valor 0
 ```
 
 ### Ejecutar pruebas
 
 ```bash
+# contratos
 docker exec -it contratos python -m pytest --maxfail=1 src/contratos/tests/ 
+# auditorias
+docker exec -it auditorias python -m pytest --maxfail=1 src/auditorias/tests/
+```
+
+#### Pruebas desde auditoria
+```bash
+# detener contratos
+export TEST_TYPE=rechazo # simula auditoría rechazada
+export TEST_TYPE=exitoso # simula auditoría exitosa y su posterior compensación
+export TEST_URL_BASE=http://localhost:5002/auditorias
+python src/auditorias/api/cliente.py
 ```
 
 ### Monitorear los logs para ver que sucede
 
 ```bash
+# contratos
 docker logs -f contratos
+# auditorias
+docker logs -f auditorias
 ```
 
 ### Reiniciar el servicio
 
 ```bash
+# contratos
 docker restart contratos
+# auditorias
+docker restart auditorias
 ```
 
 ### Eliminar base de datos y pulsar para recrear todo en limpio
@@ -201,6 +212,40 @@ subscribirse
 ```bash
 docker exec pulsar bin/pulsar-client consume -s sub public/default/topico -t Shared -st auto_consume -n 5  
 ```
+
+## APIs
+
+### Auditoria
+
+```bash
+# Obtener análisis de auditoría realizados sobre una transacción <id_transacción>
+curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
+
+# retorna json
+[
+   {
+      "auditado": true|false,
+      "completo": true|false,
+      "consistente": true|false,
+      "fecha_actualizacion": datetime,
+      "fecha_creacion": datetime,
+      "id": "<id_analisis>",
+      "id_correlacion": "<id_correlacion>",
+      "id_transaccion": "<id_transaccion>",
+      "indice_confiabilidad": 0..1,
+      "oficial": true|false,
+      "tipo_analisis": "Contrato"|"Contrato-compensacion"
+   },
+   {
+    ...
+   }
+]
+
+``` 
+#### resultados
+* análisis de transacción exitosa: 1 registro - ``` tipo_analisis = Contrato, auditado = true ```
+* análisis de transacción rechazada: 1 registro ``` tipo_analisis = Contrato, auditado = false ```
+* análisis de transacción rollback: 2 registros ``` { tipo_analisis = Contrato, auditado = true }, { tipo_analisis = Contrato-compensacion, auditado = false } ```
 
 ## Escenarios de calidad
 
