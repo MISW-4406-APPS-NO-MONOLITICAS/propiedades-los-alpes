@@ -253,26 +253,26 @@ curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
 Se plantea una operación larga en la que se crea un contrato generando una transacción que debe auditarse para garantizar que la información está completa y el índice de confiabilidad es alto, y debe cambiar el estado de una propiedad a través de un arrendamiento
 
 Pasos: 
-0. BFF: emite comando de ComandoCrearContrato
-1. contrato: escucha comando de ComandoCrearContrato  
-2. contrato: emite comando ComandoAuditarContrato  
-3. auditoría: escucha comando ComandoAuditarContrato  
-4. auditoría: emite evento ContratoAuditado  
-4.1 auditoría: emite evento ContratoAuditoriaRechazada  
-4.2 contrato: actualiza el estado del contrato  
-4.3 contrato: finaliza saga revertida.  
-5. contrato: escucha evento ContratoAuditado  
-6. contrato: emite comando ComandoArrendarPropiedad  
-7. listados: escucha comando ComandoArrendarPropiedad  
-8. listados: emite evento PropiedadArrendada  
-8.1 listados: emite evento PropiedadArrendamientoRechazado  
-8.2 contrato: escucha evento PropiedadArrendamientoRechazado y empieza a revertir saga.  
-8.3 contrato: emite comando compensación ComandoCancelarContratoAuditado  
-8.4 auditoría: escucha comando de compensación ComandoCancelarContratoAuditado  
-8.5 auditoría: emite evento ContratoAuditadoCancelado  
-8.6 contrato: finaliza la saga revertida  
-9. contrato: escucha evento PropiedadArrendada  
-10. finaliza la saga como completada  
+1. BFF: emite comando de ComandoCrearContrato
+2. contrato: escucha comando de ComandoCrearContrato  
+3. contrato: emite comando ComandoAuditarContrato  
+4. auditoría: escucha comando ComandoAuditarContrato  
+5. auditoría: emite evento ContratoAuditado  
+5.1 auditoría: emite evento ContratoAuditoriaRechazada  
+5.2 contrato: actualiza el estado del contrato  
+5.3 contrato: finaliza saga revertida.  
+6. contrato: escucha evento ContratoAuditado  
+7. contrato: emite comando ComandoArrendarPropiedad  
+8. listados: escucha comando ComandoArrendarPropiedad  
+9. listados: emite evento PropiedadArrendada  
+9.1 listados: emite evento PropiedadArrendamientoRechazado  
+9.2 contrato: escucha evento PropiedadArrendamientoRechazado y empieza a revertir saga.  
+9.3 contrato: emite comando compensación ComandoCancelarContratoAuditado  
+9.4 auditoría: escucha comando de compensación ComandoCancelarContratoAuditado  
+9.5 auditoría: emite evento ContratoAuditadoCancelado  
+9.6 contrato: finaliza la saga revertida  
+10. contrato: escucha evento PropiedadArrendada  
+11. finaliza la saga como completada  
 
 ![Diagrama de Contexto-SAGA drawio](https://github.com/MISW-4406-APPS-NO-MONOLITICAS/propiedades-los-alpes/assets/98927955/8e2ce5d3-cd92-42c9-afe8-8f40cecfdd17)
 
