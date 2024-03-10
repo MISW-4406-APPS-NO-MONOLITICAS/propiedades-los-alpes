@@ -9,7 +9,8 @@ logger = logger.getChild("propiedades-handler")
 class HandlerTransaccionDominio(Handler):
     @staticmethod
     def handle_transaccion_creada(evento):
-        logger.info(f"Handling evento de dominio {type(evento).__name__}")
+        assert isinstance(evento, TransaccionCreada)
+        logger.info(f"Handling evento de dominio {evento.__class__.__name__}")
 
 
 def registrar():

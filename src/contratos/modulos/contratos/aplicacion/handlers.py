@@ -1,20 +1,15 @@
-import random
 import uuid
-from contratos.modulos.contratos.dominio.eventos import TransaccionCreadaIntegracion
+from contratos.modulos.contratos.aplicacion.comandos.schemas import ComandoCrearContrato
+from contratos.modulos.contratos.aplicacion.eventos.schemas import TransaccionCreadaIntegracion
 from contratos.config.logger import logger
 from contratos.modulos.contratos.infraestructura.repositorios import (
     RepositorioTrasaccionesDB,
 )
-from contratos.modulos.contratos.aplicacion.comandos.crear_transaccion import (
-    ComandoCrearTransaccion,
-)
-from pydispatch import dispatcher
-
 
 class TransaccionCreadaIntegracionHandler:
     def __init__(self, event: TransaccionCreadaIntegracion):
         logger.info(
-            f"Handling evento {type(event).__name__}, id_transaccion: {event.id_transaccion}"
+            f"Handling evento {event.__class__.__name__}, id_transaccion: {event.id_transaccion}"
         )
 
         repository = RepositorioTrasaccionesDB()
@@ -24,23 +19,5 @@ class TransaccionCreadaIntegracionHandler:
             logger.info(
                 f"Transaccion {event.id_transaccion} ya existe, no se hace nada"
             )
-
-            # Test
-            #if random.choice([True, False]):
-            example_enviar_comando()
-
         else:
             logger.info(f"Transaccion {event.id_transaccion} no existe, se crea")
-
-
-def example_enviar_comando():
-    from faker import Faker
-    faker = Faker()
-    comando = ComandoCrearTransaccion(
-        valor=faker.random_number(),
-        comprador=faker.name(),
-        vendedor=faker.name(),
-        inquilino=faker.name(),
-        arrendatario=faker.name(),
-    )
-    dispatcher.send(signal="Comando", comando=comando)

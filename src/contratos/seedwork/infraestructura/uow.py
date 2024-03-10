@@ -4,7 +4,11 @@ from pydispatch import dispatcher
 from contratos.config.logger import logger
 
 from contratos.seedwork.dominio.entidades import AgregacionRaiz
-from contratos.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
+from contratos.seedwork.dominio.eventos import (
+    EventoDominio,
+    EventoIntegracion,
+    despachar_evento_integracion,
+)
 
 
 class Lock(Enum):
@@ -20,9 +24,7 @@ class Batch:
         self.kwargs = kwargs
 
     def run(self):
-        logger.info(
-            f"Ejecutando operacion {self.operacion.__name__}"
-        )
+        logger.info(f"Ejecutando operacion {self.operacion.__name__}")
         return self.operacion(*self.args, **self.kwargs)
 
 
@@ -96,7 +98,7 @@ class UnidadTrabajo:
             logger.info(
                 f"Despachando evento integracion: {evento.__class__.__name__} en signal Integracion"
             )
-            dispatcher.send(signal="Integracion", evento=evento)
+            despachar_evento_integracion(evento)
 
 
 uow = None
@@ -112,8 +114,10 @@ def get_uow():
 
 
 class UnidadTrabajoPuerto:
+    from contratos.config.uow import UnidadTrabajoSQLAlchemy
+
     @staticmethod
-    def get_unidad_de_trabajo() -> UnidadTrabajo:
+    def get_unidad_de_trabajo() -> UnidadTrabajoSQLAlchemy:
         return get_uow()
 
     @staticmethod
