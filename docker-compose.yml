@@ -111,7 +111,7 @@ services:
   bff_web:
     container_name: bff_web
     image: bff_web
-    profiles: ["bff_web", "full"]
+    profiles: ["bff_web","full"]
     ports:
       - "8000:8000"
     environment:
