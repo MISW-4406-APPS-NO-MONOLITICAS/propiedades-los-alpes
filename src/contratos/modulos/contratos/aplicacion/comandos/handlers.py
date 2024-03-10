@@ -53,22 +53,6 @@ class ComandoCrearContratoHandler(ComandoHandler):
         UnidadTrabajoPuerto.savepoint()
         UnidadTrabajoPuerto.commit()
 
-        # Iniciamos la saga
-        comando_inicial = ComandoAuditarContrato(
-            id_correlacion=comando.id_correlacion,
-            id_transaccion=transaccion.id.__str__(),
-            valor=transaccion.valor.valor,
-            comprador=comando.comprador,
-            vendedor=comando.vendedor,
-            inquilino=comando.inquilino,
-            arrendatario=comando.arrendatario,
-            fecha_evento=transaccion.fecha_creacion.isoformat(),
-        )
-
-        ManejadorDeSaga().iniciar_saga(
-            id_correlacion=id_correlacion, comando_inicial=comando_inicial
-        )
-
 
 @comando.register(ComandoCrearContrato)
 def ejecutar_comando_crear_transaccion(comando: ComandoCrearContrato):

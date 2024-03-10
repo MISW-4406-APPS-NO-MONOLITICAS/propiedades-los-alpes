@@ -1,15 +1,15 @@
 from auditorias.config.pulsar import Consumidor
 from auditorias.modulos.verificacion.aplicacion.handlers import (
-    ContratoCreadoIntegracionHandler,
+    TransaccionCreadaIntegracionHandler,
 )
-from auditorias.modulos.verificacion.dominio.eventos import ContratoCreadoIntegracion
+
+from auditorias.modulos.verificacion.dominio.eventos import TransaccionCreadaIntegracion
 
 
 consumidores = [
     Consumidor(
-        topico=ContratoCreadoIntegracion().topic_name(),
-        mensaje=ContratoCreadoIntegracion,
-        handler=ContratoCreadoIntegracionHandler,
+        topico=TransaccionCreadaIntegracion().topic_name(),
+        mensaje=TransaccionCreadaIntegracion,  # type: ignore
+        handler=TransaccionCreadaIntegracionHandler,
     ).start,
-    
 ]

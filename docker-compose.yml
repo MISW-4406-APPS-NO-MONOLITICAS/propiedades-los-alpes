@@ -41,17 +41,20 @@ services:
     container_name: pulsar
     profiles: ["pulsar", "full"]
     restart: on-failure
+    environment:
+      - PULSAR_PREFIX_schemaCompatibilityStrategy=FORWARD_TRANSITIVE
+      # - PULSAR_PREFIX_systemTopicSchemaCompatibilityStrategy=FORWARD_TRANSITIVE
     ports:
       - "6650:6650"
       - "8080:8080"
-    command: ["bin/pulsar", "standalone"]
+    command: sh -c "bin/apply-config-from-env.py conf/standalone.conf && bin/pulsar standalone"
     networks:
       - internal
 
   contratos:
     container_name: contratos
     image: contratos
-    profiles: ["contratos", "full"]
+    profiles: ["contratos", "full", "experimento"]
     ports:
       - "5000:5000"
     build:
@@ -92,7 +95,7 @@ services:
   auditorias:
     container_name: auditorias
     image: auditorias
-    profiles: ["auditorias", "full"]
+    profiles: ["auditorias", "full", "experimento"]
     ports:
       - "5002:5000"
     build:
