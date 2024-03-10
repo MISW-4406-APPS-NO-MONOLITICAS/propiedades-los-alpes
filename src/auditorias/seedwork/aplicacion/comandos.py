@@ -1,4 +1,3 @@
-from dataclasses import asdict, dataclass
 from functools import singledispatch
 from abc import ABC, abstractmethod
 from typing import Any, Type

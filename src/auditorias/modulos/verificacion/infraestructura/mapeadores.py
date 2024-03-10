@@ -1,5 +1,3 @@
-# Mapeadores para la capa de infrastructura del dominio de auditorias
-
 import uuid
 from auditorias.seedwork.dominio.repositorios import Mapeador
 from auditorias.modulos.verificacion.dominio.objetos_valor import (
@@ -20,7 +18,8 @@ class MapeadorAnalisisDB(Mapeador):
             fecha_creacion=dto.fecha_creacion,
             fecha_actualizacion=dto.fecha_actualizacion,
             tipo_analisis=TipoAnalisis(valor=dto.tipo_analisis),
-            contrato_id=dto.contrato_id,
+            id_correlacion=dto.id_correlacion,
+            id_transaccion=dto.id_transaccion,
             oficial=dto.oficial,
             consistente=dto.consistente,
             completo=dto.completo,
@@ -36,7 +35,8 @@ class MapeadorAnalisisDB(Mapeador):
                 self._FORMATO_FECHA
             ),
             tipo_analisis=entidad.tipo_analisis.valor,
-            contrato_id=entidad.contrato_id,
+            id_correlacion=entidad.id_correlacion,
+            id_transaccion=entidad.id_transaccion,
             oficial=entidad.oficial,
             consistente=entidad.consistente,
             completo=entidad.completo,

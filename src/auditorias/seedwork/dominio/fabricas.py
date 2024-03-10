@@ -1,5 +1,3 @@
-# Fábricas para la creación de objetos reusables parte del seedwork del proyecto
-
 from abc import ABC, abstractmethod
 from typing import Any
 from .repositorios import Mapeador

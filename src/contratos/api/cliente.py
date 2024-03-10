@@ -1,15 +1,33 @@
+import uuid
 import requests
 import random
 import faker
+import argparse
+
+
+parser = argparse.ArgumentParser(description="Helper utility to test the server")
+
+parser.add_argument(
+    "--transaccion",
+    action="store_true",
+    default=False,
+)
+
+parser.add_argument(
+    "--valor",
+    type=int,
+    default=None,
+)
 
 faker = faker.Faker()
 
 
-def establecer_transaccion_test():
+def establecer_transaccion_test(valor: int | None = None):
     url = "http://localhost:5000/contratos"
 
     data = {
-        "valor": random.randint(1, 1000000),
+        "id_propiedad": str(uuid.uuid4()),
+        "valor": valor if valor is not None else faker.random_number(),
         "comprador": faker.name(),
         "vendedor": faker.name(),
         "inquilino": faker.name(),
@@ -30,4 +48,12 @@ def establecer_transaccion_test():
         print(response.text)
 
 
-establecer_transaccion_test()
+args = parser.parse_args()
+
+if args.transaccion:
+    print(args)
+    establecer_transaccion_test(args.valor)
+else:
+    print("No se especifico ninguna accion correcta")
+    parser.print_help()
+    exit(1)

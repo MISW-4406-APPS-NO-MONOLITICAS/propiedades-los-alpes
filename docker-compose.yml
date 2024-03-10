@@ -3,7 +3,7 @@ services:
   database:
     image: mysql:8
     container_name: database
-    profiles: ["database", "full"]
+    profiles: ["database", "platform", "full"]
     restart: on-failure
     ports:
       - "3306:3306"
@@ -39,15 +39,20 @@ services:
   pulsar:
     image: apachepulsar/pulsar:3.2.0
     container_name: pulsar
-    profiles: ["pulsar", "full"]
+    profiles: ["pulsar", "platform", "full"]
     restart: on-failure
     ports:
       - "6650:6650"
       - "8080:8080"
     command: ["bin/pulsar", "standalone"]
+    healthcheck:
+      test: ["CMD", "bin/pulsar-admin", "brokers", "healthcheck"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
     networks:
       - internal
-
+   
   contratos:
     container_name: contratos
     image: contratos
@@ -58,8 +63,12 @@ services:
       context: .
       dockerfile: src/contratos/Dockerfile
     env_file: .env
+    environment:
+      - BROKER_HOST=pulsar
     depends_on:
       database:
+        condition: service_healthy
+      pulsar:
         condition: service_healthy
     volumes:
       - ./src:/src
@@ -81,6 +90,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      pulsar:
+        condition: service_healthy
     volumes:
       - ./src:/src
     networks:
@@ -100,6 +111,32 @@ services:
     env_file: .env
     depends_on:
       database:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+  bff_web:
+    container_name: bff_web
+    image: bff_web
+    profiles: ["bff_web","full"]
+    ports:
+      - "8000:8000"
+    environment:
+      - BROKER_HOST=pulsar
+      - CONTRATOS_ADDRESS=contratos
+    build:
+      context: .
+      dockerfile: src/bff_web/Dockerfile
+    depends_on:
+      contratos:
+        condition: service_started
+      pulsar:
         condition: service_healthy
     volumes:
       - ./src:/src

@@ -1,5 +1,4 @@
 from pydispatch import dispatcher
-from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado
 from auditorias.seedwork.aplicacion.handlers import Handler
 from auditorias.config.logger import logger
 

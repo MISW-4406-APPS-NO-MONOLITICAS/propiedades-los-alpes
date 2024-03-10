@@ -98,7 +98,7 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 └── requirements.txt
 ```
 
-- El directorio `/src` cuenta con los directorios `/contratos`, `/auditorias` y `/propiedades` los cuales representan los microservicios definidos para Propiedades de los Alpes. La comunicación entre ellos se realiza a través de eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos basado en Apache Pulsar
+- El directorio `/src` cuenta con los directorios `/contratos`, `/auditorias` y `/propiedades` los cuales representan los microservicios definidos para Propiedades de los Alpes. La comunicación entre ellos se realiza a través de eventos de integración propagados del sistema de Propiedad de los Alpes, por medio de un broker de eventos basado en Apache Pulsar
 - `src/*/api/`: contiene la definición de los endpoints del microservicio
 - `src/*/config/`: contiene las configuraciones generales del microservicio 
 - `src/*/modulos/`: contiene los diferentes modulos del microservicio. Cada módulo está estructurado en capas de aplicación, dominio e infraestructura
@@ -118,35 +118,46 @@ docker compose --profile full up -d --build
 ### Ejecutar cliente que crea una transacción
 
 ```bash
-docker exec contratos python src/contratos/api/cliente.py
-```
-
-### Ejecutar cliente que audita un contrato
-* generación de múltiples contratos
-* suscripción del microservicio de auditoria al evento de contrato creado
-* captura del evento e inicio del procesod de auditoría de contrato
-* publicación del resultado de contrato auditado
-
-```bash
-docker exec contratos python src/auditorias/api/cliente.py
+# Generar transacción valida
+docker exec contratos python src/contratos/api/cliente.py --transaccion
+# Generar transacción inválida para auditoría
+docker exec contratos python src/contratos/api/cliente.py --transaccion --valor 0
 ```
 
 ### Ejecutar pruebas
 
 ```bash
+# contratos
 docker exec -it contratos python -m pytest --maxfail=1 src/contratos/tests/ 
+# auditorias
+docker exec -it auditorias python -m pytest --maxfail=1 src/auditorias/tests/
+```
+
+#### Pruebas desde auditoria
+```bash
+# detener contratos
+export TEST_TYPE=rechazo # simula auditoría rechazada
+export TEST_TYPE=exitoso # simula auditoría exitosa y su posterior compensación
+export TEST_URL_BASE=http://localhost:5002/auditorias
+python src/auditorias/api/cliente.py
 ```
 
 ### Monitorear los logs para ver que sucede
 
 ```bash
+# contratos
 docker logs -f contratos
+# auditorias
+docker logs -f auditorias
 ```
 
 ### Reiniciar el servicio
 
 ```bash
+# contratos
 docker restart contratos
+# auditorias
+docker restart auditorias
 ```
 
 ### Eliminar base de datos y pulsar para recrear todo en limpio
@@ -201,6 +212,75 @@ subscribirse
 ```bash
 docker exec pulsar bin/pulsar-client consume -s sub public/default/topico -t Shared -st auto_consume -n 5  
 ```
+
+## APIs
+
+### Auditoria
+
+```bash
+# Obtener análisis de auditoría realizados sobre una transacción <id_transacción>
+curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transaccion>
+
+# retorna json
+[
+   {
+      "auditado": true|false,
+      "completo": true|false,
+      "consistente": true|false,
+      "fecha_actualizacion": datetime,
+      "fecha_creacion": datetime,
+      "id": "<id_analisis>",
+      "id_correlacion": "<id_correlacion>",
+      "id_transaccion": "<id_transaccion>",
+      "indice_confiabilidad": 0..1,
+      "oficial": true|false,
+      "tipo_analisis": "Contrato"|"Contrato-compensacion"
+   },
+   {
+    ...
+   }
+]
+
+``` 
+#### resultados
+* análisis de transacción exitosa: 1 registro - ``` tipo_analisis = Contrato, auditado = true ```
+* análisis de transacción rechazada: 1 registro ``` tipo_analisis = Contrato, auditado = false ```
+* análisis de transacción rollback: 2 registros ``` { tipo_analisis = Contrato, auditado = true }, { tipo_analisis = Contrato-compensacion, auditado = false } ```
+
+## SAGA
+
+### Flujo de operación larga
+Se plantea una operación larga en la que se crea un contrato generando una transacción que debe auditarse para garantizar que la información está completa y el índice de confiabilidad es alto, y debe cambiar el estado de una propiedad a través de un arrendamiento
+
+Pasos: 
+1. BFF: emite comando de ComandoCrearContrato
+2. contrato: escucha comando de ComandoCrearContrato  
+3. contrato: emite comando ComandoAuditarContrato  
+4. auditoría: escucha comando ComandoAuditarContrato  
+5. auditoría: emite evento ContratoAuditado  
+5.1 auditoría: emite evento ContratoAuditoriaRechazada  
+5.2 contrato: actualiza el estado del contrato  
+5.3 contrato: finaliza saga revertida.  
+6. contrato: escucha evento ContratoAuditado  
+7. contrato: emite comando ComandoArrendarPropiedad  
+8. listados: escucha comando ComandoArrendarPropiedad  
+9. listados: emite evento PropiedadArrendada  
+9.1 listados: emite evento PropiedadArrendamientoRechazado  
+9.2 contrato: escucha evento PropiedadArrendamientoRechazado y empieza a revertir saga.  
+9.3 contrato: emite comando compensación ComandoCancelarContratoAuditado  
+9.4 auditoría: escucha comando de compensación ComandoCancelarContratoAuditado  
+9.5 auditoría: emite evento ContratoAuditadoCancelado  
+9.6 contrato: finaliza la saga revertida  
+10. contrato: escucha evento PropiedadArrendada  
+11. finaliza la saga como completada  
+
+![Diagrama de Contexto-SAGA drawio (1)](https://github.com/MISW-4406-APPS-NO-MONOLITICAS/propiedades-los-alpes/assets/98927955/3dfe7f4e-2ea9-43f7-9859-4cd088b702bf)
+
+[Ver SAGA en Draw.io](https://viewer.diagrams.net/?page-id=8BqL5w1kLr_CeNQm_G1R&highlight=0000ff&edit=_blank&layers=1&nav=1&page-id=8BqL5w1kLr_CeNQm_G1R#G1SEoDtM7BW_qL7KysAWG-W4_v_kGHrHuO)
+
+## Colleción Postman
+
+[Colección Postman](https://documenter.getpostman.com/view/33501861/2sA2xh3YT2)
 
 ## Escenarios de calidad
 

@@ -1,0 +1,19 @@
+name: Build test
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Levantar contenedores
+        run: docker compose --profile full up -d --wait
+      - name: Correr Pruebas
+        run: docker exec contratos python -m pytest src/contratos/tests/ -v
