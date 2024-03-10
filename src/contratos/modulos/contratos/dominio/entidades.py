@@ -44,6 +44,7 @@ class Transaccion(AgregacionRaiz):
                 comprador=self.comprador,
                 vendedor=self.vendedor,
                 inquilino=self.inquilino,
+                intermediario='prueba',
                 fecha_evento=self.fecha_creacion.isoformat(),
                 fecha_creacion=self.fecha_creacion.isoformat(),
             ),

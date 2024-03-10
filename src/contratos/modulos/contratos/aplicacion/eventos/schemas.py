@@ -9,6 +9,7 @@ class TransaccionCreadaIntegracion(EventoIntegracion):
     comprador = schema.String(required=True)
     vendedor = schema.String(required=True)
     inquilino = schema.String(required=True)
+    intermediario = schema.String(default=None, required_default=True)
     fecha_evento = schema.String(required=True)
 
     def topic_name(self):
