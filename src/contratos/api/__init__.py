@@ -1,4 +1,5 @@
 import os
+import multiprocessing
 
 from flask import Flask
 from pydispatch.saferef import sys
@@ -25,20 +26,20 @@ def registrar_handlers_eventos_dominio():
 
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):
     processes = []
-    import multiprocessing
+    todos: list[Consumidor] = []
+
     from contratos.modulos.contratos.infraestructura.consumidores import (
         consumidores as consumidores_contratos,
     )
+    todos.extend(consumidores_contratos)
+
     from contratos.modulos.sagas.saga import consumidores as consumidores_sagas
+    todos.extend(consumidores_sagas)
 
     # DELETE SOOON
     from contratos.modulos.sagas.consumidores import (
         consumidores as consumidores_sagas_helper,
     )
-
-    todos: list[Consumidor] = []
-    todos.extend(consumidores_contratos)
-    todos.extend(consumidores_sagas)
     todos.extend(consumidores_sagas_helper)
 
     for consumidor in todos:
