@@ -247,6 +247,33 @@ curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
 * análisis de transacción rechazada: 1 registro ``` tipo_analisis = Contrato, auditado = false ```
 * análisis de transacción rollback: 2 registros ``` { tipo_analisis = Contrato, auditado = true }, { tipo_analisis = Contrato-compensacion, auditado = false } ```
 
+## SAGA
+
+### Flujo de operación larga
+Se plantea una operación larga en la que se crea un contrato generando una transacción que debe auditarse para garantizar que la información está completa y el índice de confiabilidad es alto, y debe cambiar el estado de una propiedad a través de un arrendamiento
+
+Pasos: 
+1. contrato: escucha comando de ComandoCrearContrato  
+2. contrato: emite comando ComandoAuditarContrato  
+3. auditoría: escucha comando ComandoAuditarContrato  
+4. auditoría: emite evento ContratoAuditado  
+4.1 auditoría: emite evento ContratoAuditoriaRechazada  
+4.2 contrato: actualiza el estado del contrato  
+4.3 contrato: finaliza saga revertida.  
+5. contrato: escucha evento ContratoAuditado  
+6. contrato: emite comando ComandoArrendarPropiedad  
+7. listados: escucha comando ComandoArrendarPropiedad  
+8. listados: emite evento PropiedadArrendada  
+8.1 listados: emite evento PropiedadArrendamientoRechazado  
+8.2 contrato: escucha evento PropiedadArrendamientoRechazado y empieza a revertir saga.  
+8.3 contrato: emite comando compensación ComandoCancelarContratoAuditado  
+8.4 auditoría: escucha comando de compensación ComandoCancelarContratoAuditado  
+8.5 auditoría: emite evento ContratoAuditadoCancelado  
+8.6 contrato: finaliza la saga revertida  
+9. contrato: escucha evento PropiedadArrendada  
+10. finaliza la saga como completada  
+
+
 ## Escenarios de calidad
 
 Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/1ergvNQD3fY79l_3he4n_UzElMptrbnxj/view?usp=sharing)
