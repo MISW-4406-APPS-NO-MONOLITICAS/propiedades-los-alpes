@@ -10,8 +10,7 @@ from contratos.modulos.contratos.dominio.eventos import (
     TransaccionCreada,
 )
 from contratos.modulos.contratos.aplicacion.eventos.schemas import (
-    TransaccionCreadaIntegracionV1,
-    TransaccionCreadaIntegracionV2,
+    TransaccionCreadaIntegracion,
 )
 
 
@@ -35,7 +34,7 @@ class Transaccion(AgregacionRaiz):
             )
         )
 
-        evento = TransaccionCreadaIntegracionV2(
+        evento = TransaccionCreadaIntegracion(
             id=str(uuid4()),
             id_correlacion=id_correlacion or str(uuid4()),
             id_transaccion=self.id.__str__(),
@@ -49,7 +48,6 @@ class Transaccion(AgregacionRaiz):
             fecha_creacion=self.fecha_creacion.isoformat(),
         )
         self.agregar_evento_integracion(evento=evento)
-        self.agregar_evento_integracion(evento=TransaccionCreadaIntegracionV1.from_v2(evento))
 
     def auditar(self, id_auditoria: str):
         self.id_auditoria = id_auditoria
