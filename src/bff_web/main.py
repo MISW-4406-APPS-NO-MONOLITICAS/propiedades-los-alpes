@@ -5,7 +5,7 @@ import traceback
 import uvicorn
 import uuid
 import datetime
-
+import time
 
 from pydantic import BaseSettings
 from typing import Any
@@ -32,7 +32,7 @@ eventos = list()
 async def app_startup():
     global tasks
     global eventos
-    task1 = asyncio.ensure_future(suscribirse_a_topico("transaccion_creada", "propiedades-bff", "public/default/transaccion_creada", eventos=eventos))
+    task1 = asyncio.ensure_future(suscribirse_a_topico("contratos_transaccion_creada", "propiedades-bff", "public/default/contratos_transaccion_creada", eventos=eventos))
     tasks.append(task1)
 
 @app.on_event("shutdown")
@@ -60,5 +60,9 @@ async def stream_mensajes(request: Request):
             await asyncio.sleep(0.1)
 
     return EventSourceResponse(leer_eventos())
+
+@app.get("/healt-check")
+async def healt_check():
+    return {'bff_web':'Running'}
     
 app.include_router(v1, prefix="/v1")

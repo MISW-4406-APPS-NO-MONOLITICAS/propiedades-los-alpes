@@ -47,7 +47,7 @@ services:
     command: ["bin/pulsar", "standalone"]
     networks:
       - internal
-
+   
   contratos:
     container_name: contratos
     image: contratos
@@ -58,6 +58,8 @@ services:
       context: .
       dockerfile: src/contratos/Dockerfile
     env_file: .env
+    environment:
+      - BROKER_HOST=pulsar
     depends_on:
       database:
         condition: service_healthy
@@ -67,7 +69,6 @@ services:
       - internal
     # attaching for debugging
     stdin_open: true
-
 
   listados:
     container_name: listados
@@ -102,6 +103,27 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+  bff_web:
+    container_name: bff_web
+    image: bff_web
+    profiles: ["bff_web","full"]
+    ports:
+      - "8000:8000"
+    environment:
+      - BROKER_HOST=pulsar
+      - CONTRATOS_ADDRESS=contratos
+    build:
+      context: .
+      dockerfile: src/bff_web/Dockerfile
+    depends_on:
+      - contratos
     volumes:
       - ./src:/src
     networks:
