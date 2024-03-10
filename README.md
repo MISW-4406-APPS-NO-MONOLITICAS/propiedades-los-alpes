@@ -98,7 +98,7 @@ Microservicio en Flask de un sistema que provee información sobre bienes raíce
 └── requirements.txt
 ```
 
-- El directorio `/src` cuenta con los directorios `/contratos`, `/auditorias` y `/propiedades` los cuales representan los microservicios definidos para Propiedades de los Alpes. La comunicación entre ellos se realiza a través de eventos de integración propagados del sistema de AeroAlpes, por medio de un broker de eventos basado en Apache Pulsar
+- El directorio `/src` cuenta con los directorios `/contratos`, `/auditorias` y `/propiedades` los cuales representan los microservicios definidos para Propiedades de los Alpes. La comunicación entre ellos se realiza a través de eventos de integración propagados del sistema de Propiedad de los Alpes, por medio de un broker de eventos basado en Apache Pulsar
 - `src/*/api/`: contiene la definición de los endpoints del microservicio
 - `src/*/config/`: contiene las configuraciones generales del microservicio 
 - `src/*/modulos/`: contiene los diferentes modulos del microservicio. Cada módulo está estructurado en capas de aplicación, dominio e infraestructura
