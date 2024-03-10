@@ -13,14 +13,16 @@ FORMATO_FECHA = '%a, %d %b %Y %H:%M:%S %Z'
 def obtener_transacciones(root) -> typing.List["Transaccion"]:
     transacciones_json = requests.get(f'http://{CONTRATOS_HOST}:5000/contratos').json()
     transacciones = []
-
     for transaccion in transacciones_json:
         transacciones.append(
             Transaccion(
                 id=transaccion.get('id'),
+                id_propiedad=transaccion.get('id_propiedad',''),
+                id_auditoria=transaccion.get('id_auditoria',''),
+                id_correlacion=transaccion.get('id_correlacion',''),
                 fecha_creacion=datetime.strptime(transaccion.get('fecha_creacion'), FORMATO_FECHA), 
                 fecha_actualizacion=datetime.strptime(transaccion.get('fecha_actualizacion'), FORMATO_FECHA), 
-                valor=transaccion.get('valor', ''),
+                valor=transaccion.get('valor').get('valor',''),
                 comprador=transaccion.get('comprador', ''),
                 vendedor=transaccion.get('vendedor', ''),
                 inquilino=transaccion.get('inquilino', ''),
@@ -33,6 +35,9 @@ def obtener_transacciones(root) -> typing.List["Transaccion"]:
 @strawberry.type
 class Transaccion:
     id:str
+    id_propiedad: str
+    id_auditoria: str
+    id_correlacion: str
     fecha_creacion: datetime
     fecha_actualizacion: datetime
     valor: float

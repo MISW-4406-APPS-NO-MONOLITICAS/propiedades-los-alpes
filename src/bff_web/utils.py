@@ -31,24 +31,30 @@ def obtener_schema_avro_de_diccionario(json_schema: dict) -> AvroSchema:
     return AvroSchema(None,schema_definition=definicion_schema)
 
 class Comando(schema.Record):
+    id_correlacion = schema.String(required=True)
     def topic_name(self) -> str:
         raise ValueError("La subclase debe implementar el método topic_name")
 
-class ComandoCrearTransaccion(Comando):
-    valor = schema.Float()
+
+class ComandoCrearContrato(Comando):
+    id_correlacion = schema.String(required=True)
+    id_propiedad = schema.String(required=True)
+    valor = schema.Float(required=True)
     comprador = schema.String()
     vendedor = schema.String()
     inquilino = schema.String()
     arrendatario = schema.String()
 
-    def topic_name(self):
-        return "crear_transaccion"
-
     def as_dict(self):
         return {
+            "id_correlacion": self.id_correlacion,
+            "id_propiedad": self.id_propiedad,
             "valor": self.valor,
             "comprador": self.comprador,
             "vendedor": self.vendedor,
             "inquilino": self.inquilino,
             "arrendatario": self.arrendatario,
         }
+
+    def topic_name(self) -> str:
+        return "contratos_crear"

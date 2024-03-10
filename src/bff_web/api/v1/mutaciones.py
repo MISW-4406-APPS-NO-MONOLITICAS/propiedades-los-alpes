@@ -10,8 +10,12 @@ from .esquemas import *
 class Mutation:
 
     @strawberry.mutation
-    async def crear_transaccion(self, valor:float,comprador:str,vendedor:str,inquilino:str,arrendatario:str, info:Info)->TransaccionRespuesta:
-        payload = utils.ComandoCrearTransaccion(
+    async def crear_transaccion(
+        self, valor:float,comprador:str,vendedor:str,inquilino:str,arrendatario:str,id_correlacion:str,id_propiedad:str, info:Info
+    )->TransaccionRespuesta:
+        payload = utils.ComandoCrearContrato(
+            id_correlacion = id_correlacion,
+            id_propiedad = id_propiedad,
             valor = valor,
             comprador = comprador,
             vendedor = vendedor,
