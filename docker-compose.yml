@@ -120,6 +120,8 @@ services:
     build:
       context: .
       dockerfile: src/bff_web/Dockerfile
+    depends_on:
+      - contratos
     volumes:
       - ./src:/src
     networks:
