@@ -47,12 +47,7 @@ services:
     command: ["bin/pulsar", "standalone"]
     networks:
       - internal
-  
-  client:
-    depends_on:
-      - pulsar
-    image: apachepulsar/pulsar:latest
-  
+   
   contratos:
     container_name: contratos
     image: contratos
@@ -68,8 +63,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-      pulsar:
-        condition: service_started
     volumes:
       - ./src:/src
     networks:
