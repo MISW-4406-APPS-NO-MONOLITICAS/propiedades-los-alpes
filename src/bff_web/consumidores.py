@@ -12,7 +12,7 @@ async def suscribirse_a_topico(topico: str, suscripcion: str, schema: str, tipo_
         json_schema = utils.consultar_schema_registry(schema)  
         avro_schema = utils.obtener_schema_avro_de_diccionario(json_schema)
 
-        async with aiopulsar.connect(f'pulsar://{utils.broker_host()}:6650') as cliente:
+        async with aiopulsar.connect(f'pulsar://pulsar:6650') as cliente:
             async with cliente.subscribe(
                 topico, 
                 consumer_type=tipo_consumidor,
