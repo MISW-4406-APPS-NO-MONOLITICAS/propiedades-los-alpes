@@ -10,7 +10,8 @@ from contratos.modulos.contratos.dominio.eventos import (
     TransaccionCreada,
 )
 from contratos.modulos.contratos.aplicacion.eventos.schemas import (
-    TransaccionCreadaIntegracion,
+    TransaccionCreadaIntegracionV1,
+    TransaccionCreadaIntegracionV2,
 )
 
 
@@ -34,21 +35,21 @@ class Transaccion(AgregacionRaiz):
             )
         )
 
-        self.agregar_evento_integracion(
-            evento=TransaccionCreadaIntegracion(
-                id=str(uuid4()),
-                id_correlacion=id_correlacion or str(uuid4()),
-                id_transaccion=self.id.__str__(),
-                id_propiedad=self.id_propiedad,
-                valor=self.valor.valor,
-                comprador=self.comprador,
-                vendedor=self.vendedor,
-                inquilino=self.inquilino,
-                intermediario='prueba',
-                fecha_evento=self.fecha_creacion.isoformat(),
-                fecha_creacion=self.fecha_creacion.isoformat(),
-            ),
+        evento = TransaccionCreadaIntegracionV2(
+            id=str(uuid4()),
+            id_correlacion=id_correlacion or str(uuid4()),
+            id_transaccion=self.id.__str__(),
+            id_propiedad=self.id_propiedad,
+            valor=self.valor.valor,
+            comprador=self.comprador,
+            vendedor=self.vendedor,
+            inquilino=self.inquilino,
+            intermediario="prueba",
+            fecha_evento=self.fecha_creacion.isoformat(),
+            fecha_creacion=self.fecha_creacion.isoformat(),
         )
+        self.agregar_evento_integracion(evento=evento)
+        self.agregar_evento_integracion(evento=TransaccionCreadaIntegracionV1.from_v2(evento))
 
     def auditar(self, id_auditoria: str):
         self.id_auditoria = id_auditoria
