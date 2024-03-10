@@ -36,11 +36,11 @@ def comenzar_procesos_consumidores_de_pulsar(app: Flask):
     from contratos.modulos.sagas.saga import consumidores as consumidores_sagas
     todos.extend(consumidores_sagas)
 
-    # DELETE SOOON
-    from contratos.modulos.sagas.consumidores import (
-        consumidores as consumidores_sagas_helper,
-    )
-    todos.extend(consumidores_sagas_helper)
+    # UNCOMMENT IF WE WANT TO MOCK THE SAGA COMMAND CONSUMERS
+    # from contratos.modulos.sagas.consumidores import (
+    #     consumidores as consumidores_sagas_helper,
+    # )
+    # todos.extend(consumidores_sagas_helper)
 
     for consumidor in todos:
         assert isinstance(consumidor, Consumidor)
