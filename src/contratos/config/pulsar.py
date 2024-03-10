@@ -11,7 +11,7 @@ logger = logging.getLogger("pulsar")
 
 
 def get_pulsar_client() -> pulsar.Client:
-    logger = logging.getLogger("pulsar_client")
+    logger = logging.getLogger("client")
     logger.setLevel(logging.ERROR)
     return pulsar.Client(f"pulsar://pulsar:6650", logger=logger)
 
@@ -22,7 +22,6 @@ class Despachador:
 
     def _publicar_mensaje(self, topico: str, mensaje: schema.Record):
         cliente = get_pulsar_client()
-        self.logger.info(f"Publicando {type(mensaje).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
             topico, schema=schema.AvroSchema(mensaje.__class__)  # pyright: ignore
         )
@@ -49,15 +48,31 @@ def comenzar_despachador_coamndos_a_pulsar():
 
 
 class Consumidor:
-    mensaje: EventoIntegracion | Comando
+    mensaje: type[EventoIntegracion] | type[Comando]
     topico: str
     handler: Callable
+    tipo: str
 
-    def __init__(self, topico: str, mensaje: EventoIntegracion | Comando, handler: Callable):
-        self.topico = topico
+    def __init__(
+        self,
+        mensaje: type[EventoIntegracion] | type[Comando],
+        handler: Callable,
+    ):
+        self.topico = mensaje().topic_name()
         self.mensaje = mensaje
         self.handler = handler
-        self.logger = logger.getChild("consumidor")
+
+        if issubclass(mensaje, EventoIntegracion):
+            self.tipo = "evento"
+        elif issubclass(mensaje, Comando):
+            self.tipo = "comando"
+        else:
+            self.tipo = "desconocido"
+
+        self.logger = logger.getChild(self.name())
+
+    def name(self):
+        return f"consumidor-{self.tipo}-topico-{self.topico}"
 
     def start(self):
         self.logger.info(f"Comenzando a consumir del topico {self.topico}")
