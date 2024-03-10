@@ -4,8 +4,7 @@ from auditorias.modulos.verificacion.aplicacion.comandos.auditar_contrato import
 
 consumidores = [
     Consumidor(
-        topico=ComandoAuditarContrato().topic_name(),
         mensaje=ComandoAuditarContrato,
-        handler=ComandoAuditarContratoHandler,
+        handler=ComandoAuditarContratoHandler().handle,
     ).start,
 ]

@@ -1,18 +1,16 @@
-from datetime import datetime
 import logging
 import os
 from typing import Callable
 import pulsar
 import pulsar.schema as schema
 from pydispatch import dispatcher
-from auditorias.config.logger import logger
-from auditorias.seedwork.aplicacion.comandos import Comando
-from auditorias.seedwork.infraestructura.eventos import EventoIntegracion
+from contratos.config.logger import logger
+from contratos.seedwork.aplicacion.comandos import Comando
+from contratos.seedwork.dominio.eventos import EventoIntegracion
 
 pulsar_host = os.environ.get("PULSAR_HOST")
 if not pulsar_host:
     pulsar_host = "//pulsar:6650"
-logger = logging.getLogger("pulsar")
 
 def get_pulsar_client() -> pulsar.Client:
     logger = logging.getLogger("pulsar_client")
@@ -24,25 +22,20 @@ class Despachador:
     def __init__(self):
         self.logger = logger.getChild("despachador")
 
-    def _publicar_mensaje(self, topico: str, evento: schema.Record):
+    def _publicar_mensaje(self, topico: str, mensaje: schema.Record):
         cliente = get_pulsar_client()
-        self.logger.info(f"Publicando {type(evento).__name__} en el topico {topico}")
         publicador = cliente.create_producer(
-            topico, schema=schema.AvroSchema(evento.__class__)  # pyright: ignore
+            topico, schema=schema.AvroSchema(mensaje.__class__)  # pyright: ignore
         )
-        instant = datetime.now()
-        publicador.send(evento)
-        # logger.info(
-        #     f"EXPERIMENT - FINAL: id_transaccion: {evento.id_transaccion}, fin-proceso: {instant.isoformat()}, fin-evento: {datetime.now().isoformat()}"
-        # )
-        self.logger.info(f"Publicado {type(evento).__name__} en el topico {topico}")
+        publicador.send(mensaje)
+        self.logger.info(f"Publicado {type(mensaje).__name__} en el topico {topico}")
         cliente.close()
 
     def publicar_evento(self, evento: EventoIntegracion):
-        self._publicar_mensaje(evento.topic_name(), evento)
+        self._publicar_mensaje(topico=evento.topic_name(), mensaje=evento)
 
     def publicar_comando(self, comando: Comando):
-        self._publicar_mensaje(comando.topic_name(), comando)
+        self._publicar_mensaje(topico=comando.topic_name(), mensaje=comando)
 
 
 despachador = Despachador()
@@ -57,18 +50,34 @@ def comenzar_despachador_comandos_a_pulsar():
 
 
 class Consumidor:
-    mensaje: EventoIntegracion | Comando
+    mensaje: type[EventoIntegracion] | type[Comando]
     topico: str
     handler: Callable
+    tipo: str
 
-    def __init__(self, topico: str, mensaje: EventoIntegracion | Comando, handler: Callable):
-        self.topico = topico
+    def __init__(
+        self,
+        mensaje: type[EventoIntegracion] | type[Comando],
+        handler: Callable,
+    ):
+        self.topico = mensaje().topic_name()
         self.mensaje = mensaje
         self.handler = handler
-        self.logger = logger.getChild("consumidor")
+
+        if issubclass(mensaje, EventoIntegracion):
+            self.tipo = "evento"
+        elif issubclass(mensaje, Comando):
+            self.tipo = "comando"
+        else:
+            self.tipo = "desconocido"
+
+        self.logger = logger.getChild(self.name())
+
+    def name(self):
+        return f"consumidor-{self.tipo}-topico-{self.topico}"
 
     def start(self):
-        self.logger.info(f"Comenzando consumo del topico {self.topico}")
+        self.logger.info(f"Comenzando a consumir del topico {self.topico}")
         cliente = get_pulsar_client()
         consumidor = cliente.subscribe(
             self.topico,
