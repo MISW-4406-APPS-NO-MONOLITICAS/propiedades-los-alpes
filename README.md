@@ -274,7 +274,7 @@ Pasos:
 10. contrato: escucha evento PropiedadArrendada  
 11. finaliza la saga como completada  
 
-![Diagrama de Contexto-SAGA drawio](https://github.com/MISW-4406-APPS-NO-MONOLITICAS/propiedades-los-alpes/assets/98927955/8e2ce5d3-cd92-42c9-afe8-8f40cecfdd17)
+![Diagrama de Contexto-SAGA drawio (1)](https://github.com/MISW-4406-APPS-NO-MONOLITICAS/propiedades-los-alpes/assets/98927955/3dfe7f4e-2ea9-43f7-9859-4cd088b702bf)
 
 [Ver SAGA en Draw.io](https://viewer.diagrams.net/?page-id=8BqL5w1kLr_CeNQm_G1R&highlight=0000ff&edit=_blank&layers=1&nav=1&page-id=8BqL5w1kLr_CeNQm_G1R#G1SEoDtM7BW_qL7KysAWG-W4_v_kGHrHuO)
 
