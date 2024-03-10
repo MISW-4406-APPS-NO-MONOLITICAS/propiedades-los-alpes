@@ -253,6 +253,7 @@ curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
 Se plantea una operación larga en la que se crea un contrato generando una transacción que debe auditarse para garantizar que la información está completa y el índice de confiabilidad es alto, y debe cambiar el estado de una propiedad a través de un arrendamiento
 
 Pasos: 
+0. BFF: emite comando de ComandoCrearContrato
 1. contrato: escucha comando de ComandoCrearContrato  
 2. contrato: emite comando ComandoAuditarContrato  
 3. auditoría: escucha comando ComandoAuditarContrato  
