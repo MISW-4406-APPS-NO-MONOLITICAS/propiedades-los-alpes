@@ -1,16 +1,14 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from pydispatch import dispatcher
-from contratos.config.logger import logger
+from listados.config.logger import logger
 
-from contratos.seedwork.dominio.entidades import AgregacionRaiz
-from contratos.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
-
+from listados.seedwork.dominio.entidades import AgregacionRaiz
+from listados.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
 
 class Lock(Enum):
     OPTIMISTA = 1
     PESIMISTA = 2
-
 
 class Batch:
     def __init__(self, operacion, lock: Lock, *args, **kwargs):
@@ -105,7 +103,7 @@ uow = None
 def get_uow():
     global uow
     if uow is None:
-        from contratos.config.uow import UnidadTrabajoSQLAlchemy
+        from listados.config.uow import UnidadTrabajoSQLAlchemy
 
         uow = UnidadTrabajoSQLAlchemy()
     return uow

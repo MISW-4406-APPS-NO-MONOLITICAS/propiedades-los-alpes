@@ -14,9 +14,7 @@ class MapeadorPropiedadDTOJson(Mapeador):
             area=externo["area"],
             direccion=externo["direccion"],
             lote=externo["lote"],
-            compania=externo["compania"],
-            fecha_registro=externo["fecha_registro"],
-            fecha_actualizacion=externo["fecha_actualizacion"]
+            compania=externo["compania"]
 
         )
 
@@ -30,9 +28,7 @@ class MapeadorPropiedadDTOJson(Mapeador):
             "area": dto.area,
             "direccion": dto.direccion,
             "lote": dto.lote,
-            "compania": dto.compania,
-            "fecha_registro": dto.fecha_registro,
-            "fecha_actualizacion": dto.fecha_actualizacion,
+            "compania": dto.compania
         }
 
     def dto_a_entidad(self, dto):

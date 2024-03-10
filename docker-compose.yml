@@ -18,23 +18,23 @@ services:
     networks:
       - internal
 
-  database2:
-    image: mysql:8
-    container_name: database2
-    profiles: ["database2", "full"]
-    restart: on-failure
-    ports:
-      - "3307:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=listados
-    healthcheck:
-      test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
-      interval: 1s
-      timeout: 3s
-      retries: 60
-    networks:
-      - internal
+  # database2:
+  #   image: mysql:8
+  #   container_name: database2
+  #   profiles: ["database2", "full"]
+  #   restart: on-failure
+  #   ports:
+  #     - "3307:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root
+  #     - MYSQL_DATABASE=listados
+  #   healthcheck:
+  #     test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
+  #     interval: 1s
+  #     timeout: 3s
+  #     retries: 60
+  #   networks:
+  #     - internal
 
   pulsar:
     image: apachepulsar/pulsar:3.2.0
@@ -68,7 +68,6 @@ services:
     # attaching for debugging
     stdin_open: true
 
-
   listados:
     container_name: listados
     image: listados
@@ -80,7 +79,7 @@ services:
       dockerfile: src/listados/Dockerfile
     env_file: .env
     depends_on:
-      database2:
+      database:
         condition: service_healthy
     volumes:
       - ./src:/src

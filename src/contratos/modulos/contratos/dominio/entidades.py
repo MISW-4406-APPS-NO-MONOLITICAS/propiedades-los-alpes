@@ -22,7 +22,7 @@ class Transaccion(AgregacionRaiz):
 
     def crear_transaccion(self):
         logger.info(
-            f"Creando transaccion, agregando evento de dominio {type(TransaccionCreada).__name__}"
+            f"Creando transaccion, agregando evento de dominio {TransaccionCreada.__name__}"
         )
         self.agregar_evento(
             TransaccionCreada(

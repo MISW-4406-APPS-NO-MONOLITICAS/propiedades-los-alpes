@@ -6,17 +6,18 @@ faker = faker.Faker()
 
 
 def establecer_transaccion_test():
+    import uuid
+
     url = "http://localhost:5000/listados"
 
     data = {
-        "tipo_construccion": faker.word(),
-        "estado": faker.boolean(),
-        "area": faker.pyfloat(),
-        "direccion": faker.address(),
-        "lote": faker.random_int(min=1, max=100),
-        "compania": faker.company(),
-        "fecha_registro": faker.date_this_year(),
-        "fecha_actualizacion": faker.date_this_year(),
+        "id_correlacion": str(uuid.uuid4()),
+        "id_propiedad": str(uuid.uuid4()),
+        "id_transaccion": str(uuid.uuid4()),
+        "fecha_evento": faker.date_time_this_month().isoformat(),
+        "valor": 2,
+        "inquilino": faker.name(),
+        "arrendatario": faker.name()
     }
 
     print("About to send the following data to the server:", data)

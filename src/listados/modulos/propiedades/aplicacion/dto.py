@@ -14,11 +14,14 @@ class PropiedadDTO(DTO):
     fecha_registro: str = field(default_factory=str)
     fecha_actualizacion: str = field(default_factory=str)
 
+
 @dataclass(frozen=True)
 class ActualizarPropiedadDTO(DTO):
-    id: str = field(default_factory=str)
-    estado: str = field(default_factory=str)
+    id_propiedad: str = field(default_factory=str)
+    estado: bool = field(default_factory=bool)
     fecha_actualizacion: str = field(default_factory=str)
+
+
 
 
 

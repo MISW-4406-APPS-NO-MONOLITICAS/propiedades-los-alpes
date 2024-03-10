@@ -9,20 +9,17 @@ import pulsar.schema as schema
 
 @dataclass
 class ArrendamientoRealizado(EventoDominio):
-    id_arrendamiento: uuid.UUID = field(default_factory=uuid.uuid4)
-    fecha_registro: datetime = field(default_factory=datetime.now)
-    
+    id_correlacion: str = field(default_factory=str)
+    id_propiedad: str = field(default_factory=str)
+    id_transaccion: str = field(default_factory=str)
+    arrendamiento_confirmado: bool = field(default_factory=bool)
 
-class ContratoPropiedadArrendadaIntegracion(EventoIntegracion):
-    id = schema.String(required=True)
-    fecha_evento = schema.String(required=True)
-    id_arrendamiento = schema.String(required=True)
+    
+class ContratoPropiedadArrendada(EventoIntegracion):
+    id_correlacion = schema.String(required=True)
     id_propiedad = schema.String(required=True)
-    estado = schema.String(required=True)
-    fecha_registro = schema.String(required=True)
+    id_transaccion = schema.String(required=True)
+    fecha_evento = schema.String(required=True)
 
-    def topic_name(self):
-        return "contrato_propiedad_arrendado"
-    
-
-
+    def topic_name(self) -> str:
+        return "contrato_propiedad_arrendada"

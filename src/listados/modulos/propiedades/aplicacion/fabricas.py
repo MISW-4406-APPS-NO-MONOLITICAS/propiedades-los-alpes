@@ -4,19 +4,14 @@ from listados.seedwork.dominio.repositorios import Mapeador
 from listados.seedwork.dominio.fabricas import Fabrica
 from dataclasses import dataclass
 
-
-@dataclass
 class FabricaPropiedades(Fabrica):
-    def crear_objeto(self, obj, mapeador: Mapeador | None = None) -> Propiedad:
-        mapeador = mapeador or MapeadorPropiedad()
-        result = mapeador.dto_a_entidad(obj)
-        assert isinstance(result, Propiedad)
-        return result
-
-
-class FabricaArrendamiento(Fabrica):
-    def crear_objeto(self, obj, mapeador: Mapeador | None = None) -> Propiedad:
-        mapeador = mapeador or MapeadorPropiedad()
-        result = mapeador.dto_a_entidad(obj)
-        assert isinstance(result, Propiedad)
-        return result
+    def crear_objeto(self, dto):
+        return Propiedad(
+            id=dto.id,
+            tipo_construccion=dto.tipo_construccion,
+            estado=dto.estado,
+            area=dto.area,
+            direccion=dto.direccion,
+            lote=dto.lote,
+            compania=dto.compania,
+        )
