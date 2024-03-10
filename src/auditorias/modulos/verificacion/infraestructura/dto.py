@@ -1,5 +1,3 @@
-# DTOs para la capa de infraestructura del dominio de auditorias
-
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base
 from sqlalchemy import Float, String, DateTime, Boolean
 from auditorias.config.db import Base
@@ -17,7 +15,8 @@ class AnalisisDB(Base):
         DateTime, nullable=False
     )
     tipo_analisis: Mapped[str] = mapped_column(String(200), nullable=True)
-    contrato_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    id_correlacion: Mapped[str] = mapped_column(String(50), nullable=False)
+    id_transaccion: Mapped[str] = mapped_column(String(50), nullable=False)
     oficial: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     consistente: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     completo: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

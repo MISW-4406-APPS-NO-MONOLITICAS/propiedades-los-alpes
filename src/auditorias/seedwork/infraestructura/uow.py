@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from enum import Enum
 from pydispatch import dispatcher
 from auditorias.config.logger import logger
 
 from auditorias.seedwork.dominio.entidades import AgregacionRaiz
-from auditorias.seedwork.dominio.eventos import EventoDominio, EventoIntegracion
+from auditorias.seedwork.dominio.eventos import EventoDominio
+from auditorias.seedwork.infraestructura.eventos import EventoIntegracion
 
 
 class Lock(Enum):
@@ -93,9 +94,6 @@ class UnidadTrabajo:
             assert isinstance(
                 evento, EventoIntegracion
             ), "Debe ser un evento de integracion"
-            logger.info(
-                f"Despachando evento integracion: {evento.__class__.__name__} en signal Integracion"
-            )
             dispatcher.send(signal="Integracion", evento=evento)
 
 

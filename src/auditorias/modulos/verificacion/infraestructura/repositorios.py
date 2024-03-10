@@ -25,7 +25,7 @@ class FabricaAnalisisDB(Fabrica):
 logger = logger.getChild("repo-analisises")
 
 
-class RepositorioTrasaccionesDB(RepositorioAnalisis):
+class RepositorioAnalisisDB(RepositorioAnalisis):
     def __init__(self):
         self._fabrica_analisis: FabricaAnalisisDB = FabricaAnalisisDB()
 

@@ -3,7 +3,7 @@ services:
   database:
     image: mysql:8
     container_name: database
-    profiles: ["database", "full"]
+    profiles: ["database", "platform", "full"]
     restart: on-failure
     ports:
       - "3306:3306"
@@ -39,7 +39,7 @@ services:
   pulsar:
     image: apachepulsar/pulsar:3.2.0
     container_name: pulsar
-    profiles: ["pulsar", "full"]
+    profiles: ["pulsar", "platform", "full"]
     restart: on-failure
     ports:
       - "6650:6650"
