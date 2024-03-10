@@ -9,12 +9,12 @@ from dataclasses import dataclass
 
 @dataclass
 class ObtenerAuditoriasContrato(Query):
-    contrato_id: str
+    id_transaccion: str
 
 class ObtenerAuditoriasContratoHandler(QueryHandler):
     def handle(self, query: ObtenerAuditoriasContrato) -> QueryResultado:
         repositorio = RepositorioAnalisisDB()        
-        return QueryResultado(repositorio.obtener_por_columna('contrato_id', query.contrato_id))
+        return QueryResultado(repositorio.obtener_por_columna('id_transaccion', query.id_transaccion))
 
 
 @query.register(ObtenerAuditoriasContrato)

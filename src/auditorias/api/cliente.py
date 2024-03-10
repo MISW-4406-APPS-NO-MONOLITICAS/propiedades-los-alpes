@@ -6,17 +6,21 @@ import faker
 
 faker = faker.Faker()
 test_type = os.environ.get("TEST_TYPE")
-uuid = ""
+id_correlacion = ""
+id_transaccion = ""
 
 def solicitar_auditoria_contrato_test():
     url = "http://localhost:5002/auditorias"
-    uuid = str(uuid4())
+    id_correlacion = str(uuid4())
+    id_transaccion = str(uuid4())
     data = {
-        "id_transaccion": uuid,
+        "id_correlacion": id_correlacion,
+        "id_transaccion": id_transaccion,
         "valor": 0 if test_type == "rechazo" else random.randint(1, 1000000),
         "comprador": faker.name(),
         "vendedor": faker.name(),
         "inquilino": faker.name(),
+        "arrendatario": faker.name(),
     }
 
     print("Contrato para auditar:", data)
@@ -24,22 +28,22 @@ def solicitar_auditoria_contrato_test():
     if response.ok:
         print("Auditoría de contrato solicitada")   
         if test_type != "rechazo" :
-          solicitar_compensacion_auditoria_test(uuid)
+          solicitar_compensacion_auditoria_test(id_correlacion, id_transaccion)
 
-    # Pretty print the response
     try:
         import json
-
         print(json.dumps(response.json(), indent=4))
     except:
         print(response.text)
         
 
-def solicitar_compensacion_auditoria_test(uuid: str):
+def solicitar_compensacion_auditoria_test(id_correlacion: str, id_transaccion: str):
     url = "http://localhost:5002/auditorias/compensacion"
-
+    id_auditoria = str(uuid4())
     data = {
-        "id_transaccion": uuid
+        "id_correlacion": id_correlacion,
+        "id_transaccion": id_transaccion,
+        "id_auditoria": id_auditoria
     }
 
     print("Compensación:", data)
@@ -47,10 +51,8 @@ def solicitar_compensacion_auditoria_test(uuid: str):
     if response.ok:
         print("Compensación solicitada")
 
-    # Pretty print the response
     try:
         import json
-
         print(json.dumps(response.json(), indent=4))
     except:
         print(response.text)

@@ -1,33 +1,31 @@
-from dataclasses import dataclass, field
 from uuid import uuid4
 from auditorias.config.logger import logger
-from auditorias.modulos.verificacion.dominio.objetos_valor import Valor
 from auditorias.modulos.verificacion.dominio.servicios import ServicioAuditoria
 from .base import BaseHandler
 from auditorias.seedwork.aplicacion.comandos import Comando
 from auditorias.seedwork.aplicacion.comandos import ejecutar_comando as comando
 from auditorias.seedwork.infraestructura.uow import UnidadTrabajoPuerto
-from auditorias.modulos.verificacion.aplicacion.dto import AnalisisDTO, TipoAnalisis, CompensacionDTO, TransaccionDTO
+from auditorias.modulos.verificacion.aplicacion.dto import CompensacionDTO
 import pulsar.schema as schema
 
 
 class ComandoCancelarContratoAuditado(Comando):
-    id_transaccion = schema.String(required=True) 
+    fecha_evento = schema.String(required=True)
+    id_correlacion = schema.String(required=True)
+    id_transaccion = schema.String(required=True)
+    id_auditoria = schema.String(required=True)
 
     def topic_name(self):
-        return "cancelar_contrato_auditado"
+        return "auditorias_cancelar_contrato_auditado"
 
     def as_dict(self):
         return {
+            "fecha_evento": self.fecha_evento,
+            "id_correlacion": self.id_correlacion,
             "id_transaccion": self.id_transaccion,
+            "id_auditoria": self.id_auditoria
         }
-
-
-class ComandoCancelarContratoAuditadoIntegracion(ComandoCancelarContratoAuditado):
-    id = schema.String(required=True)
-    fecha_evento = schema.String(required=True)
-    id_transaccion = schema.String(required=True)
-    
+   
     
 class ComandoCancelarContratoAuditadoHandler(BaseHandler):
     servicio_auditoria: ServicioAuditoria = ServicioAuditoria()
@@ -35,7 +33,10 @@ class ComandoCancelarContratoAuditadoHandler(BaseHandler):
     def handle(self, comando: ComandoCancelarContratoAuditado):
         logger.info(f"Manejando comando {comando.__class__.__name__}")
         transaccion_cancelar_dto = CompensacionDTO(
-            contrato_id = comando.id_transaccion
+            fecha_evento = comando.fecha_evento, 
+            id_correlacion = comando.id_correlacion,
+            id_transaccion = comando.id_transaccion,
+            id_auditoria = comando.id_auditoria
         )
         
         analisis = self.servicio_auditoria.buscar_analisis(transaccion_cancelar_dto)

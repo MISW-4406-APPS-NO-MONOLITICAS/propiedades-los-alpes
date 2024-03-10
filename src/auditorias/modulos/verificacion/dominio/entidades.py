@@ -1,16 +1,16 @@
 from __future__ import annotations
-import uuid
 from auditorias.config.logger import logger
 from dataclasses import dataclass, field
-from uuid import uuid4
-from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado, ContratoAuditadoIntegracion, ContratoRechazado, ContratoRechazadoIntegracion, contratoAuditadoCancelado, contratoAuditadoCanceladoIntegracion
+from auditorias.modulos.verificacion.dominio.eventos import ContratoAuditado, ContratoRechazado, ContratoAuditadoCancelado
 from auditorias.modulos.verificacion.dominio.objetos_valor import TipoAnalisis
+from auditorias.modulos.verificacion.infraestructura.schema.v1.eventos import ContratoAuditadoIntegracion, ContratoAuditoriaRechazadaIntegracion, ContratoAuditadoCanceladoIntegracion
 from auditorias.seedwork.dominio.entidades import AgregacionRaiz
 
 @dataclass
 class Analisis(AgregacionRaiz):
+    id_correlacion: str = field(default_factory=str)
+    id_transaccion: str = field(default_factory=str)
     tipo_analisis: TipoAnalisis = field(default_factory=TipoAnalisis)
-    contrato_id: str = field(default_factory=str)
     oficial: bool = field(default_factory=bool)
     consistente: bool = field(default_factory=bool)
     completo: bool = field(default_factory=bool)
@@ -23,23 +23,18 @@ class Analisis(AgregacionRaiz):
         )
         self.agregar_evento(
             ContratoAuditado(
-                id_transaccion=uuid.UUID(self.contrato_id), 
-                fecha_creacion=self.fecha_creacion
+                id_correlacion = self.id_correlacion, 
+                id_transaccion = self.id_transaccion, 
+                id_auditoria = self.id
             )
         )
 
         self.agregar_evento_integracion(
             evento=ContratoAuditadoIntegracion(
-                id=str(uuid4()),
-                fecha_evento=self.fecha_creacion.isoformat(),
-                fecha_creacion=self.fecha_creacion.isoformat(),
-                tipo_analisis=self.tipo_analisis.valor,
-                id_transaccion=self.contrato_id,
-                oficial=self.oficial,
-                consistente=self.consistente,
-                completo=self.completo,
-                indice_confiabilidad=self.indice_confiabilidad,
-                auditado=self.auditado,
+                fecha_evento = self.fecha_creacion.isoformat(),
+                id_correlacion = self.id_correlacion,
+                id_transaccion = self.id_transaccion,
+                id_auditoria = f"{self.id}"
             ),
         )
         
@@ -49,51 +44,39 @@ class Analisis(AgregacionRaiz):
         )
         self.agregar_evento(
             ContratoRechazado(
-                id_transaccion=uuid.UUID(self.contrato_id), 
-                fecha_creacion=self.fecha_creacion
+                id_correlacion=self.id_correlacion,
+                id_transaccion=self.id_transaccion
             )
         )
 
         self.agregar_evento_integracion(
-            evento=ContratoRechazadoIntegracion(
-                id=str(uuid4()),
-                fecha_evento=self.fecha_creacion.isoformat(),
-                fecha_creacion=self.fecha_creacion.isoformat(),
-                tipo_analisis=self.tipo_analisis.valor,
-                id_transaccion=self.contrato_id,
-                oficial=self.oficial,
-                consistente=self.consistente,
-                completo=self.completo,
-                indice_confiabilidad=self.indice_confiabilidad,
-                auditado=self.auditado,
+            evento=ContratoAuditoriaRechazadaIntegracion(
+                fecha_evento = self.fecha_creacion.isoformat(),
+                id_correlacion = self.id_correlacion,
+                id_transaccion = self.id_transaccion,
+                id_auditoria = f"{self.id}"
             ),
         )
         
     def cancelar_contrato_auditado(self):
         logger.info(
-            f"Guardando cancelación de contrato, agregando evento de dominio {type(contratoAuditadoCancelado).__name__}"
+            f"Guardando cancelación de contrato, agregando evento de dominio {type(ContratoAuditadoCanceladoIntegracion).__name__}"
         )
         self.agregar_evento(
-            contratoAuditadoCancelado(
-                id_transaccion=uuid.UUID(self.contrato_id), 
-                fecha_creacion=self.fecha_creacion
+            ContratoAuditadoCancelado(
+                id_correlacion = self.id_correlacion,
+                id_transaccion = self.id_transaccion
             )
         )
         
         self.tipo_analisis = TipoAnalisis("Contrato-compensacion")
 
         self.agregar_evento_integracion(
-            evento=contratoAuditadoCanceladoIntegracion(
-                id=str(uuid4()),
-                fecha_evento=self.fecha_creacion.isoformat(),
-                fecha_creacion=self.fecha_creacion.isoformat(),
-                tipo_analisis=self.tipo_analisis.valor,
-                id_transaccion=self.contrato_id,
-                oficial=False,
-                consistente=False,
-                completo=False,
-                indice_confiabilidad=0,
-                auditado=False,
+            evento=ContratoAuditadoCanceladoIntegracion(
+                fecha_evento = self.fecha_creacion.isoformat(),
+                id_correlacion = self.id_correlacion,
+                id_transaccion = self.id_transaccion,
+                id_auditoria = f"{self.id}"
             ),
         )
         

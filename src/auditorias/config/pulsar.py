@@ -7,7 +7,7 @@ import pulsar.schema as schema
 from pydispatch import dispatcher
 from auditorias.config.logger import logger
 from auditorias.seedwork.aplicacion.comandos import Comando
-from auditorias.seedwork.dominio.eventos import EventoIntegracion
+from auditorias.seedwork.infraestructura.eventos import EventoIntegracion
 
 pulsar_host = os.environ.get("PULSAR_HOST")
 if not pulsar_host:
@@ -32,9 +32,9 @@ class Despachador:
         )
         instant = datetime.now()
         publicador.send(evento)
-        logger.info(
-            f"EXPERIMENT - FINAL: id_transaccion: {evento.id_transaccion}, fin-proceso: {instant.isoformat()}, fin-evento: {datetime.now().isoformat()}"
-        )
+        # logger.info(
+        #     f"EXPERIMENT - FINAL: id_transaccion: {evento.id_transaccion}, fin-proceso: {instant.isoformat()}, fin-evento: {datetime.now().isoformat()}"
+        # )
         self.logger.info(f"Publicado {type(evento).__name__} en el topico {topico}")
         cliente.close()
 

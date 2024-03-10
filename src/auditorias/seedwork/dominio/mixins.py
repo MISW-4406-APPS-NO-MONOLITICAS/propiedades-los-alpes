@@ -1,5 +1,3 @@
-#Mixins reusables parte del seedwork del proyecto
-
 from .reglas import ReglaNegocio
 from .excepciones import ReglaNegocioExcepcion
 

@@ -1,11 +1,10 @@
 import uuid
 from datetime import datetime
 from dataclasses import dataclass, field
-from .eventos import EventoDominio, EventoIntegracion
-from .mixins import ValidarReglasMixin
-from .reglas import IdEntidadEsInmutable
-from .excepciones import IdDebeSerInmutableExcepcion
 
+from auditorias.seedwork.infraestructura.eventos import EventoIntegracion
+from .eventos import EventoDominio
+from .mixins import ValidarReglasMixin
 
 @dataclass
 class Entidad:
@@ -22,7 +21,7 @@ class AgregacionRaiz(Entidad, ValidarReglasMixin):
     def agregar_evento(self, evento: EventoDominio):
         self.eventos.append(evento)
 
-    def agregar_evento_integracion(self, evento):
+    def agregar_evento_integracion(self, evento: EventoIntegracion):
         self.eventos_integracion.append(evento)
 
     def limpiar_eventos(self):
