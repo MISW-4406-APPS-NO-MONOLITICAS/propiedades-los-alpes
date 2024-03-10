@@ -14,6 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Levantar contenedores
-        run: docker compose --profile full up -d
+        run: docker compose --profile full up -d --wait
       - name: Correr Pruebas
-        run: docker exec -it contratos python -m pytest src/contratos/tests/ -v
+        run: docker exec contratos python -m pytest src/contratos/tests/ -v
