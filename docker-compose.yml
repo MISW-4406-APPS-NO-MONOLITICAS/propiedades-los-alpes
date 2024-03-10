@@ -45,6 +45,11 @@ services:
       - "6650:6650"
       - "8080:8080"
     command: ["bin/pulsar", "standalone"]
+    healthcheck:
+      test: ["CMD", "bin/pulsar-admin", "brokers", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - internal
    
@@ -62,6 +67,8 @@ services:
       - BROKER_HOST=pulsar
     depends_on:
       database:
+        condition: service_healthy
+      pulsar:
         condition: service_healthy
     volumes:
       - ./src:/src
@@ -83,6 +90,8 @@ services:
     depends_on:
       database2:
         condition: service_healthy
+      pulsar:
+        condition: service_healthy
     volumes:
       - ./src:/src
     networks:
@@ -102,6 +111,8 @@ services:
     env_file: .env
     depends_on:
       database:
+        condition: service_healthy
+      pulsar:
         condition: service_healthy
     volumes:
       - ./src:/src
@@ -123,7 +134,10 @@ services:
       context: .
       dockerfile: src/bff_web/Dockerfile
     depends_on:
-      - contratos
+      contratos:
+        condition: service_started
+      pulsar:
+        condition: service_healthy
     volumes:
       - ./src:/src
     networks:
