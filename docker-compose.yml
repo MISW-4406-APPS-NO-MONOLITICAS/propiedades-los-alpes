@@ -47,7 +47,12 @@ services:
     command: ["bin/pulsar", "standalone"]
     networks:
       - internal
-
+  
+  client:
+    depends_on:
+      - pulsar
+    image: apachepulsar/pulsar:latest
+  
   contratos:
     container_name: contratos
     image: contratos
@@ -126,7 +131,6 @@ services:
       dockerfile: src/bff_web/Dockerfile
     depends_on:
       - contratos
-      - pulsar
     volumes:
       - ./src:/src
     networks:
