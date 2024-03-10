@@ -63,6 +63,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      pulsar:
+        condition: service_started
     volumes:
       - ./src:/src
     networks:
@@ -124,6 +126,7 @@ services:
       dockerfile: src/bff_web/Dockerfile
     depends_on:
       - contratos
+      - pulsar
     volumes:
       - ./src:/src
     networks:
