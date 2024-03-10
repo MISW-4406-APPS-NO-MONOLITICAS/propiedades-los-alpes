@@ -247,6 +247,37 @@ curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
 * análisis de transacción rechazada: 1 registro ``` tipo_analisis = Contrato, auditado = false ```
 * análisis de transacción rollback: 2 registros ``` { tipo_analisis = Contrato, auditado = true }, { tipo_analisis = Contrato-compensacion, auditado = false } ```
 
+## SAGA
+
+### Flujo de operación larga
+Se plantea una operación larga en la que se crea un contrato generando una transacción que debe auditarse para garantizar que la información está completa y el índice de confiabilidad es alto, y debe cambiar el estado de una propiedad a través de un arrendamiento
+
+Pasos: 
+1. BFF: emite comando de ComandoCrearContrato
+2. contrato: escucha comando de ComandoCrearContrato  
+3. contrato: emite comando ComandoAuditarContrato  
+4. auditoría: escucha comando ComandoAuditarContrato  
+5. auditoría: emite evento ContratoAuditado  
+5.1 auditoría: emite evento ContratoAuditoriaRechazada  
+5.2 contrato: actualiza el estado del contrato  
+5.3 contrato: finaliza saga revertida.  
+6. contrato: escucha evento ContratoAuditado  
+7. contrato: emite comando ComandoArrendarPropiedad  
+8. listados: escucha comando ComandoArrendarPropiedad  
+9. listados: emite evento PropiedadArrendada  
+9.1 listados: emite evento PropiedadArrendamientoRechazado  
+9.2 contrato: escucha evento PropiedadArrendamientoRechazado y empieza a revertir saga.  
+9.3 contrato: emite comando compensación ComandoCancelarContratoAuditado  
+9.4 auditoría: escucha comando de compensación ComandoCancelarContratoAuditado  
+9.5 auditoría: emite evento ContratoAuditadoCancelado  
+9.6 contrato: finaliza la saga revertida  
+10. contrato: escucha evento PropiedadArrendada  
+11. finaliza la saga como completada  
+
+![Diagrama de Contexto-SAGA drawio (1)](https://github.com/MISW-4406-APPS-NO-MONOLITICAS/propiedades-los-alpes/assets/98927955/3dfe7f4e-2ea9-43f7-9859-4cd088b702bf)
+
+[Ver SAGA en Draw.io](https://viewer.diagrams.net/?page-id=8BqL5w1kLr_CeNQm_G1R&highlight=0000ff&edit=_blank&layers=1&nav=1&page-id=8BqL5w1kLr_CeNQm_G1R#G1SEoDtM7BW_qL7KysAWG-W4_v_kGHrHuO)
+
 ## Escenarios de calidad
 
 Los atributos y escenarios de calidad priorizados para este desarrollo son los encontrados en [el siguiente documento](https://drive.google.com/file/d/1ergvNQD3fY79l_3he4n_UzElMptrbnxj/view?usp=sharing)
