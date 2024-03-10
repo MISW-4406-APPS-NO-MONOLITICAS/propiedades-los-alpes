@@ -219,7 +219,7 @@ docker exec pulsar bin/pulsar-client consume -s sub public/default/topico -t Sha
 
 ```bash
 # Obtener análisis de auditoría realizados sobre una transacción <id_transacción>
-curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transacción>
+curl --request "GET" http://localhost:5002/auditorias/contrato/<id_transaccion>
 
 # retorna json
 [
