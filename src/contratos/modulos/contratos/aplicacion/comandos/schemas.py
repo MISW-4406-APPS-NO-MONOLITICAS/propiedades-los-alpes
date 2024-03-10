@@ -36,6 +36,7 @@ class ComandoAuditarContrato(Comando):
     vendedor = schema.String()
     inquilino = schema.String()
     arrendatario = schema.String()
+    fecha_evento = schema.String(required=True)
 
     def topic_name(self) -> str:
         return "auditorias_auditar_contrato"

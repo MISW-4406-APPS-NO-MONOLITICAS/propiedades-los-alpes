@@ -62,6 +62,7 @@ class ComandoCrearContratoHandler(ComandoHandler):
             vendedor=comando.vendedor,
             inquilino=comando.inquilino,
             arrendatario=comando.arrendatario,
+            fecha_evento=transaccion.fecha_creacion.isoformat(),
         )
 
         ManejadorDeSaga().iniciar_saga(
