@@ -15,8 +15,12 @@ def registrar_handlers_eventos_dominio():
     from contratos.modulos.propiedades.aplicacion.handlers import (
         registrar as handler_propiedades,
     )
+    from contratos.modulos.contratos.aplicacion.eventos.handlers import (
+        registrar as handler_contratos,
+    )
 
     handler_propiedades()
+    handler_contratos()
 
 
 def comenzar_procesos_consumidores_de_pulsar(app: Flask):
@@ -51,13 +55,13 @@ def comenzar_procesos_consumidores_de_pulsar(app: Flask):
 
 def setup_db(app: Flask):
     # Inicializa la DB
-    from contratos.config.db import init_db, db_session
+    from contratos.config.db import init_db, Session
 
     init_db()
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        db_session.remove()
+        Session.remove()
 
 
 def create_app(configuracion={}):

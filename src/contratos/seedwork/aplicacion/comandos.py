@@ -20,6 +20,9 @@ class Comando(schema.Record):
     def from_evento(evento: EventoIntegracion) -> Comando:
         raise ValueError("La subclase debe implementar el método from_evento")
 
+    def validate(self):
+        schema.AvroSchema(self.__class__).encode(self)
+
 
 class ComandoHandler(ABC):
     @abstractmethod
@@ -32,6 +35,7 @@ def ejecutar_commando(comando):
     raise NotImplementedError(
         f"No existe implementación para el comando de tipo {type(comando).__name__}"
     )
+
 
 def ejecutar_commando_async(comando):
     dispatcher.send(signal="Comando", comando=comando)

@@ -27,6 +27,7 @@ class MapeadorCrearTransaccion(Mapeador):
     def dto_a_entidad(self, dto: CrearTransaccionDTO) -> Transaccion:
         transaccion = Transaccion(
             id_propiedad=dto.id_propiedad,
+            valor=dto.valor,
             comprador=dto.comprador,
             vendedor=dto.vendedor,
             inquilino=dto.inquilino,

@@ -18,6 +18,7 @@ class MapeadorTransaccionDB(Mapeador):
     def dto_a_entidad(self, dto: TransaccionDB) -> Transaccion:
         return Transaccion(
             id=uuid.UUID(dto.id),
+            id_propiedad=dto.id_propiedad,
             valor=Valor(valor=dto.valor),
             comprador=dto.comprador,
             vendedor=dto.vendedor,
@@ -31,6 +32,7 @@ class MapeadorTransaccionDB(Mapeador):
     def entidad_a_dto(self, entidad: Transaccion) -> TransaccionDB:
         return TransaccionDB(
             id=str(entidad.id),
+            id_propiedad=entidad.id_propiedad,
             valor=entidad.valor.valor,
             comprador=entidad.comprador,
             vendedor=entidad.vendedor,

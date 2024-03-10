@@ -6,6 +6,7 @@ from datetime import datetime
 import uuid
 import pulsar.schema as schema
 from pydispatch import dispatcher
+from contratos.config.logger import logger
 
 
 @dataclass
@@ -23,3 +24,10 @@ class EventoIntegracion(schema.Record):
 
 def despachar_evento_integracion(evento: EventoIntegracion):
     dispatcher.send(signal="Integracion", evento=evento)
+
+
+def despachar_evento_integracion_localmente(evento: EventoIntegracion):
+    logger.getChild("despachador-eventos").info(
+        f"Despachando evento {evento.__class__.__name__} localmente"
+    )
+    dispatcher.send(signal=evento.__class__.__name__, evento=evento)

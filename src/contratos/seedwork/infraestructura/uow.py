@@ -116,9 +116,6 @@ def get_uow():
 class UnidadTrabajoPuerto:
     from contratos.config.uow import UnidadTrabajoSQLAlchemy
 
-    def get_db_session():
-        return __class__.get_unidad_de_trabajo().db_session
-
     @staticmethod
     def get_unidad_de_trabajo() -> UnidadTrabajoSQLAlchemy:
         return get_uow()

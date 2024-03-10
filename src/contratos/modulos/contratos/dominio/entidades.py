@@ -6,6 +6,7 @@ from contratos.modulos.contratos.dominio.objetos_valor import Valor
 
 from contratos.seedwork.dominio.entidades import AgregacionRaiz
 from contratos.modulos.contratos.dominio.eventos import (
+    TransaccionAuditada,
     TransaccionCreada,
 )
 from contratos.modulos.contratos.aplicacion.eventos.schemas import (
@@ -46,4 +47,10 @@ class Transaccion(AgregacionRaiz):
                 fecha_evento=self.fecha_creacion.isoformat(),
                 fecha_creacion=self.fecha_creacion.isoformat(),
             ),
+        )
+
+    def auditar(self, id_auditoria: str):
+        self.id_auditoria = id_auditoria
+        self.agregar_evento(
+            TransaccionAuditada(id_transaccion=self.id, id_auditoria=id_auditoria)
         )

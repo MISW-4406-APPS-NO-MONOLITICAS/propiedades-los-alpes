@@ -18,13 +18,14 @@ from contratos.modulos.contratos.aplicacion.comandos.schemas import (
 
 
 class ComandoCrearContratoHandler(ComandoHandler):
-    def __init__(self, db_session=None):
+    def __init__(self):
         self.fabrica_transacciones = FabricaTransacciones(
             mapeador=MapeadorCrearTransaccion()
         )
-        self.repositorio_transaciones = RepositorioTrasaccionesDB(db_session=db_session)
+        self.repositorio_transaciones = RepositorioTrasaccionesDB()
 
     def handle(self, comando: ComandoCrearContrato):
+        comando.validate()
         id_correlacion = comando.id_correlacion.__str__()
         logger.info(
             f"Manejando comando %s con id_correlacion %s",
@@ -33,6 +34,7 @@ class ComandoCrearContratoHandler(ComandoHandler):
         )
 
         transaccion_dto = CrearTransaccionDTO(
+            id_propiedad=comando.id_propiedad,
             valor=Valor(comando.valor),  # type: ignore
             comprador=comando.comprador,
             vendedor=comando.vendedor,

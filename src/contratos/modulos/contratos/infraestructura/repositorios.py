@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from contratos.config.db import create_db_session
+from contratos.config.db import Session
 from contratos.modulos.contratos.dominio.repositorios import (
     RepositorioTransacciones,
 )
@@ -26,9 +26,9 @@ logger = logger.getChild("repo-transacciones")
 
 
 class RepositorioTrasaccionesDB(RepositorioTransacciones):
-    def __init__(self, db_session=None):
+    def __init__(self):
         self._fabrica_transacciones: FabricaTransaccionesDB = FabricaTransaccionesDB()
-        self.db_session = db_session or create_db_session()
+        self.db_session = Session()
 
     @property
     def fabrica_transacciones(self):
@@ -56,7 +56,8 @@ class RepositorioTrasaccionesDB(RepositorioTransacciones):
 
     def actualizar(self, entity: Transaccion):
         logger.info(f"Updating model with id {entity.id}")
-        raise NotImplementedError
+        db_model = MapeadorTransaccionDB().entidad_a_dto(entity)
+        self.db_session.merge(db_model)
 
     def eliminar(self, entity_id: UUID):
         logger.info(f"Deleting model with id {entity_id}")

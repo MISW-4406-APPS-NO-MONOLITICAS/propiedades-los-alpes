@@ -1,4 +1,4 @@
-from contratos.config.db import create_db_session
+from contratos.config.db import Session
 from contratos.modulos.sagas.db_models import SagaLogDB
 from contratos.modulos.sagas.saga import SagaContratos
 from contratos.seedwork.dominio.repositorios import Mapeador
@@ -36,7 +36,7 @@ class MapeadorSagaContratos(Mapeador):
 class RepositorioSagaContratosDB:
     def __init__(self):
         self._mapeador: MapeadorSagaContratos = MapeadorSagaContratos()
-        self.db_session = create_db_session()
+        self.db_session = Session()
 
     def obter_por_id(self, id_correlacion: str) -> SagaContratos:
         logger.info(f"Obtaining model {SagaLogDB.__name__} with id {id_correlacion}")

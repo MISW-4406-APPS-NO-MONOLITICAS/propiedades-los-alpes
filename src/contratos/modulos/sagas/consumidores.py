@@ -34,7 +34,9 @@ class ComandoArrendarPropiedadHandler:
         )
         if random.choice([True, False]):
             evento = PropiedadArrendamientoRechazado(
-                id_correlacion=comando.id_correlacion
+                id_correlacion=comando.id_correlacion,
+                id_propiedad=comando.id_propiedad,
+                id_transaccion=comando.id_transaccion,
             )
 
         despachar_evento_integracion(evento)
