@@ -5,6 +5,7 @@ import requests
 import json
 from fastavro.schema import parse_schema
 from pulsar.schema import *
+import pulsar.schema as schema
 
 epoch = datetime.datetime.utcfromtimestamp(0)
 PULSAR_ENV: str = 'BROKER_HOST'
@@ -27,4 +28,27 @@ def consultar_schema_registry(topico: str) -> dict:
 
 def obtener_schema_avro_de_diccionario(json_schema: dict) -> AvroSchema:
     definicion_schema = parse_schema(json_schema)
-    return AvroSchema(None, schema_definition=definicion_schema)
+    return AvroSchema(None,schema_definition=definicion_schema)
+
+class Comando(schema.Record):
+    def topic_name(self) -> str:
+        raise ValueError("La subclase debe implementar el método topic_name")
+
+class ComandoCrearTransaccion(Comando):
+    valor = schema.Float()
+    comprador = schema.String()
+    vendedor = schema.String()
+    inquilino = schema.String()
+    arrendatario = schema.String()
+
+    def topic_name(self):
+        return "crear_transaccion"
+
+    def as_dict(self):
+        return {
+            "valor": self.valor,
+            "comprador": self.comprador,
+            "vendedor": self.vendedor,
+            "inquilino": self.inquilino,
+            "arrendatario": self.arrendatario,
+        }

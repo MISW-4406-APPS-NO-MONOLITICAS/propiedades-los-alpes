@@ -68,7 +68,6 @@ services:
     # attaching for debugging
     stdin_open: true
 
-
   listados:
     container_name: listados
     image: listados
@@ -102,6 +101,25 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+  bff_web:
+    container_name: bff_web
+    image: bff_web
+    profiles: ["bff_web","full"]
+    ports:
+      - "8000:8000"
+    environment:
+      - BROKER_HOST=pulsar
+      - CONTRATOS_ADDRESS=contratos
+    build:
+      context: .
+      dockerfile: src/bff_web/Dockerfile
     volumes:
       - ./src:/src
     networks:
