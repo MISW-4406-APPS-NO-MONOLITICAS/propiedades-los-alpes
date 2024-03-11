@@ -48,7 +48,7 @@ services:
     healthcheck:
       test: ["CMD", "bin/pulsar-admin", "brokers", "healthcheck"]
       interval: 1s
-      timeout: 3s
+      timeout: 10s
       retries: 60
     networks:
       - internal
@@ -56,7 +56,7 @@ services:
   contratos:
     container_name: contratos
     image: contratos
-    profiles: ["contratos", "full"]
+    profiles: ["contratos", "full", "servicios"]
     ports:
       - "5000:5000"
     build:
@@ -80,7 +80,7 @@ services:
   listados:
     container_name: listados
     image: listados
-    profiles: ["listados", "full"]
+    profiles: ["listados", "full", "servicios"]
     ports:
       - "5001:5000"
     build:
@@ -102,7 +102,7 @@ services:
   auditorias:
     container_name: auditorias
     image: auditorias
-    profiles: ["auditorias", "full"]
+    profiles: ["auditorias", "full", "servicios"]
     ports:
       - "5002:5000"
     build:
@@ -124,7 +124,7 @@ services:
   bff_web:
     container_name: bff_web
     image: bff_web
-    profiles: ["bff_web","full"]
+    profiles: ["bff_web","full", "servicios"]
     ports:
       - "8000:8000"
     environment:

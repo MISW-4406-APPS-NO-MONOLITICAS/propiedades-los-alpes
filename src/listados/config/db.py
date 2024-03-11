@@ -3,9 +3,9 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-databse_uri = os.environ.get("SQLALCHEMY_DATABASE2_URI")
+databse_uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
 if not databse_uri:
-    databse_uri = "mysql+mysqldb://root:root@database2/listados"
+    databse_uri = "mysql+mysqldb://root:root@database/contratos"
 
 engine = create_engine(
     databse_uri, execution_options={"isolation_level": "READ COMMITTED"}
@@ -23,5 +23,6 @@ Base = declarative_base()
 # Init db with mysql
 def init_db():
     import listados.modulos.propiedades.infraestructura.dto as propiedades_dto
+    import listados.modulos.arrendamiento.infraestructura.dto as arrendamiento_dto
 
     Base.metadata.create_all(bind=engine)

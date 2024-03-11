@@ -55,7 +55,8 @@ class RepositorioPropiedadesDB(RepositorioPropiedades):
 
     def actualizar(self, entity: Propiedad):
         logger.info(f"Updating model with id {entity.id}")
-        raise NotImplementedError
+        db_model = MapeadorPropiedadDB().entidad_a_dto(entity)
+        db_session.merge(db_model)
 
     def eliminar(self, entity_id: UUID):
         logger.info(f"Deleting model with id {entity_id}")

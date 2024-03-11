@@ -1,3 +1,4 @@
+from datetime import datetime
 import uuid
 import pulsar.schema as schema
 
@@ -85,6 +86,7 @@ class ComandoArrendarPropiedad(Comando):
 
 
 class ComandoCancelarContratoAuditado(Comando):
+    fecha_evento = schema.String(required=True)
     id_correlacion = schema.String(required=True)
     id_transaccion = schema.String(required=True)
     id_auditoria = schema.String(required=True)
@@ -112,6 +114,7 @@ class ComandoCancelarContratoAuditado(Comando):
         assert transaccion, "Transaccion no encontrada"
 
         return ComandoCancelarContratoAuditado(
+            fecha_evento=datetime.now().isoformat(),
             id_correlacion=evento.id_correlacion,
             id_transaccion=evento.id_transaccion,
             id_auditoria=transaccion.id_auditoria,

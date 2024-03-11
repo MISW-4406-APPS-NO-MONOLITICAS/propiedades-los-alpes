@@ -1,4 +1,3 @@
-from dataclasses import dataclass, field
 from listados.config.logger import logger
 from .base import BaseHandler
 from listados.seedwork.aplicacion.comandos import Comando
@@ -7,62 +6,39 @@ from listados.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from listados.modulos.propiedades.aplicacion.dto import PropiedadDTO, Valor
 import pulsar.schema as schema
 
-
-class ComandoCrearPropiedad(Comando):
-    tipo_construccion: str
-    estado: bool
-    area: float
-    direccion: str
-    lote: int
-    compania: str
-    fecha_registro: str
-    fecha_actualizacion: str
-
-    def topic_name(self):
-        return "crear_transaccion"
-
-    def as_dict(self):
-        return {
-            "tipo_construccion": self.tipo_construccion,
-            "estado": self.estado,
-            "area": self.area,
-            "direccion": self.direccion,
-            "lote": self.lote,
-            "compania": self.compania,
-            "fecha_registro": self.fecha_registro,
-            "fecha_actualizacion": self.fecha_actualizacion,
-        }
-
+class ComandoCrearPropiedad():
+    def __init__(self, id_propiedad, tipo_construccion, estado, area, direccion, lote, compania, fecha_creacion, id_transaccion):
+        self.id_propiedad = id_propiedad
+        self.tipo_construccion = tipo_construccion
+        self.estado = estado
+        self.area = area
+        self.direccion = direccion
+        self.lote = lote
+        self.compania = compania
+        self.fecha_creacion = fecha_creacion
+        self.id_transaccion = id_transaccion
 
 class ComandoCrearPropiedadHandler(BaseHandler):
     def handle(self, comando: ComandoCrearPropiedad):
         logger.info(f"Manejando comando {comando.__class__.__name__}")
         propiedad_dto = PropiedadDTO(
-            id="",
-            tipo_construccion=comando.tipo_construccion,
-            estado=comando.estado,
-            area=comando.area,
-            direccion=comando.direccion,
-            lote=comando.lote,
-            compania=comando.compania,
-            fecha_registro=comando.fecha_registro,
-            fecha_actualizacion=comando.fecha_actualizacion,
+            id=str(comando.id_propiedad),
+            tipo_construccion=str(comando.tipo_construccion),
+            estado=bool(comando.estado),
+            area=float(comando.area),
+            direccion=str(comando.direccion),
+            lote=str(comando.lote),
+            compania=str(comando.compania),
+            fecha_registro=str(comando.fecha_creacion),
+            fecha_actualizacion=str(comando.fecha_creacion)
         )
-        propiedad = self.fabrica_propiedades.crear_objeto(propiedad_dto)
-        propiedad.crear_propiedad()  # Genera los eventos
 
-        # Se programa en el uow
-        logger.info(f"Inscribiendo en unidad de trabajo del comando {comando.__class__.__name__}")
+        propiedad = self.fabrica_propiedades.crear_objeto(propiedad_dto)
+        propiedad.crear_propiedad(str(comando.id_propiedad), str(comando.tipo_construccion), bool(comando.estado), float(comando.area), str(comando.direccion), str(comando.lote), str(comando.compania))
+
         UnidadTrabajoPuerto.registrar_batch(
             self.repositorio_propiedades.agregar, propiedad
         )
         UnidadTrabajoPuerto.savepoint()
-        UnidadTrabajoPuerto.commit()
-
-
-@comando.register(ComandoCrearPropiedad)
-def ejecutar_comando_crear_propiedad(comando: ComandoCrearPropiedad):
-    handler = ComandoCrearPropiedadHandler()
-    handler.handle(comando)
-
+        UnidadTrabajoPuerto.commit()                      
 

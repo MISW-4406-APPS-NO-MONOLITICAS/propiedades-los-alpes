@@ -1,5 +1,5 @@
-from contratos.config.db import db_session
-from contratos.seedwork.infraestructura.uow import UnidadTrabajo, Batch
+from listados.config.db import db_session
+from listados.seedwork.infraestructura.uow import UnidadTrabajo, Batch
 
 
 class UnidadTrabajoSQLAlchemy(UnidadTrabajo):

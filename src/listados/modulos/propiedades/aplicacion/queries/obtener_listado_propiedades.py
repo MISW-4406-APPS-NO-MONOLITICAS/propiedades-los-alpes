@@ -1,7 +1,7 @@
 from listados.modulos.propiedades.infraestructura.repositorios import (
     RepositorioPropiedadesDB,
 )
-from contratos.seedwork.aplicacion.queries import (
+from listados.seedwork.aplicacion.queries import (
     QueryHandler,
     QueryResultado,
     ejecutar_query as query,
