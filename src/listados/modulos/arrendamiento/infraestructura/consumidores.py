@@ -9,6 +9,6 @@ consumidores_arrendamiento = [
     Consumidor(
         topico=ComandoArrendarPropiedad().topic_name(),
         mensaje=ComandoArrendarPropiedad,# type: ignore
-        handler=ComandoArrendarPropiedadHandler,
-    ).start 
+        handler=ComandoArrendarPropiedadHandler().handle,
+    ).start,
 ]

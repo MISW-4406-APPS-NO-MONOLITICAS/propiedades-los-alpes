@@ -14,7 +14,7 @@ class PropiedadArrendadaDominio(EventoDominio):
     arrendamiento_confirmado: bool = field(default_factory=bool)
 
 
-class PropiedadArrendada(EventoIntegracion):
+class PropiedadArrendadaIntegracion(EventoIntegracion):
     id_correlacion = schema.String(required=True)
     id_propiedad = schema.String(required=True)
     id_transaccion = schema.String(required=True)
@@ -22,7 +22,7 @@ class PropiedadArrendada(EventoIntegracion):
     def topic_name(self) -> str:
         return "listados_propiedad_arrendada"
 
-class PropiedadArrendamientoRechazado(EventoIntegracion):
+class PropiedadArrendamientoRechazadoIntegracion(EventoIntegracion):
     id_correlacion = schema.String(required=True)
     id_propiedad = schema.String(required=True)
     id_transaccion = schema.String(required=True)
