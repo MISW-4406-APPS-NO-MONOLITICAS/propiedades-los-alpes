@@ -8,8 +8,9 @@ from datetime import datetime
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
 from listados.modulos.propiedades.dominio.eventos import (
     PropiedadArrendamientoRechazadoIntegracion,
-    PropiedadArrendadaIntegracion
+    PropiedadArrendadaIntegracion,
 )
+
 
 @dataclass
 class Propiedad(AgregacionRaiz):
@@ -23,15 +24,17 @@ class Propiedad(AgregacionRaiz):
     fecha_registro: datetime = field(default_factory=datetime.today)
     fecha_actualizacion: datetime = field(default_factory=datetime.today)
 
-    def actualizar_propiedad(self, id_propiedad: str, id_correlacion: str, id_transaccion: str):
+    def actualizar_propiedad(
+        self, id_propiedad: str, id_correlacion: str, id_transaccion: str
+    ):
         logger.info(
             f"Propiedad arrendada, agregando evento de integracion {PropiedadArrendadaIntegracion.__name__}"
         )
         self.agregar_evento_integracion(
-            evento = PropiedadArrendadaIntegracion(
+            evento=PropiedadArrendadaIntegracion(
                 id_correlacion=id_correlacion,
                 id_propiedad=id_propiedad,
-                id_transaccion=id_transaccion
+                id_transaccion=id_transaccion,
             )
         )
 
@@ -41,18 +44,18 @@ class Propiedad(AgregacionRaiz):
             f"id_propiedad: {id_propiedad} "
             f"id_transaccion: {id_transaccion} "
         )
-    
 
-
-    def rechazar_actualizacion_propiedad(self, id_propiedad:str, id_correlacion: str, id_transaccion: str):
+    def rechazar_actualizacion_propiedad(
+        self, id_propiedad: str, id_correlacion: str, id_transaccion: str
+    ):
         logger.info(
-                f"Rechazando arrendamiento, agregando evento de integracion {PropiedadArrendamientoRechazadoIntegracion.__name__}"
-            )
+            f"Rechazando arrendamiento, agregando evento de integracion {PropiedadArrendamientoRechazadoIntegracion.__name__}"
+        )
         self.agregar_evento_integracion(
             PropiedadArrendamientoRechazadoIntegracion(
                 id_correlacion=id_correlacion,
                 id_propiedad=id_propiedad,
-                id_transaccion=id_transaccion
+                id_transaccion=id_transaccion,
             )
         )
 
@@ -62,9 +65,17 @@ class Propiedad(AgregacionRaiz):
             f"id_propiedad: {id_propiedad} "
             f"id_transaccion: {id_transaccion} "
         )
-    
 
-    def crear_propiedad(self, id_propiedad: str, tipo_construccion: str, estado: bool, area: float, direccion: str, lote: int, compania: str):
+    def crear_propiedad(
+        self,
+        id_propiedad: str,
+        tipo_construccion: str,
+        estado: bool,
+        area: float,
+        direccion: str,
+        lote: int,
+        compania: str,
+    ):
         self.id_propiedad = id_propiedad
         self.tipo_construccion = tipo_construccion
         self.estado = estado
@@ -77,9 +88,4 @@ class Propiedad(AgregacionRaiz):
         logger.info(
             f"Creando propiedad con id {id_propiedad} y fecha de registro {self.fecha_registro}"
         )
-        return self         
-        
-
-    
-
-
+        return self
