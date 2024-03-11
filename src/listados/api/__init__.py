@@ -14,7 +14,6 @@ def registrar_handlers_eventos_dominio():
     from listados.modulos.propiedades.aplicacion.handlers import (
         registrar as handler_propiedades,
     )
-
     handler_propiedades()
 
 

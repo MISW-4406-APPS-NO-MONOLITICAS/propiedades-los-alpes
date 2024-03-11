@@ -3,20 +3,17 @@ from datetime import datetime
 from listados.config.logger import logger
 from dataclasses import dataclass, field
 from uuid import uuid4
-from listados.modulos.propiedades.dominio.objetos_valor import Valor
+from datetime import datetime
 
 from listados.seedwork.dominio.entidades import AgregacionRaiz, Entidad
 from listados.modulos.propiedades.dominio.eventos import (
-    PropiedadCreada,
-    PropiedadCreadaIntegracion,
-    PropiedadActualizada,
-    PropiedadActualizadaIntegracion,
+    PropiedadArrendamientoRechazadoIntegracion,
+    PropiedadArrendadaIntegracion
 )
-from contratos.seedwork.dominio.eventos import EventoIntegracion
-
 
 @dataclass
 class Propiedad(AgregacionRaiz):
+    id_propiedad: str = field(default_factory=str)
     tipo_construccion: str = field(default_factory=str)
     estado: bool = field(default_factory=bool)
     area: float = field(default_factory=float)
@@ -26,60 +23,62 @@ class Propiedad(AgregacionRaiz):
     fecha_registro: datetime = field(default_factory=datetime.today)
     fecha_actualizacion: datetime = field(default_factory=datetime.today)
 
-    def crear_propiedad(self):
+    def actualizar_propiedad(self, id_propiedad: str, id_correlacion: str, id_transaccion: str):
         logger.info(
-            f"Creando propiedad, agregando evento de dominio {type(PropiedadCreada).__name__}"
+            f"Propiedad arrendada, agregando evento de integracion {PropiedadArrendadaIntegracion.__name__}"
         )
-        self.agregar_evento(
-            PropiedadCreada(
-                id_propiedad=self.id, 
-                fecha_registro=self.fecha_creacion
-            )
-        )
-
         self.agregar_evento_integracion(
-            evento=PropiedadCreadaIntegracion(
-                id=str(uuid4()),
-                fecha_evento=self.fecha_creacion,
-                id_propiedad=str(self.id),
-                tipo_construccion=self.tipo_construccion,
-                estado=self.estado,
-                area=self.area,
-                direccion=self.direccion,
-                lote=self.lote,
-                compania=self.compania,
-                fecha_registro=self.fecha_creacion,
-                fecha_actualizacion=self.fecha_actualizacion
+            evento = PropiedadArrendadaIntegracion(
+                id_correlacion=id_correlacion,
+                id_propiedad=id_propiedad,
+                id_transaccion=id_transaccion
             )
         )
 
-    def actualizar_propiedad(self):
         logger.info(
-            f"Actualizando propiedad, agregando evento de dominio {type(PropiedadCreada).__name__}"
+            f"Informacion del evento de integracion: {PropiedadArrendadaIntegracion.__name__} "
+            f"id_correlacion: {id_correlacion} "
+            f"id_propiedad: {id_propiedad} "
+            f"id_transaccion: {id_transaccion} "
         )
-        self.agregar_evento(
-            PropiedadActualizada(
-                id_propiedad=self.id, 
-                fecha_actualizacion=self.fecha_actualizacion
+    
+
+
+    def rechazar_actualizacion_propiedad(self, id_propiedad:str, id_correlacion: str, id_transaccion: str):
+        logger.info(
+                f"Rechazando arrendamiento, agregando evento de integracion {PropiedadArrendamientoRechazadoIntegracion.__name__}"
             )
-
-        )
-
         self.agregar_evento_integracion(
-            evento=PropiedadActualizadaIntegracion(
-                id=str(uuid4()),
-                fecha_evento=self.fecha_actualizacion,
-                id_propiedad=str(self.id),
-                tipo_construccion=self.tipo_construccion,
-                estado=True,
-                area=self.area,
-                direccion=self.direccion,
-                lote=self.lote,
-                compania=self.compania,
-                fecha_registro=self.fecha_registro,
-                fecha_actualizacion=self.fecha_actualizacion
+            PropiedadArrendamientoRechazadoIntegracion(
+                id_correlacion=id_correlacion,
+                id_propiedad=id_propiedad,
+                id_transaccion=id_transaccion
             )
         )
+
+        logger.info(
+            f"Informacion del evento de integracion: {PropiedadArrendamientoRechazadoIntegracion.__name__} "
+            f"id_correlacion: {id_correlacion} "
+            f"id_propiedad: {id_propiedad} "
+            f"id_transaccion: {id_transaccion} "
+        )
+    
+
+    def crear_propiedad(self, id_propiedad: str, tipo_construccion: str, estado: bool, area: float, direccion: str, lote: int, compania: str):
+        self.id_propiedad = id_propiedad
+        self.tipo_construccion = tipo_construccion
+        self.estado = estado
+        self.area = area
+        self.direccion = direccion
+        self.lote = lote
+        self.compania = compania
+        self.fecha_registro = datetime.now()
+        self.fecha_actualizacion = datetime.now()
+        logger.info(
+            f"Creando propiedad con id {id_propiedad} y fecha de registro {self.fecha_registro}"
+        )
+        return self         
+        
 
     
 
