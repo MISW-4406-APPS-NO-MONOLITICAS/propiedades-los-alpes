@@ -15,8 +15,9 @@ class ComandoArrendarPropiedad(Comando):
     id_correlacion = schema.String(required=True)
     id_transaccion = schema.String(required=True)
     id_propiedad = schema.String(required=True)
-    fecha_evento = schema.String(required=True)
     valor = schema.Float(required=True)
+    comprador = schema.String()
+    vendedor = schema.String()
     inquilino = schema.String()
     arrendatario = schema.String()
 
@@ -32,7 +33,6 @@ class ComandoArrendarPropiedadHandler(BaseHandler):
             id_correlacion=str(comando.id_correlacion),
             id_transaccion=str(comando.id_transaccion),
             id_propiedad=str(comando.id_propiedad),
-            fecha_evento = datetime.strptime(str(comando.fecha_evento).replace('T', ' '), '%Y-%m-%d %H:%M:%S.%f'),
             valor=float(comando.valor),
             inquilino=str(comando.inquilino),
             arrendatario=str(comando.arrendatario),
