@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 from auditorias.config.logger import logger
 from auditorias.modulos.verificacion.aplicacion.dto import CompensacionDTO, TransaccionDTO
 from auditorias.modulos.verificacion.dominio.entidades import Analisis
@@ -33,6 +34,7 @@ class ServicioAuditoria(Servicio):
         analisis.auditado = True if analisis.indice_confiabilidad > 0 else False
         # delay para experimento - 2 peticiones por segundo
         time.sleep(0.5)
+        analisis.fecha_actualizacion = datetime.now()
         
         return analisis
       

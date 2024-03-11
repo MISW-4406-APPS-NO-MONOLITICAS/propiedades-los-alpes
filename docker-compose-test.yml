@@ -1,0 +1,133 @@
+version: "3.7"
+services:
+  database:
+    image: mysql:8
+    container_name: database
+    profiles: ["database", "platform", "full"]
+    restart: on-failure
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=contratos
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+    networks:
+      - internal
+
+  database2:
+    image: mysql:8
+    container_name: database2
+    profiles: ["database2", "full"]
+    restart: on-failure
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=listados
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+    networks:
+      - internal
+
+  pulsar:
+    image: apachepulsar/pulsar:3.2.0
+    container_name: pulsar
+    profiles: ["pulsar", "platform", "full"]
+    restart: on-failure
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    command: ["bin/pulsar", "standalone"]
+    networks:
+      - internal
+
+  contratos:
+    container_name: contratos
+    image: contratos
+    profiles: ["contratos", "full"]
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: src/contratos/Dockerfile
+    env_file: .env
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+
+  listados:
+    container_name: listados
+    image: listados
+    profiles: ["listados", "full"]
+    ports:
+      - "5001:5000"
+    build:
+      context: .
+      dockerfile: src/listados/Dockerfile
+    env_file: .env
+    depends_on:
+      database2:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+  auditorias:
+    container_name: auditorias
+    image: auditorias
+    profiles: ["auditorias", "full"]
+    ports:
+      - "5002:5000"
+    build:
+      context: .
+      dockerfile: src/auditorias/Dockerfile
+    env_file: .env
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+  auditorias2:
+    container_name: auditorias2
+    image: auditorias
+    profiles: ["auditorias", "full"]
+    ports:
+      - "5003:5000"
+    build:
+      context: .
+      dockerfile: src/auditorias/Dockerfile
+    env_file: .env
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+    networks:
+      - internal
+    # attaching for debugging
+    stdin_open: true
+
+networks:
+  internal:
