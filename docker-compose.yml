@@ -3,7 +3,7 @@ services:
   database:
     image: mysql:8
     container_name: database
-    profiles: ["database", "platform", "full"]
+    profiles: ["database", "platform", "full", "experimentacion"]
     restart: on-failure
     ports:
       - "3306:3306"
@@ -18,28 +18,10 @@ services:
     networks:
       - internal
 
-  # database2:
-  #   image: mysql:8
-  #   container_name: database2
-  #   profiles: ["database2", "full"]
-  #   restart: on-failure
-  #   ports:
-  #     - "3307:3306"
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=root
-  #     - MYSQL_DATABASE=listados
-  #   healthcheck:
-  #     test: ["CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1"]
-  #     interval: 1s
-  #     timeout: 3s
-  #     retries: 60
-  #   networks:
-  #     - internal
-
   pulsar:
     image: apachepulsar/pulsar:3.2.0
     container_name: pulsar
-    profiles: ["pulsar", "platform", "full"]
+    profiles: ["pulsar", "platform", "full", "experimentacion"]
     restart: on-failure
     ports:
       - "6650:6650"
@@ -52,7 +34,7 @@ services:
       retries: 60
     networks:
       - internal
-   
+
   contratos:
     container_name: contratos
     image: contratos
@@ -80,7 +62,8 @@ services:
   listados:
     container_name: listados
     image: listados
-    profiles: ["listados", "full"]
+    restart: always
+    profiles: ["listados", "full", "experimentacion"]
     ports:
       - "5001:5000"
     build:
@@ -94,6 +77,11 @@ services:
         condition: service_healthy
     volumes:
       - ./src:/src
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 15M
+
     networks:
       - internal
     # attaching for debugging
@@ -124,7 +112,7 @@ services:
   bff_web:
     container_name: bff_web
     image: bff_web
-    profiles: ["bff_web","full"]
+    profiles: ["bff_web", "full"]
     ports:
       - "8000:8000"
     environment:
@@ -143,6 +131,26 @@ services:
     networks:
       - internal
     # attaching for debugging
+    stdin_open: true
+
+  experimento:
+    container_name: experimento
+    image: experimento
+    profiles: ["experimentacion", "full"]
+    ports:
+      - "5004:5000"
+    build:
+      context: .
+      dockerfile: src/experimento/Dockerfile
+    volumes:
+      - ./src:/src
+    depends_on:
+      database:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    networks:
+      - internal
     stdin_open: true
 
 networks:

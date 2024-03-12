@@ -88,3 +88,14 @@ def seeder():
         ComandoCrearPropiedadHandler().handle(comando)   
 
     return Response("{}", status=202, mimetype="application/json")
+
+
+
+@blueprint.route("health", methods=("GET",))
+def health():
+    return Response("{}", status=200, mimetype="application/json")
+
+
+@blueprint.route("crash", methods=("GET",))
+def crash():
+    raise Exception("Crash!")
